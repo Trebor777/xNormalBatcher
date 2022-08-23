@@ -8,17 +8,13 @@ using System.Threading.Tasks;
 namespace XnormalBatcher.ViewModels
 {
     // Holds information/logic on how to batch, which files to batch, etc...
-    class BatchViewModel : BaseViewModel
+    internal class BatchViewModel : BaseViewModel
     {
         public bool UseCage { get; set; }
         public bool UseTermsAsPrefix { get; set; }
         public bool BakeSeparately { get; set; }
         public ObservableCollection<int> MapSizes { get; set; }
-        public ObservableCollection<string> MeshFileFormats { get; set; }
-        public ObservableCollection<string> TermsSeparator { get; set; }
-        public ObservableCollection<string> TermsLow { get; set; }
-        public ObservableCollection<string> TermsHigh { get; set; }
-        public ObservableCollection<string> TermsCage { get; set; }
+        public ObservableCollection<string> MeshFileFormats { get; set; }       
         public string SelectedMeshFormatLow { get; set; }
         public string SelectedMeshFormatHigh { get; set; }
         public string SelectedMeshFormatCage { get; set; }
@@ -36,10 +32,8 @@ namespace XnormalBatcher.ViewModels
             BakeSeparately = false;
             MapSizes = new ObservableCollection<int>() { 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768 };
             MeshFileFormats = new ObservableCollection<string>() { "fbx", "sia", "sib", "x", "ms3d", "off", "dae", "ovb", "dxf", "mesh", "xsi", "3ds", "sbm", "obj", "ase", "ply", "lwo", "lxo" };
-            TermsSeparator = new ObservableCollection<string>() { "_", "\" \"", "-", "." };
-            TermsLow = new ObservableCollection<string>() { "L", "LP", "Low", "LowPoly", "LPoly", "LWPLY" };
-            TermsHigh = new ObservableCollection<string>() { "H", "HP", "High", "HighPoly", "HPoly", "HGHPLY" };
-            TermsCage = new ObservableCollection<string>() { "C", "Cage", "Cg", "cge" };    
+            
+            
             
             //Default Selection
             SelectedMapWidthAll = SelectedMapHeightAll = MapSizes[7];

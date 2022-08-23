@@ -40,6 +40,22 @@ namespace XnormalBatcher
             tools.SetProcessAppUserModelId();
             // show a welcome message when the app is first installed
             if (firstRun) MessageBox.Show("Thanks for installing my application!");
+            Task.Run(() => UpdateMyApp());
+        }
+
+        private static async Task UpdateMyApp()
+        {
+            using (var mgr = new UpdateManager("https://xnormal.trebor777.net/"))
+            {
+                var newVersion = await mgr.UpdateApp();
+
+                // optionally restart the app automatically, or ask the user if/when they want to restart
+                if (newVersion != null)
+                {
+                    MessageBox.Show("A new version has been installed, restarting...");
+                    UpdateManager.RestartApp();
+                }
+            }
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace XnormalBatcher.ViewModels
 {
-    class MainViewModel : BaseViewModel
+    internal class MainViewModel : BaseViewModel
     {
         public static MainViewModel Instance;
         public BatchViewModel BatchViewModel { get; set; }

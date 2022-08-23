@@ -6,9 +6,12 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:fa5="http://schemas.fontawesome.com/icons/"
         xmlns:local="clr-namespace:XnormalBatcher"
-        mc:Ignorable="d" Title="XNormal Batcher" Height="480" Width="800" MinWidth="800" MinHeight="480">
+        xmlns:vm="clr-namespace:XnormalBatcher.ViewModels"
+        mc:Ignorable="d" Title="XNormal Batcher" Height="480" Width="800" MinWidth="800" MinHeight="480"
+        d:DataContext="{d:DesignInstance vm:MainViewModel}">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        
     </Window.Resources>
     <Border Margin="6">
         <TabControl x:Name="tabControl">
@@ -58,7 +61,8 @@
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Grid.Column="0">
                                     <Label Content="Sep." Padding="1"/>
-                                    <ComboBox ItemsSource="{Binding TermsSeparator}" SelectedItem="{Binding SelectedTermSeparator}"/>
+                                    <ComboBox ItemsSource="{Binding RelativeSource={RelativeSource FindAncestor, 
+AncestorType={x:Type Window}}, Path=DataContext.SuffixSettings.TermsSeparator}"  SelectedItem="{Binding SelectedTermSeparator}"/>
                                 </StackPanel>
                                 <Label Grid.Column="1" Content="+" VerticalContentAlignment="Bottom" FontSize="18" FontWeight="Bold"/>
                                 <Border Padding="2" Grid.Column="2">

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace XnormalBatcher.ViewModels
 {
@@ -17,5 +18,7 @@ namespace XnormalBatcher.ViewModels
         public bool HasLow { get; set; }
         public bool HasHigh { get; set; }
         public bool HasCage { get; set; }
+
+        public ICommand BakeMe { get; set; }
     }
 }
