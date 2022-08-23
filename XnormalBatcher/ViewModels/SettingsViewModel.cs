@@ -204,9 +204,9 @@ namespace XnormalBatcher.ViewModels
             DialogResult result = dialog.ShowDialog();
             if (result == DialogResult.OK)
             {
-                BakingPath = dialog.SelectedPath + "\\";
+                BakingPath = dialog.SelectedPath + @"\";
             }
-            Helpers.FileHelper.CreateSubFolders(BakingPath, SubFolders);
+            Helpers.FileHelper.CreateSubFolders(BakingPath);
             if (oPath != BakingPath)
             {
                 //BakeData.Clear();

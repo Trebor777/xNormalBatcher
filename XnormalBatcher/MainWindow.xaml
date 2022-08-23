@@ -157,9 +157,9 @@ AncestorType={x:Type Window}}, Path=DataContext.SuffixSettings.TermsCage}" Selec
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <Button Grid.Column="0" Content="Open Folder" Padding="2" Margin="4"/>
-                                <Button Grid.Column="1" Content="Bake Selected" Padding="2" Margin="4"/>
-                                <Button Grid.Column="2" Content="BAKE ALL" Padding="2" Margin="4"/>
+                                <Button Grid.Column="0" Content="Open Folder" Padding="2" Margin="4" Command="{Binding CMDOpenFolder}"/>
+                                <Button Grid.Column="1" Content="Bake Selected" Padding="2" Margin="4" Command="{Binding CMDBakeSelected}"/>
+                                <Button Grid.Column="2" Content="BAKE ALL" Padding="2" Margin="4" Command="{Binding CMDBakeAll}"/>
                             </Grid>
 
                         </StackPanel>
