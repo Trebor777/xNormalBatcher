@@ -30,8 +30,10 @@ namespace XnormalBatcher.ViewModels
         public List<string> SubFolders { get; set; }
         public ICommand BrowseXnormal { get; set; }
         public ICommand BrowseBakingPath { get; set; }
-        public string XNormalPath { get; set; }
-        public string BakingPath { get; set; }
+        private string _xnPath;
+        private string _bakePath;
+        public string XNormalPath { get => _xnPath; set { _xnPath = value; NotifyPropertyChanged(); } }
+        public string BakingPath { get => _bakePath; set { _bakePath = value; NotifyPropertyChanged(); } }
         public ObservableCollection<int> AASizes { get; set; }
         public ObservableCollection<int> BucketSizes { get; set; }
         public ObservableCollection<string> TextureFileFormats { get; set; }
@@ -65,6 +67,22 @@ namespace XnormalBatcher.ViewModels
         public bool BakeWireframe { get; set; }
         public bool BakeTranslucency { get; set; }
 
+        public VMSettingsAmbient SettingsAmbient { get; set; }
+        public VMSettingsBaseTexture SettingsBaseTexture { get; set; }
+        public VMSettingsBentNormal SettingsBentNormal { get; set; }
+        public VMSettingsCavity SettingsCavity { get; set; }
+        public VMSettingsConvexity SettingsConvexity { get; set; }
+        public VMSettingsCurvature SettingsCurvature { get; set; }
+        public VMSettingsDerivative SettingsDerivative { get; set; }
+        public VMSettingsDirection SettingsDirection { get; set; }
+        public VMSettingsHeight SettingsHeight { get; set; }
+        public VMSettingsNormal SettingsNormal { get; set; }
+        public VMSettingsProximity SettingsProximity { get; set; }
+        public VMSettingsPRTpn SettingsPRTpn { get; set; }
+        public VMSettingsRadiosity SettingsRadiosity { get; set; }
+        public VMSettingsTranslucency SettingsTranslucency { get; set; }
+        public VMSettingsVertexColors SettingsVertexColors { get; set; }
+        public VMSettingsWireframe SettingsWireframe { get; set; }
         public SettingsViewModel()
         {
             EdgePadding = 16;
@@ -91,41 +109,42 @@ namespace XnormalBatcher.ViewModels
         private void CheckXNPath()
         {
             if (!File.Exists(XNormalPath))
-            {
-                try
+            {                
+                var uninstallKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall";
+                var HKLM64 = RegistryKey.OpenRemoteBaseKey(RegistryHive.LocalMachine, Environment.MachineName, RegistryView.Registry64);
+                RegistryKey key64 = HKLM64.OpenSubKey(uninstallKey);
+                List<string> nameList = key64.GetSubKeyNames().ToList();
+
+                string location = "";
+                Regex xNormalRegEx = new Regex(@"xNormal ");
+                foreach (string keyName in nameList.Distinct())
                 {
-                    RegistryKey regKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall");
-                    List<string> nameList = regKey.GetSubKeyNames().ToList();
-                    string location = "";
-                    Regex xNormalRegEx = new Regex(@"xNormal \d*");
-                    foreach (string keyName in nameList)
+                    RegistryKey subKey = key64.OpenSubKey(keyName);
+                    if (subKey != null)
                     {
-                        RegistryKey subKey = regKey.OpenSubKey(keyName);
-                        try
+                        object key = subKey.GetValue("DisplayName");
+                        if (key != null)
                         {
-                            var key = subKey.GetValue("DisplayName");
-                            if (key != null)
+                            if (xNormalRegEx.IsMatch(key.ToString()))
                             {
-                                if (xNormalRegEx.IsMatch(key.ToString()))
+                                location = $@"{subKey.GetValue("InstallLocation")}\x64\xNormal.exe";
+                                if (File.Exists(location))
                                 {
-                                    location = subKey.GetValue("InstallLocation").ToString() + @"\x64\xNormal.exe";
-                                    if (File.Exists(location))
-                                        break;
+                                    break;
                                 }
                             }
                         }
-                        catch { }
                     }
-                    regKey.Close();
-                    if (File.Exists(location))
-                        XNormalPath = location;
-                    else
-                        DisplayUpdatePath();
                 }
-                catch
+                key64.Close();
+                if (File.Exists(location))
+                {
+                    XNormalPath = location;
+                }
+                else
                 {
                     DisplayUpdatePath();
-                }
+                }                
             }
         }
         private void DisplayUpdatePath()
@@ -153,13 +172,15 @@ namespace XnormalBatcher.ViewModels
 
         private void BrowseXNExecutable()
         {
-            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
-            dlg.FileName = "xNormal"; // Default file name 
-            dlg.DefaultExt = ".exe"; // Default file extension 
-            dlg.Filter = "Executables (.exe)|*.exe"; // Filter files by extension
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog
+            {
+                FileName = "xNormal", // Default file name 
+                DefaultExt = ".exe", // Default file extension 
+                Filter = "Executables (.exe)|*.exe" // Filter files by extension
+            };
             try
             {
-                dlg.InitialDirectory = System.IO.Path.GetDirectoryName(XNormalPath);
+                dlg.InitialDirectory = Path.GetDirectoryName(XNormalPath);
             }
             catch
             {

@@ -72,6 +72,22 @@
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\SuffixViewModel.cs" />
+    <Compile Include="ViewModels\VMSettingsAmbient.cs" />
+    <Compile Include="ViewModels\VMSettingsBaseTexture.cs" />
+    <Compile Include="ViewModels\VMSettingsBentNormal.cs" />
+    <Compile Include="ViewModels\VMSettingsCavity.cs" />
+    <Compile Include="ViewModels\VMSettingsConvexity.cs" />
+    <Compile Include="ViewModels\VMSettingsCurvature.cs" />
+    <Compile Include="ViewModels\VMSettingsDerivative.cs" />
+    <Compile Include="ViewModels\VMSettingsDirection.cs" />
+    <Compile Include="ViewModels\VMSettingsHeight.cs" />
+    <Compile Include="ViewModels\VMSettingsNormal.cs" />
+    <Compile Include="ViewModels\VMSettingsProximity.cs" />
+    <Compile Include="ViewModels\VMSettingsPRTpn.cs" />
+    <Compile Include="ViewModels\VMSettingsRadiosity.cs" />
+    <Compile Include="ViewModels\VMSettingsTranslucency.cs" />
+    <Compile Include="ViewModels\VMSettingsVertexColors.cs" />
+    <Compile Include="ViewModels\VMSettingsWireframe.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -7,12 +7,12 @@ namespace XnormalBatcher.ViewModels
 {
     public abstract class BaseViewModel : INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;                
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }       
+        }
     }
 
     public class RelayCommand : ICommand

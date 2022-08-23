@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using XnormalBatcher.ViewModels;
 
 namespace XnormalBatcher
 {
@@ -11,7 +10,6 @@ namespace XnormalBatcher
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new MainViewModel();
         }
     }
 }

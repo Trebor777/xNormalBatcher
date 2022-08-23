@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,7 +14,14 @@ namespace XnormalBatcher.ViewModels
         public SettingsViewModel Settings { get; set; }
         public SuffixViewModel SuffixSettings { get; set; }
 
-
+        public string Title
+        {
+            get
+            {
+                Version version = Assembly.GetEntryAssembly().GetName().Version;
+                return $"XNormal Batcher {version.ToString(3)} by trebor777.art@outlook.com";
+            }
+        }
         public MainViewModel()
         {
             Instance = this;
