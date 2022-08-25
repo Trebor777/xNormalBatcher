@@ -9,9 +9,9 @@ using System.Windows.Input;
 namespace XnormalBatcher.ViewModels
 {
     // Holds information/logic on what are the usable terms in the different settings...
-    internal class SuffixViewModel : BaseViewModel
+    internal class TermsViewModel : BaseViewModel
     {
-
+        public static TermsViewModel Instance { get; } = new TermsViewModel();
         public ObservableCollection<string> TermsSeparator { get; set; }
         public ObservableCollection<string> TermsLow { get; set; }
         public ObservableCollection<string> TermsHigh { get; set; }
@@ -88,8 +88,8 @@ namespace XnormalBatcher.ViewModels
             }
         }
 
-        public SuffixViewModel()
-        {
+        private TermsViewModel()
+        {            
             TermsLow = new ObservableCollection<string>() { "L", "LP", "Low", "LowPoly", "LPoly", "LWPLY" };
             TermsHigh = new ObservableCollection<string>() { "H", "HP", "High", "HighPoly", "HPoly", "HGHPLY" };
             TermsCage = new ObservableCollection<string>() { "C", "Cage", "Cg", "cge" };

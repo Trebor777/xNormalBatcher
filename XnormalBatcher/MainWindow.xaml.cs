@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using XnormalBatcher.ViewModels;
 
 namespace XnormalBatcher
 {
@@ -10,6 +11,11 @@ namespace XnormalBatcher
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            MainViewModel.Instance.IsLoaded = true;
         }
     }
 }

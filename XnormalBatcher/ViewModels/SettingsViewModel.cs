@@ -14,6 +14,7 @@ namespace XnormalBatcher.ViewModels
     // Holds information/logic on bake settings...
     internal class SettingsViewModel : BaseViewModel
     {
+        public static SettingsViewModel Instance { get; } = new SettingsViewModel();
         public int EdgePadding { get; set; }
         public bool BakeSettingsVisibility // Show the Settings Panel depending if any map to bake is checked. Else Hide it. Uses a BooleanToVisibilityConverter
         {
@@ -83,8 +84,9 @@ namespace XnormalBatcher.ViewModels
         public VMSettingsTranslucency SettingsTranslucency { get; set; }
         public VMSettingsVertexColors SettingsVertexColors { get; set; }
         public VMSettingsWireframe SettingsWireframe { get; set; }
-        public SettingsViewModel()
+        private SettingsViewModel()
         {
+            BakingPath = @"E:\bake\";
             EdgePadding = 16;
             BakeSettingsVisibility = false;
             AASizes = new ObservableCollection<int>() { 1, 2, 4 };

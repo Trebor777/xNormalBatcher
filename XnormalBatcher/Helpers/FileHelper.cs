@@ -47,5 +47,11 @@ namespace XnormalBatcher.Helpers
                 separator = " ";
             return UseTermsAsPrefix ? term + separator : separator + term;
         }
+
+        public static string GenerateExtensionFilter(string title, List<string> extensions)
+        {
+            var list = string.Join(", ", extensions.Select(e => $"*.{e}"));
+            return $"{title}({list})|{list}";
+        }
     }
 }

@@ -7,18 +7,15 @@
         xmlns:fa5="http://schemas.fontawesome.com/icons/"
         xmlns:local="clr-namespace:XnormalBatcher"
         xmlns:vm="clr-namespace:XnormalBatcher.ViewModels"
-        mc:Ignorable="d" Title="{Binding Title}" Height="480" Width="800" MinWidth="800" MinHeight="480"
+        mc:Ignorable="d" Title="{Binding Title}" Height="480" Width="960" MinWidth="960" MinHeight="480" Loaded="Window_Loaded"
+        DataContext="{x:Static vm:MainViewModel.Instance}"
         >
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-        
     </Window.Resources>
-    <Window.DataContext>
-        <vm:MainViewModel/>
-    </Window.DataContext>
     <Border Margin="6">
         <TabControl x:Name="tabControl">
-            <TabItem Header="Files" DataContext="{Binding BatchViewModel}">
+            <TabItem Header="Baker" DataContext="{x:Static vm:BatchViewModel.Instance}">
                 <Grid>
                     <!-- CONFIGURATION -->
                     <Grid.ColumnDefinitions>
@@ -64,29 +61,25 @@
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Grid.Column="0">
                                     <Label Content="Sep." Padding="1"/>
-                                    <ComboBox ItemsSource="{Binding RelativeSource={RelativeSource FindAncestor, 
-AncestorType={x:Type Window}}, Path=DataContext.SuffixSettings.TermsSeparator}"  SelectedItem="{Binding SelectedTermSeparator}"/>
+                                    <ComboBox ItemsSource="{Binding TermsSeparator, Source ={x:Static vm:TermsViewModel.Instance}}"  SelectedItem="{Binding SelectedTermSeparator}"/>
                                 </StackPanel>
                                 <Label Grid.Column="1" Content="+" VerticalContentAlignment="Bottom" FontSize="18" FontWeight="Bold"/>
                                 <Border Padding="2" Grid.Column="2">
                                     <StackPanel>
                                         <Label Content="LowPoly" Padding="1"/>
-                                        <ComboBox ItemsSource="{Binding RelativeSource={RelativeSource FindAncestor, 
-AncestorType={x:Type Window}}, Path=DataContext.SuffixSettings.TermsLow}" SelectedItem="{Binding SelectedTermLow}"/>
+                                        <ComboBox ItemsSource="{Binding TermsLow, Source ={x:Static vm:TermsViewModel.Instance}}" SelectedItem="{Binding SelectedTermLow}"/>
                                     </StackPanel>
                                 </Border>
                                 <Border Padding="2" Grid.Column="3">
                                     <StackPanel>
                                         <Label Content="HighPoly" Padding="1"/>
-                                        <ComboBox ItemsSource="{Binding RelativeSource={RelativeSource FindAncestor, 
-AncestorType={x:Type Window}}, Path=DataContext.SuffixSettings.TermsHigh}" SelectedItem="{Binding SelectedTermHigh}"/>
+                                        <ComboBox ItemsSource="{Binding TermsHigh, Source ={x:Static vm:TermsViewModel.Instance}}" SelectedItem="{Binding SelectedTermHigh}"/>
                                     </StackPanel>
                                 </Border>
                                 <Border Padding="2" Grid.Column="4" IsEnabled="{Binding IsChecked, ElementName=chkUseCage}">
                                     <StackPanel>
                                         <Label Content="Cage" Padding="1"/>
-                                        <ComboBox ItemsSource="{Binding RelativeSource={RelativeSource FindAncestor, 
-AncestorType={x:Type Window}}, Path=DataContext.SuffixSettings.TermsCage}" SelectedItem="{Binding SelectedTermCage}"/>
+                                        <ComboBox ItemsSource="{Binding TermsCage, Source ={x:Static vm:TermsViewModel.Instance}}" SelectedItem="{Binding SelectedTermCage}"/>
                                     </StackPanel>
                                 </Border>
                             </Grid>
@@ -127,8 +120,8 @@ AncestorType={x:Type Window}}, Path=DataContext.SuffixSettings.TermsCage}" Selec
                                     <ColumnDefinition Width="1.5*" />
                                 </Grid.ColumnDefinitions>
                                 <Label Content="Set all:" />
-                                <Button Grid.Column="1" Content="LOWPOLY" Margin="2" />
-                                <Button Grid.Column="2" Content="HIGHPOLY" Margin="2"/>
+                                <Button Grid.Column="1" Content="LOWPOLY" Margin="2" Command="{Binding CMDSetAllItemsLow}"/>
+                                <Button Grid.Column="2" Content="HIGHPOLY" Margin="2" Command="{Binding CMDSetAllItemsHigh}"/>
                             </Grid>
 
                             <!-- MAP SETTINGS -->
@@ -143,7 +136,7 @@ AncestorType={x:Type Window}}, Path=DataContext.SuffixSettings.TermsCage}" Selec
                                 <ComboBox ItemsSource="{Binding MapSizes}" SelectedItem="{Binding SelectedMapWidthAll}"/>
                                 <Label Grid.Column="1" Content="X" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontWeight="Bold"/>
                                 <ComboBox Grid.Column="2" ItemsSource="{Binding MapSizes}" SelectedItem="{Binding SelectedMapHeightAll}"/>
-                                <Button Grid.Column="3" Content="SET ALL" Padding="2" Margin="2"/>
+                                <Button Grid.Column="3" Content="SET ALL" Padding="2" Margin="2" Command="{Binding CMDSetAllMaps}"/>
                             </Grid>
 
                             <!-- BAKE ACTIONS -->
@@ -167,70 +160,136 @@ AncestorType={x:Type Window}}, Path=DataContext.SuffixSettings.TermsCage}" Selec
                     <!-- BAKING FILE LISTING-->
                     <Grid Grid.Column="1">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="20"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <!-- HEADERS -->
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="24" />
-                                <ColumnDefinition Width="3*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <CheckBox Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                            <Label Grid.Column="1" Content="Basename" Padding="0" FontWeight="Bold"/>
-                            <Label Grid.Column="2" Content="Multiple HPoly?" Padding="0" FontWeight="Bold"/>
-                            <Label Grid.Column="3" Content="Baked?" Padding="0" FontWeight="Bold"/>
-                            <Label Grid.Column="4" Content="Low?" Padding="0" FontWeight="Bold"/>
-                            <Label Grid.Column="5" Content="High?" Padding="0" FontWeight="Bold"/>
-                            <Label Grid.Column="6" Content="Cage?" Padding="0" FontWeight="Bold"/>
-                            <Label Grid.Column="7" Content="Width" Padding="0" FontWeight="Bold"/>
-                            <Label Grid.Column="8" Content="Height" Padding="0" FontWeight="Bold"/>
-                        </Grid>
-                        <!-- LIST BOX-->
-                        <ListBox Grid.Column="0" Grid.Row="1" ItemsSource="{Binding BatchItems}" SelectedItem="{Binding SelectedBatchItem}">
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="24" />
-                                            <ColumnDefinition Width="3*" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="*" />
-                                        </Grid.ColumnDefinitions>
-                                        <CheckBox Grid.Column="0" />
-                                        <Label Grid.Column="1" />
-                                        <CheckBox Grid.Column="2" />
-                                        <Label Grid.Column="3" />
-                                        <Label Grid.Column="4" />
-                                        <Label Grid.Column="5" />
-                                        <Label Grid.Column="6" />
-                                        <ComboBox Grid.Column="7" />
-                                        <Label Grid.Column="8" />
-                                        <ComboBox Grid.Column="9" />
-                                        <Button  Grid.Column="10" Content="Bake Me"/>
-                                    </Grid>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
+                        <!-- LIST View-->
+                        <ListView Grid.Column="0" Grid.Row="1" ItemsSource="{Binding BatchItems}" SelectedItem="{Binding SelectedBatchItem}">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn>
+                                        <GridViewColumn.Header>
+                                            <CheckBox x:Name="CheckAll" Command="{Binding CheckAllCommand}" CommandParameter="{Binding IsChecked, ElementName=CheckAll}" />
+                                        </GridViewColumn.Header>
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <CheckBox IsChecked="{Binding IsSelected}" />
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="Base Name"  DisplayMemberBinding="{Binding Name}"/>
+                                    <GridViewColumn Header="Multiple HPoly?">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <CheckBox IsChecked="{Binding MultipleHP}" />
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="Baked?">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <fa5:FontAwesome x:Name="chkBaked" Icon="Solid_Times" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                                <DataTemplate.Triggers>
+                                                    <DataTrigger Binding="{Binding Baked}" Value="True">
+                                                        <Setter Property="Icon" TargetName="chkBaked" Value="Solid_Check" />
+                                                        <Setter Property="Foreground" TargetName="chkBaked" Value="Green"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Baked}" Value="False">
+                                                        <Setter Property="Icon" TargetName="chkBaked" Value="Solid_Times" />
+                                                        <Setter Property="Foreground" TargetName="chkBaked" Value="Red"/>
+                                                    </DataTrigger>
+                                                </DataTemplate.Triggers>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="Low?">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <fa5:FontAwesome x:Name="chkLow" Icon="Solid_Times" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                                <DataTemplate.Triggers>
+                                                    <DataTrigger Binding="{Binding HasLow}" Value="True">
+                                                        <Setter Property="Icon" TargetName="chkLow" Value="Solid_Check" />
+                                                        <Setter Property="Foreground" TargetName="chkLow" Value="Green"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding HasLow}" Value="False">
+                                                        <Setter Property="Icon" TargetName="chkLow" Value="Solid_Times" />
+                                                        <Setter Property="Foreground" TargetName="chkLow" Value="Red"/>
+                                                    </DataTrigger>
+                                                </DataTemplate.Triggers>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="High?" >
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <fa5:FontAwesome x:Name="chkHigh" Icon="Solid_Times" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                                <DataTemplate.Triggers>
+                                                    <DataTrigger Binding="{Binding HasHigh}" Value="True">
+                                                        <Setter Property="Icon" TargetName="chkHigh" Value="Solid_Check" />
+                                                        <Setter Property="Foreground" TargetName="chkHigh" Value="Green"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding HasHigh}" Value="False">
+                                                        <Setter Property="Icon" TargetName="chkHigh" Value="Solid_Times" />
+                                                        <Setter Property="Foreground" TargetName="chkHigh" Value="Red"/>
+                                                    </DataTrigger>
+                                                </DataTemplate.Triggers>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="Cage?">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <fa5:FontAwesome x:Name="chkCage" Icon="Solid_Times" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                                <DataTemplate.Triggers>
+                                                    <DataTrigger Binding="{Binding HasCage}" Value="True">
+                                                        <Setter Property="Icon" TargetName="chkCage" Value="Solid_Check" />
+                                                        <Setter Property="Foreground" TargetName="chkCage" Value="Green"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding HasCage}" Value="False">
+                                                        <Setter Property="Icon" TargetName="chkCage" Value="Solid_Times" />
+                                                        <Setter Property="Foreground" TargetName="chkCage" Value="Red"/>
+                                                    </DataTrigger>
+                                                </DataTemplate.Triggers>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="Width">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <ComboBox ItemsSource="{Binding MapSizes, Source ={x:Static vm:BatchViewModel.Instance}}" SelectedValue="{Binding Width}" />
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="Height">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <ComboBox ItemsSource="{Binding MapSizes, Source ={x:Static vm:BatchViewModel.Instance}}" SelectedValue="{Binding Height}" />
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="" Width="80">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Button Command="{Binding LowSetting}" Width="20" Height="20" ToolTip="LowPoly Settings">
+                                                        <fa5:FontAwesome Icon="Solid_Cog" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                                    </Button>
+                                                    <Button Command="{Binding HightSetting}" Width="20" Height="20" ToolTip="HighPoly Settings">
+                                                        <fa5:FontAwesome Icon="Solid_Cogs" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                                    </Button>
+                                                    <Button Command="{Binding BakeMe}" Width="20" Height="20" ToolTip="Bake this item.">
+                                                        <fa5:FontAwesome Icon="Solid_Blender" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                                    </Button>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
                     </Grid>
                 </Grid>
             </TabItem>
-            <TabItem Header="Bake Settings" DataContext="{Binding Settings}">
+            <TabItem Header="Settings" DataContext="{x:Static vm:SettingsViewModel.Instance}">
                 <Grid Background="#FFE5E5E5">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="160"/>
@@ -254,7 +313,7 @@ AncestorType={x:Type Window}}, Path=DataContext.SuffixSettings.TermsCage}" Selec
                                     <ColumnDefinition Width="1.1*" />
                                     <ColumnDefinition Width="0.6*" />
                                     <ColumnDefinition Width="3.5*" />
-                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="28" />
                                 </Grid.ColumnDefinitions>
 
                                 <Label  Grid.Column="1" Content="Edge Padding:" VerticalAlignment="Center"/>
@@ -262,14 +321,18 @@ AncestorType={x:Type Window}}, Path=DataContext.SuffixSettings.TermsCage}" Selec
                                 <Label Grid.Column="3" Content="Bucket Size:" VerticalAlignment="Center" />
                                 <ComboBox Grid.Column="4" Margin="2" ItemsSource="{Binding BucketSizes}" SelectedItem="{Binding SelectedBucketSize}"/>
                                 <TextBox Grid.Column="5" Text="{Binding XNormalPath}" Margin="2"/>
-                                <Button Grid.Column="6" Content="XNormal Path" Margin="2" Command="{Binding BrowseXnormal}"/>
+                                <Button Grid.Column="6" Margin="2" Command="{Binding BrowseXnormal}" Width="24">
+                                    <fa5:FontAwesome Icon="Solid_FolderOpen" />
+                                </Button>
 
                                 <Label Grid.Row="1" Grid.Column="1" Content="Anti-Allasing:" VerticalAlignment="Center" />
                                 <ComboBox Grid.Row="1" Grid.Column="2" Margin="2" ItemsSource="{Binding AASizes}" SelectedItem="{Binding SelectedAASize}"/>
                                 <Label Grid.Row="1" Grid.Column="3" Content="Texture Format:" VerticalAlignment="Center" />
                                 <ComboBox Grid.Row="1" Grid.Column="4" Margin="2" ItemsSource="{Binding TextureFileFormats}" SelectedItem="{Binding SelectedTextureFileFormat}"/>
                                 <TextBox Grid.Row="1" Grid.Column="5" Text="{Binding BakingPath}" Margin="2" />
-                                <Button Grid.Row="1" Grid.Column="6" Content="Baking Path" Margin="2" Command="{Binding BrowseBakingPath}"/>
+                                <Button Grid.Row="1" Grid.Column="6" Margin="2" Command="{Binding BrowseBakingPath}" Width="24">
+                                    <fa5:FontAwesome Icon="Solid_FolderOpen" />
+                                </Button>
                             </Grid>
                             <Grid Grid.Row="1">
                                 <Grid.ColumnDefinitions>
@@ -900,7 +963,7 @@ AncestorType={x:Type Window}}, Path=DataContext.SuffixSettings.TermsCage}" Selec
                     </ScrollViewer>
                 </Grid>
             </TabItem>
-            <TabItem Header="Suffix Manager" DataContext="{Binding SuffixSettings}">
+            <TabItem Header="Terms Manager" DataContext="{x:Static vm:TermsViewModel.Instance}">
                 <Grid Margin="5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />

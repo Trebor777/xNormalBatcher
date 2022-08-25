@@ -65,13 +65,16 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Helpers\FileHelper.cs" />
+    <Compile Include="Helpers\ObjectExtension.cs" />
     <Compile Include="Helpers\XmlHelper.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\BatchItemViewModel.cs" />
     <Compile Include="ViewModels\BatchViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\MeshSettingsHighVM.cs" />
+    <Compile Include="ViewModels\MeshSettingsLowVM.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
-    <Compile Include="ViewModels\SuffixViewModel.cs" />
+    <Compile Include="ViewModels\TermsViewModel.cs" />
     <Compile Include="ViewModels\VMSettingsAmbient.cs" />
     <Compile Include="ViewModels\VMSettingsBaseTexture.cs" />
     <Compile Include="ViewModels\VMSettingsBentNormal.cs" />
@@ -88,6 +91,8 @@
     <Compile Include="ViewModels\VMSettingsTranslucency.cs" />
     <Compile Include="ViewModels\VMSettingsVertexColors.cs" />
     <Compile Include="ViewModels\VMSettingsWireframe.cs" />
+    <Compile Include="WindowHighPoly.xaml.cs" />
+    <Compile Include="WindowLowPoly.xaml.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -100,6 +105,14 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="WindowHighPoly.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="WindowLowPoly.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
