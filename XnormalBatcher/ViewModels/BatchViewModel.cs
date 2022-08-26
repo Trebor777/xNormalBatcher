@@ -22,7 +22,7 @@ namespace XnormalBatcher.ViewModels
         public ObservableCollection<string> MeshFileFormats { get; set; }
         public ObservableCollection<BatchItemViewModel> BatchItems { get; set; } = new ObservableCollection<BatchItemViewModel>();
         public BatchItemViewModel SelectedBatchItem { get; set; }
-        private BatchItemViewModel GlobalBatchItem { get; set; } = new BatchItemViewModel("__global__");
+        private BatchItemViewModel GlobalBatchItem { get; set; }
         public bool UseCage { get => useCage; set { useCage = value; RefreshBatchItems(); } }
         public bool UseTermsAsPrefix { get => useTermsAsPrefix; set { useTermsAsPrefix = value; RefreshBatchItems(); } }
         public string SelectedTermSeparator { get => selectedTermSeparator; set { selectedTermSeparator = value; RefreshBatchItems(); } }
@@ -85,7 +85,7 @@ namespace XnormalBatcher.ViewModels
 
         private BatchViewModel()
         {
-
+            
             UseCage = false;
             UseTermsAsPrefix = false;
             BakeSeparately = false;
@@ -103,7 +103,7 @@ namespace XnormalBatcher.ViewModels
 
             CMDSetAllMaps = new RelayCommand(SetAllMaps);
             CMDSetAllItemsLow = new RelayCommand(SetAllLow);
-            CMDSetAllItemsLow = new RelayCommand(SetAllHigh);
+            CMDSetAllItemsHigh = new RelayCommand(SetAllHigh);
 
             SelectedTermSeparator = TermsViewModel.Instance.TermsSeparator[0];
             SelectedTermLow = TermsViewModel.Instance.TermsLow[0];
@@ -119,6 +119,8 @@ namespace XnormalBatcher.ViewModels
             AutoUpdater.Renamed += new RenamedEventHandler(OnRefreshFiles);
             AutoUpdater.Path = SettingsViewModel.Instance.BakingPath;
             AutoUpdater.EnableRaisingEvents = SettingsViewModel.Instance.BakingPath != null;
+
+            GlobalBatchItem = new BatchItemViewModel("__global__", this);
         }
 
         public string GetSuffix(int slot)
@@ -212,6 +214,7 @@ namespace XnormalBatcher.ViewModels
                 {
                     item.SettingsHigh = new MeshSettingsHighVM(GlobalBatchItem.SettingsHigh);
                 }
+                item.GenerateXml();
             }
         }
 

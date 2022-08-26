@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using XnormalBatcher.Helpers;
 
@@ -20,21 +21,25 @@ namespace XnormalBatcher.ViewModels
         private int height;
         private bool hasLow;
         private bool hasHigh;
-        private bool hasCage;        
+        private bool hasCage;
         private string[] hpList = { };
 
         public bool IsSelected { get => isSelected; set { isSelected = value; NotifyPropertyChanged(); } }
-        public string Name { get => name; set { name = value; NotifyPropertyChanged(); }
-}
-        public bool MultipleHP { get => multipleHP; set { multipleHP = value; NotifyPropertyChanged(); } }
+        public string Name
+        {
+            get => name; set { name = value; NotifyPropertyChanged(); }
+        }
+        public bool MultipleHP { get => multipleHP; set { multipleHP = value; NotifyPropertyChanged(); Validate(); } }
         public bool Baked { get => baked; set { baked = value; NotifyPropertyChanged(); } }
         public int Width { get => width; set { width = value; NotifyPropertyChanged(); } }
         public int Height { get => height; set { height = value; NotifyPropertyChanged(); } }
         public bool HasLow { get => hasLow; set { hasLow = value; NotifyPropertyChanged(); } }
-        public bool HasHigh { get => hasHigh; set { hasHigh = value; NotifyPropertyChanged(); }}
-        public bool HasCage { get => hasCage; set { hasCage = value; NotifyPropertyChanged(); }}
+        public bool HasHigh { get => hasHigh; set { hasHigh = value; NotifyPropertyChanged(); } }
+        public bool HasCage { get => hasCage; set { hasCage = value; NotifyPropertyChanged(); } }
         public bool IsValid => HasLow && HasHigh && (HasCage || !BatchViewModel.Instance.UseCage);
         public ICommand BakeMe { get; set; }
+        public ICommand CMDSetLow { get; set; }
+        public ICommand CMDSetHigh { get; set; }
 
         public MeshSettingsLowVM SettingsLow { get; set; }
         public MeshSettingsHighVM SettingsHigh { get; set; }
@@ -43,10 +48,12 @@ namespace XnormalBatcher.ViewModels
 
 
 
-        public BatchItemViewModel(string filename)
+        public BatchItemViewModel(string filename, BatchViewModel Owner = null)
         {
-            owner = BatchViewModel.Instance;
+            owner = Owner ?? BatchViewModel.Instance;
             BakeMe = new RelayCommand(_Bake);
+            CMDSetLow = new RelayCommand(SetLowSettings);
+            CMDSetHigh = new RelayCommand(SetHighSettings);
             IsSelected = true;
             Width = owner.SelectedMapWidthAll;
             Height = owner.SelectedMapHeightAll;
@@ -64,6 +71,26 @@ namespace XnormalBatcher.ViewModels
             SettingsHigh = new MeshSettingsHighVM() { Owner = this };
             Validate();
         }
+
+        private void SetLowSettings()
+        {
+            Window dlg = new WindowLowPoly(SettingsLow)
+            {
+                Owner = Application.Current.MainWindow
+            };
+            dlg.ShowDialog();
+            GenerateXml();
+        }
+        private void SetHighSettings()
+        {
+            Window dlg = new WindowHighPoly(SettingsHigh)
+            {
+                Owner = Application.Current.MainWindow
+            };
+            dlg.ShowDialog();
+            GenerateXml();
+        }
+
 
         private void _Bake()
         {
@@ -111,19 +138,17 @@ namespace XnormalBatcher.ViewModels
         public bool CheckHighPolyFolder()
         {
             bool hasFiles = false;
-            string hp = MultipleHP ? "*" : Name;
-            string path = MultipleHP ? GenerateName(FileHelper.SubFolders[1], 1, true, false) + @"\" : SettingsViewModel.Instance.BakingPath + FileHelper.SubFolders[1];
-
-            bool exists = Directory.Exists(path);
-            if (exists)
+            string hp = GenerateName("", 1, false, true, "*");
+            string path = GenerateName(FileHelper.SubFolders[1], 1, true, false) + @"\";
+            if (Directory.Exists(path))
             {
-                hpList = Directory.GetFiles(path, GenerateName("", 1, false, true, hp));
+                hpList = Directory.GetFiles(path, hp);
                 hasFiles = hpList.Length > 0;
             }
-            return exists && hasFiles;
+            return hasFiles;
         }
         public void Validate()
-        {            
+        {
             HasLow = File.Exists(GenerateName(FileHelper.SubFolders[0], 0));
             HasHigh = (File.Exists(GenerateName(FileHelper.SubFolders[1], 1)) && !MultipleHP) || (CheckHighPolyFolder() && MultipleHP);
             string path = GenerateName(FileHelper.SubFolders[2], 2);
@@ -133,14 +158,14 @@ namespace XnormalBatcher.ViewModels
 
             if (Directory.Exists(GetBasenameMapPath()))
                 Baked = Directory.GetFiles(GetBasenameMapPath(), Name + "_*." + owner.SelectedFormats[3]).Length > 0;
-                        
+
             NotifyPropertyChanged("IsValid");
         }
 
 
         internal void GenerateXml()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
     }
 }

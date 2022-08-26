@@ -164,6 +164,11 @@
                         </Grid.RowDefinitions>
                         <!-- LIST View-->
                         <ListView Grid.Column="0" Grid.Row="1" ItemsSource="{Binding BatchItems}" SelectedItem="{Binding SelectedBatchItem}">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                </Style>
+                            </ListView.ItemContainerStyle>
                             <ListView.View>
                                 <GridView>
                                     <GridViewColumn>
@@ -176,11 +181,11 @@
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
-                                    <GridViewColumn Header="Base Name"  DisplayMemberBinding="{Binding Name}"/>
+                                    <GridViewColumn Header="Asset"  DisplayMemberBinding="{Binding Name}"/>
                                     <GridViewColumn Header="Multiple HPoly?">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
-                                                <CheckBox IsChecked="{Binding MultipleHP}" />
+                                                <CheckBox IsChecked="{Binding MultipleHP}" HorizontalAlignment="Center" HorizontalContentAlignment="Center" />
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
@@ -270,13 +275,13 @@
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
                                                 <StackPanel Orientation="Horizontal">
-                                                    <Button Command="{Binding LowSetting}" Width="20" Height="20" ToolTip="LowPoly Settings">
+                                                    <Button Command="{Binding CMDSetLow}" Width="20" Height="20" ToolTip="LowPoly Settings">
                                                         <fa5:FontAwesome Icon="Solid_Cog" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                                     </Button>
-                                                    <Button Command="{Binding HightSetting}" Width="20" Height="20" ToolTip="HighPoly Settings">
+                                                    <Button Command="{Binding CMDSetHigh}" Width="20" Height="20" ToolTip="HighPoly Settings">
                                                         <fa5:FontAwesome Icon="Solid_Cogs" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                                     </Button>
-                                                    <Button Command="{Binding BakeMe}" Width="20" Height="20" ToolTip="Bake this item.">
+                                                    <Button Command="{Binding BakeMe}" Width="20" Height="20" ToolTip="Bake this item." IsEnabled="{Binding IsValid}">
                                                         <fa5:FontAwesome Icon="Solid_Blender" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                                     </Button>
                                                 </StackPanel>

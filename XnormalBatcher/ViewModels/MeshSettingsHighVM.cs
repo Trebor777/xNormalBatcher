@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using XnormalBatcher.Helpers;
 
 namespace XnormalBatcher.ViewModels
@@ -10,37 +13,169 @@ namespace XnormalBatcher.ViewModels
     [Serializable]
     internal class MeshSettingsHigh
     {
-        internal double HighMeshScale;
-        internal string HighPolyBaseTexture;
-        internal string HighSmoothNormals;
-        internal bool HighPolyBaseTextureIsTangent;
+        internal double MeshScale;
+        internal string BaseTexture;
+        internal string SmoothNormals;
+        internal bool BaseTextureIsTangent;
         internal bool IgnoreVertexColor;
-        internal double HighOffsetX;
-        internal double HighOffsetY;
-        internal double HighOffsetZ;
+        internal double OffsetX;
+        internal double OffsetY;
+        internal double OffsetZ;
+
+        internal MeshSettingsHigh()
+        {
+            MeshScale = 1.0;
+            BaseTextureIsTangent = false;
+            IgnoreVertexColor = false;
+            SmoothNormals = "Exported";
+            OffsetX = 0.0;
+            OffsetY = 0.0;
+            OffsetZ = 0.0;
+        }
     }
 
     internal class MeshSettingsHighVM : BaseViewModel
     {
+        public static ObservableCollection<string> SmoothMethods = new ObservableCollection<string>() { "Exported", "Average", "Harden" };
         public BatchItemViewModel Owner;
-        private readonly MeshSettingsHigh data;
-        public double HighMeshScale { get => data.HighMeshScale; set => data.HighMeshScale = value; }
-        public string HighPolyBaseTexture { get => data.HighPolyBaseTexture; set => data.HighPolyBaseTexture = value; }
-        public string HighSmoothNormals { get=>data.HighSmoothNormals; set => data.HighSmoothNormals=value; }
-        public bool HighPolyBaseTextureIsTangent { get => data.HighPolyBaseTextureIsTangent; set => data.HighPolyBaseTextureIsTangent = value; }
-        public bool IgnoreVertexColor { get => data.IgnoreVertexColor; set => data.IgnoreVertexColor = value; }
-        public double HighOffsetX { get => data.HighOffsetX; set => data.HighOffsetX = value; }
-        public double HighOffsetY { get => data.HighOffsetY; set => data.HighOffsetY = value; }
-        public double HighOffsetZ { get => data.HighOffsetZ; set => data.HighOffsetZ = value; }
+        private MeshSettingsHigh data;
+        public double MeshScale
+        {
+            get => data.MeshScale; set
+            {
+                data.MeshScale = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public string BaseTexture
+        {
+            get => data.BaseTexture; set
+            {
+                data.BaseTexture = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public string SmoothNormals
+        {
+            get => data.SmoothNormals; set
+            {
+                data.SmoothNormals = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public bool BaseTextureIsTangent
+        {
+            get => data.BaseTextureIsTangent; set
+            {
+                data.BaseTextureIsTangent = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public bool IgnoreVertexColor
+        {
+            get => data.IgnoreVertexColor; set
+            {
+                data.IgnoreVertexColor = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public double OffsetX
+        {
+            get => data.OffsetX; set
+            {
+                data.OffsetX = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public double OffsetY
+        {
+            get => data.OffsetY; set
+            {
+                data.OffsetY = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public double OffsetZ
+        {
+            get => data.OffsetZ; set
+            {
+                data.OffsetZ = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        private RelayCommand cmdBrowse;
+        private RelayCommand cmdReset;
+        public ICommand CMDBrowseBaseTexture
+        {
+            get
+            {
+                cmdBrowse = cmdBrowse ?? new RelayCommand(BrowseBaseTexture);
+                return cmdBrowse;
+            }
+        }
+
+        public ICommand CMDReset
+        {
+            get
+            {
+                cmdReset = cmdReset ?? new RelayCommand(Reset);
+                return cmdReset;
+            }
+        }
 
         internal MeshSettingsHighVM()
         {
-            data = new MeshSettingsHigh();
+            Reset();
         }
 
         internal MeshSettingsHighVM(MeshSettingsHighVM dataIn)
         {
             data = dataIn.data.Clone();
         }
+
+        private void BrowseBaseTexture()
+        {
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog
+            {
+                Filter = FileHelper.GenerateExtensionFilter("Image Files", SettingsViewModel.Instance.TextureFileFormats.ToList())
+            };
+            if (File.Exists(BaseTexture))
+                dlg.InitialDirectory = Path.GetDirectoryName(BaseTexture);
+            if (dlg.ShowDialog() == true)
+            {
+                BaseTexture = dlg.FileName;
+            }
+        }
+        private void Reset()
+        {
+            data = new MeshSettingsHigh();
+            NotifyDataChanged();
+        }
+
+        private void NotifyDataChanged()
+        {
+            NotifyPropertyChanged("MeshScale");
+            NotifyPropertyChanged("BaseTexture");
+            NotifyPropertyChanged("SmoothNormals");
+            NotifyPropertyChanged("BaseTextureIsTangent");
+            NotifyPropertyChanged("IgnoreVertexColor");
+            NotifyPropertyChanged("OffsetX");
+            NotifyPropertyChanged("OffsetY");
+            NotifyPropertyChanged("OffsetZ");
+        }
+
+        private MeshSettingsHigh dataBefore;
+        public void PrepareDataChange() // Clone current data state, before any modifications from dialog
+        {
+            dataBefore = data.Clone();
+        }
+
+        public void RevertDataChange() // Revert data state, after any modifications from dialog when cancelling.
+        {
+            data = dataBefore.Clone();
+            NotifyDataChanged();
+        }
+
     }
 }
