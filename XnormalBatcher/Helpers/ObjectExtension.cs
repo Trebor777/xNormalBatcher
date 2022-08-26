@@ -18,7 +18,7 @@ namespace XnormalBatcher.Helpers
                 throw new ArgumentException("This type must be serializable.", "source");
             }
 
-            if (ReferenceEquals(source, null))
+            if (source == null)
                 return default;
 
             IFormatter formatter = new BinaryFormatter();

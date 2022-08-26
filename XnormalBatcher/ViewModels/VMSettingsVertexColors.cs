@@ -6,7 +6,15 @@ using System.Threading.Tasks;
 
 namespace XnormalBatcher.ViewModels
 {
-    class VMSettingsVertexColors : BaseViewModel
+    internal class SettingsVertexColors
     {
+        internal SettingsVertexColors()
+        {
+
+        }
+    }
+    internal class VMSettingsVertexColors : BaseViewModel
+    {
+        private SettingsVertexColors Data { get; set; }
     }
 }

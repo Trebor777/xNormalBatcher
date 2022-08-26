@@ -6,7 +6,15 @@ using System.Threading.Tasks;
 
 namespace XnormalBatcher.ViewModels
 {
-    class VMSettingsHeight : BaseViewModel
+    internal class SettingsHeight
     {
+        internal SettingsHeight()
+        {
+
+        }
+    }
+    internal class VMSettingsHeight : BaseViewModel
+    {
+        private SettingsHeight Data { get; set; }
     }
 }

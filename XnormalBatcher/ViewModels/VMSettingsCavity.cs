@@ -6,7 +6,15 @@ using System.Threading.Tasks;
 
 namespace XnormalBatcher.ViewModels
 {
-    class VMSettingsCavity : BaseViewModel
+    internal class SettingsCavity
     {
+        internal SettingsCavity()
+        {
+
+        }
+    }
+    internal class VMSettingsCavity : BaseViewModel
+    {
+        private SettingsCavity Data { get; set; }
     }
 }

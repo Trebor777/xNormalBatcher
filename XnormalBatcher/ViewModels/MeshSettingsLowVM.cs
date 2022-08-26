@@ -204,8 +204,10 @@ namespace XnormalBatcher.ViewModels
 
         private void BrowseHPTexture()
         {
-            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
-            dlg.Filter = FileHelper.GenerateExtensionFilter("Image Files", SettingsViewModel.Instance.TextureFileFormats.ToList());
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog
+            {
+                Filter = FileHelper.GenerateExtensionFilter("Image Files", SettingsViewModel.Instance.TextureFileFormats.ToList())
+            };
             if (Directory.Exists(HighPolyOverrideFile))
                 dlg.InitialDirectory = Path.GetDirectoryName(HighPolyOverrideFile);
             if (dlg.ShowDialog() == true)
@@ -215,8 +217,10 @@ namespace XnormalBatcher.ViewModels
         }
         private void BrowseBlockerMesh()
         {
-            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
-            dlg.Filter = FileHelper.GenerateExtensionFilter("All known file types", BatchViewModel.Instance.MeshFileFormats.ToList());
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog
+            {
+                Filter = FileHelper.GenerateExtensionFilter("All known file types", BatchViewModel.Instance.MeshFileFormats.ToList())
+            };
             if (Directory.Exists(BlockerFile))
                 dlg.InitialDirectory = Path.GetDirectoryName(BlockerFile);
             if (dlg.ShowDialog() == true)

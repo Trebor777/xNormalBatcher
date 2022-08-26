@@ -40,13 +40,20 @@ namespace XnormalBatcher.ViewModels
         public ICommand BakeMe { get; set; }
         public ICommand CMDSetLow { get; set; }
         public ICommand CMDSetHigh { get; set; }
-
         public MeshSettingsLowVM SettingsLow { get; set; }
         public MeshSettingsHighVM SettingsHigh { get; set; }
-
         private readonly BatchViewModel owner;
-
-
+        private string BasenamePath => SettingsViewModel.Instance.BakingPath + Name;
+        private string BasenameMapPath
+        {
+            get
+            {
+                if (owner.BakeSeparately)
+                    return GenerateName(FileHelper.SubFolders[3], 3, true, false);
+                else
+                    return GenerateName(FileHelper.SubFolders[3], 3, true, false) + Name;
+            }
+        }
 
         public BatchItemViewModel(string filename, BatchViewModel Owner = null)
         {
@@ -123,18 +130,7 @@ namespace XnormalBatcher.ViewModels
             return final;
         }
 
-        private string GetBasenamePath()
-        {
-            return SettingsViewModel.Instance.BakingPath + Name;
-        }
 
-        private string GetBasenameMapPath()
-        {
-            if (owner.BakeSeparately)
-                return GenerateName(FileHelper.SubFolders[3], 3, true, false);
-            else
-                return GenerateName(FileHelper.SubFolders[3], 3, true, false) + Name;
-        }
         public bool CheckHighPolyFolder()
         {
             bool hasFiles = false;
@@ -156,8 +152,8 @@ namespace XnormalBatcher.ViewModels
             HasCage = (v && owner.UseCage) || !owner.UseCage;
             Baked = false;
 
-            if (Directory.Exists(GetBasenameMapPath()))
-                Baked = Directory.GetFiles(GetBasenameMapPath(), Name + "_*." + owner.SelectedFormats[3]).Length > 0;
+            if (Directory.Exists(BasenameMapPath))
+                Baked = Directory.GetFiles(BasenameMapPath, Name + "_*." + owner.SelectedFormats[3]).Length > 0;
 
             NotifyPropertyChanged("IsValid");
         }

@@ -15,80 +15,496 @@ namespace XnormalBatcher.ViewModels
     internal class SettingsViewModel : BaseViewModel
     {
         public static SettingsViewModel Instance { get; } = new SettingsViewModel();
-        public int EdgePadding { get; set; }
-        public bool BakeSettingsVisibility // Show the Settings Panel depending if any map to bake is checked. Else Hide it. Uses a BooleanToVisibilityConverter
-        {
-            get
-            {
-                return BakeNormals || BakeAmbient || BakeHeight || BakeCurvature || BakeVertexColors
-                    || BakeWireframe || BakeTranslucency || BakeThickness || BakeRadiosity
-                    || BakePRTpn || BakeProximity || BakeDirection || BakeDerivative || BakeConvexity
-                    || BakeCavity || BakeBentNormals || BakeBaseTexture;
-            }
 
-            set { }
-        }
-        public List<string> SubFolders { get; set; }
-        public ICommand BrowseXnormal { get; set; }
-        public ICommand BrowseBakingPath { get; set; }
         private string _xnPath;
         private string _bakePath;
-        public string XNormalPath { get => _xnPath; set { _xnPath = value; NotifyPropertyChanged(); } }
-        public string BakingPath { get => _bakePath; set { _bakePath = value; NotifyPropertyChanged(); } }
-        public ObservableCollection<int> AASizes { get; set; }
-        public ObservableCollection<int> BucketSizes { get; set; }
-        public ObservableCollection<string> TextureFileFormats { get; set; }
-        public ObservableCollection<string> Axis { get; set; }
-        public ObservableCollection<string> Distributions { get; set; }
-        public ObservableCollection<string> Algorithms { get; set; }
-        public ObservableCollection<string> CoordSystems { get; set; }
-        public ObservableCollection<string> ToneMappings { get; set; }
-        public int SelectedAASize { get; set; }
-        public int SelectedBucketSize { get; set; }
-        public string SelectedTextureFileFormat { get; set; }
-        /// <summary>
-        /// Selected Bake Options Properties
-        /// </summary>
-        public bool BakeNormals { get; set; }
-        public bool BothNormalsType { get; set; }
-        public bool BakeAmbient { get; set; }
-        public bool BakeHeight { get; set; }
-        public bool BakeCurvature { get; set; }
-        public bool BakeVertexColors { get; set; }
-        public bool BakeThickness { get; set; }
-        public bool BakeCavity { get; set; }
-        public bool BakeBentNormals { get; set; }
-        public bool BakeDirection { get; set; }
-        public bool BakeConvexity { get; set; }
-        public bool BakeDerivative { get; set; }
-        public bool BakeRadiosity { get; set; }
-        public bool BakeProximity { get; set; }
-        public bool BakePRTpn { get; set; }
-        public bool BakeBaseTexture { get; set; }
-        public bool BakeWireframe { get; set; }
-        public bool BakeTranslucency { get; set; }
+        private ObservableCollection<int> aaSizes;
+        private ObservableCollection<int> bucketSizes;
+        private ObservableCollection<string> textureFileFormats;
+        private ObservableCollection<string> axis;
+        private ObservableCollection<string> distributions;
+        private ObservableCollection<string> algorithms;
+        private ObservableCollection<string> coordSystems;
+        private ObservableCollection<string> toneMappings;
+        private int selectedAASize;
+        private int selectedBucketSize;
+        private string selectedTextureFileFormat;
+        private bool bakeNormals;
+        private bool bothNormalsType;
+        private bool bakeAmbient;
+        private bool bakeHeight;
+        private bool bakeCurvature;
+        private bool bakeVertexColors;
+        private bool bakeThickness;
+        private bool bakeCavity;
+        private bool bakeBentNormals;
+        private bool bakeDirection;
+        private bool bakeConvexity;
+        private bool bakeDerivative;
+        private bool bakeRadiosity;
+        private bool bakeProximity;
+        private bool bakePRTpn;
+        private bool bakeBaseTexture;
+        private bool bakeWireframe;
+        private bool bakeTranslucency;
+        private bool closestHitRayFails;
+        private bool discardBackFaceHit;
+        private VMSettingsAmbient settingsAmbient;
+        private VMSettingsBaseTexture settingsBaseTexture;
+        private VMSettingsBentNormal settingsBentNormal;
+        private VMSettingsCavity settingsCavity;
+        private VMSettingsConvexity settingsConvexity;
+        private VMSettingsCurvature settingsCurvature;
+        private VMSettingsDerivative settingsDerivative;
+        private VMSettingsDirection settingsDirection;
+        private VMSettingsHeight settingsHeight;
+        private VMSettingsNormal settingsNormal;
+        private VMSettingsProximity settingsProximity;
+        private VMSettingsPRTpn settingsPRTpn;
+        private VMSettingsRadiosity settingsRadiosity;
+        private VMSettingsTranslucency settingsTranslucency;
+        private VMSettingsVertexColors settingsVertexColors;
+        private VMSettingsWireframe settingsWireframe;
+        private int edgePadding;
+        private ObservableCollection<string> normalizations;
 
-        public VMSettingsAmbient SettingsAmbient { get; set; }
-        public VMSettingsBaseTexture SettingsBaseTexture { get; set; }
-        public VMSettingsBentNormal SettingsBentNormal { get; set; }
-        public VMSettingsCavity SettingsCavity { get; set; }
-        public VMSettingsConvexity SettingsConvexity { get; set; }
-        public VMSettingsCurvature SettingsCurvature { get; set; }
-        public VMSettingsDerivative SettingsDerivative { get; set; }
-        public VMSettingsDirection SettingsDirection { get; set; }
-        public VMSettingsHeight SettingsHeight { get; set; }
-        public VMSettingsNormal SettingsNormal { get; set; }
-        public VMSettingsProximity SettingsProximity { get; set; }
-        public VMSettingsPRTpn SettingsPRTpn { get; set; }
-        public VMSettingsRadiosity SettingsRadiosity { get; set; }
-        public VMSettingsTranslucency SettingsTranslucency { get; set; }
-        public VMSettingsVertexColors SettingsVertexColors { get; set; }
-        public VMSettingsWireframe SettingsWireframe { get; set; }
+        //private VMSettingsThickness settingsThickness;
+
+        // Show the Settings Panel depending if any map to bake is checked. Else Hide it. Uses a BooleanToVisibilityConverter
+        public bool BakeSettingsVisibility => BakeNormals || BakeAmbient || BakeHeight || BakeCurvature || BakeVertexColors
+                    || BakeWireframe || BakeTranslucency || BakeRadiosity
+                    || BakePRTpn || BakeProximity || BakeDirection || BakeDerivative || BakeConvexity
+                    || BakeCavity || BakeBentNormals || BakeBaseTexture;
+        public ICommand BrowseXnormal { get; set; }
+        public ICommand BrowseBakingPath { get; set; }
+        public ICommand CMDQuickBakes { get; set; }
+        public ICommand CMDResetALL { get; set; }
+
+        public int EdgePadding
+        {
+            get => edgePadding; set
+            {
+                edgePadding = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public string XNormalPath
+        {
+            get => _xnPath; set
+            {
+                _xnPath = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public string BakingPath
+        {
+            get => _bakePath; set
+            {
+                _bakePath = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public ObservableCollection<int> AASizes
+        {
+            get => aaSizes; set
+            {
+                aaSizes = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public ObservableCollection<int> BucketSizes
+        {
+            get => bucketSizes; set
+            {
+                bucketSizes = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public ObservableCollection<string> TextureFileFormats
+        {
+            get => textureFileFormats; set
+            {
+                textureFileFormats = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public ObservableCollection<string> Axis
+        {
+            get => axis; set
+            {
+                axis = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public ObservableCollection<string> Distributions
+        {
+            get => distributions; set
+            {
+                distributions = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public ObservableCollection<string> Algorithms
+        {
+            get => algorithms; set
+            {
+                algorithms = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public ObservableCollection<string> CoordSystems
+        {
+            get => coordSystems; set
+            {
+                coordSystems = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public ObservableCollection<string> ToneMappings
+        {
+            get => toneMappings; set
+            {
+                toneMappings = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public ObservableCollection<string> Normalizations
+        {
+            get => normalizations;
+            set
+            {
+                normalizations = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public int SelectedAASize
+        {
+            get => selectedAASize; set
+            {
+                selectedAASize = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public int SelectedBucketSize
+        {
+            get => selectedBucketSize; set
+            {
+                selectedBucketSize = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public string SelectedTextureFileFormat
+        {
+            get => selectedTextureFileFormat; set
+            {
+                selectedTextureFileFormat = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public bool BakeNormals
+        {
+            get => bakeNormals; set
+            {
+                bakeNormals = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public bool BothNormalsType
+        {
+            get => bothNormalsType; set
+            {
+                bothNormalsType = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public bool BakeAmbient
+        {
+            get => bakeAmbient; set
+            {
+                bakeAmbient = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public bool BakeHeight
+        {
+            get => bakeHeight; set
+            {
+                bakeHeight = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public bool BakeCurvature
+        {
+            get => bakeCurvature; set
+            {
+                bakeCurvature = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public bool BakeVertexColors
+        {
+            get => bakeVertexColors; set
+            {
+                bakeVertexColors = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public bool BakeThickness
+        {
+            get => bakeThickness; set
+            {
+                bakeThickness = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public bool BakeCavity
+        {
+            get => bakeCavity; set
+            {
+                bakeCavity = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public bool BakeBentNormals
+        {
+            get => bakeBentNormals; set
+            {
+                bakeBentNormals = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public bool BakeDirection
+        {
+            get => bakeDirection; set
+            {
+                bakeDirection = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public bool BakeConvexity
+        {
+            get => bakeConvexity; set
+            {
+                bakeConvexity = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public bool BakeDerivative
+        {
+            get => bakeDerivative; set
+            {
+                bakeDerivative = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public bool BakeRadiosity
+        {
+            get => bakeRadiosity; set
+            {
+                bakeRadiosity = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public bool BakeProximity
+        {
+            get => bakeProximity; set
+            {
+                bakeProximity = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public bool BakePRTpn
+        {
+            get => bakePRTpn; set
+            {
+                bakePRTpn = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public bool BakeBaseTexture
+        {
+            get => bakeBaseTexture; set
+            {
+                bakeBaseTexture = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public bool BakeWireframe
+        {
+            get => bakeWireframe; set
+            {
+                bakeWireframe = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public bool BakeTranslucency
+        {
+            get => bakeTranslucency; set
+            {
+                bakeTranslucency = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public bool ClosestHitRayFails
+        {
+            get => closestHitRayFails; set
+            {
+                closestHitRayFails = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public bool DiscardBackFaceHit
+        {
+            get => discardBackFaceHit; set
+            {
+                discardBackFaceHit = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public VMSettingsAmbient SettingsAmbient
+        {
+            get => settingsAmbient; set
+            {
+                settingsAmbient = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public VMSettingsBaseTexture SettingsBaseTexture
+        {
+            get => settingsBaseTexture; set
+            {
+                settingsBaseTexture = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public VMSettingsBentNormal SettingsBentNormal
+        {
+            get => settingsBentNormal; set
+            {
+                settingsBentNormal = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public VMSettingsCavity SettingsCavity
+        {
+            get => settingsCavity; set
+            {
+                settingsCavity = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public VMSettingsConvexity SettingsConvexity
+        {
+            get => settingsConvexity; set
+            {
+                settingsConvexity = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public VMSettingsCurvature SettingsCurvature
+        {
+            get => settingsCurvature; set
+            {
+                settingsCurvature = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public VMSettingsDerivative SettingsDerivative
+        {
+            get => settingsDerivative; set
+            {
+                settingsDerivative = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public VMSettingsDirection SettingsDirection
+        {
+            get => settingsDirection; set
+            {
+                settingsDirection = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public VMSettingsHeight SettingsHeight
+        {
+            get => settingsHeight; set
+            {
+                settingsHeight = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public VMSettingsNormal SettingsNormal
+        {
+            get => settingsNormal; set
+            {
+                settingsNormal = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public VMSettingsProximity SettingsProximity
+        {
+            get => settingsProximity; set
+            {
+                settingsProximity = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public VMSettingsPRTpn SettingsPRTpn
+        {
+            get => settingsPRTpn; set
+            {
+                settingsPRTpn = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public VMSettingsRadiosity SettingsRadiosity
+        {
+            get => settingsRadiosity; set
+            {
+                settingsRadiosity = value;
+                NotifyPropertyChanged();
+            }
+        }
+        /*
+        public VMSettingsThickness SettingsThickness
+        {
+            get => settingsThickness; set
+            {
+                settingsThickness = value;
+                NotifyPropertyChanged();
+            }
+        }*/
+
+        public VMSettingsTranslucency SettingsTranslucency
+        {
+            get => settingsTranslucency; set
+            {
+                settingsTranslucency = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public VMSettingsVertexColors SettingsVertexColors
+        {
+            get => settingsVertexColors; set
+            {
+                settingsVertexColors = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public VMSettingsWireframe SettingsWireframe
+        {
+            get => settingsWireframe; set
+            {
+                settingsWireframe = value;
+                NotifyPropertyChanged();
+            }
+        }
         private SettingsViewModel()
         {
             BakingPath = @"E:\bake\";
             EdgePadding = 16;
-            BakeSettingsVisibility = false;
             AASizes = new ObservableCollection<int>() { 1, 2, 4 };
             BucketSizes = new ObservableCollection<int>() { 16, 32, 64, 128, 256, 512 };
             TextureFileFormats = new ObservableCollection<string>() { "tga", "tif", "tiff", "jpg", "png", "raw", "dds", "j2k", "wdp", "jxr", "hdp", "hdr", "imgj", "webp", "exr" };
@@ -97,21 +513,81 @@ namespace XnormalBatcher.ViewModels
             Algorithms = new ObservableCollection<string>() { "Average", "Gaussian" };
             CoordSystems = new ObservableCollection<string>() { "OpenGL", "DirectX", "AliB" };
             ToneMappings = new ObservableCollection<string>() { "Monocrome", "2Col", "3Col" };
-            SubFolders = new List<string>() { @"LowPoly\", @"HighPoly\", @"Cage\", @"Maps\" };
+            Normalizations = new ObservableCollection<string>() { "Interactive", "Manual", "Raw FP Values" };
             BrowseXnormal = new RelayCommand(BrowseXNExecutable);
             BrowseBakingPath = new RelayCommand(BrowseBakePath);
+            CMDQuickBakes = new RelayCommand(SetQuickBakes);
+            CMDResetALL = new RelayCommand(ResetAll);
             CheckXNPath();
             CheckBakePath();
             SelectedAASize = AASizes[0];
             SelectedBucketSize = BucketSizes[2];
             SelectedTextureFileFormat = TextureFileFormats[4];
+            CreateSettings();
+            ToggleAllPanels(true);
+        }
+
+        private void ToggleAllPanels(bool show = true)
+        {
+            BakeAmbient = show;
+            BakeBaseTexture = show;
+            BakeBentNormals = show;
+            BakeCavity = show;
+            BakeConvexity = show;
+            BakeCurvature = show;
+            BakeDerivative = show;
+            BakeDirection = show;
+            BakeHeight = show;
+            BakeNormals = show;
+            BakeProximity = show;
+            BakePRTpn = show;
+            BakeRadiosity = show;
+            //BakeThickness = show;
+            BakeTranslucency = show;
+            BakeVertexColors = show;
+            BakeWireframe = show;
+            NotifyPropertyChanged("BakeSettingsVisibility");
+        }
+
+
+        private void SetQuickBakes()
+        {
+            ToggleAllPanels(false);
             BakeNormals = true;
+            BakeAmbient = true;
+            BakeCurvature = true;
+        }
+
+        private void ResetAll()
+        {
+
+        }
+
+        private void CreateSettings()
+        {
+            SettingsAmbient = new VMSettingsAmbient();
+            SettingsBaseTexture = new VMSettingsBaseTexture();
+            SettingsBentNormal = new VMSettingsBentNormal();
+            SettingsCavity = new VMSettingsCavity();
+            SettingsConvexity = new VMSettingsConvexity();
+            SettingsCurvature = new VMSettingsCurvature();
+            SettingsDerivative = new VMSettingsDerivative();
+            SettingsDirection = new VMSettingsDirection();
+            SettingsHeight = new VMSettingsHeight();
+            SettingsNormal = new VMSettingsNormal();
+            SettingsProximity = new VMSettingsProximity();
+            SettingsPRTpn = new VMSettingsPRTpn();
+            SettingsRadiosity = new VMSettingsRadiosity();
+            //SettingsThickness = new VMSettingsThickness();
+            SettingsTranslucency = new VMSettingsTranslucency();
+            SettingsVertexColors = new VMSettingsVertexColors();
+            SettingsWireframe = new VMSettingsWireframe();
         }
 
         private void CheckXNPath()
         {
             if (!File.Exists(XNormalPath))
-            {                
+            {
                 var uninstallKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall";
                 var HKLM64 = RegistryKey.OpenRemoteBaseKey(RegistryHive.LocalMachine, Environment.MachineName, RegistryView.Registry64);
                 RegistryKey key64 = HKLM64.OpenSubKey(uninstallKey);
@@ -146,7 +622,7 @@ namespace XnormalBatcher.ViewModels
                 else
                 {
                     DisplayUpdatePath();
-                }                
+                }
             }
         }
         private void DisplayUpdatePath()
@@ -163,10 +639,6 @@ namespace XnormalBatcher.ViewModels
             if (!Directory.Exists(BakingPath))
             {
                 MessageBoxResult result = System.Windows.MessageBox.Show("Baking Path doesn't exist.\n Please set it now.", "Error", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
-                if (result == MessageBoxResult.No)
-                {
-                    //this.Close();
-                }
                 if (result == MessageBoxResult.Yes)
                     BrowseBakePath();
             }
@@ -211,7 +683,7 @@ namespace XnormalBatcher.ViewModels
             Helpers.FileHelper.CreateSubFolders(BakingPath);
             if (oPath != BakingPath)
             {
-                //BakeData.Clear();
+                BatchViewModel.Instance.RefreshBatchItems();
             }
         }
     }

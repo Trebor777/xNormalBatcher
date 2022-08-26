@@ -1,12 +1,55 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Windows.Media;
 
 namespace XnormalBatcher.ViewModels
 {
-    class VMSettingsNormal : BaseViewModel
+    internal class SettingsNormal
     {
+        internal string SwizzleX;
+        internal string SwizzleY;
+        internal string SwizzleZ;
+        internal bool TangentSpace;
+        internal Color Color;
+
+        internal SettingsNormal()
+        {
+            SwizzleX = "X+";
+            SwizzleY = "Y+";
+            SwizzleZ = "Z+";
+            Color = new Color() { A = 255, R = 127, G = 127, B = 255 };
+            TangentSpace = true;
+        }
+    }
+    internal class VMSettingsNormal : BaseViewModel
+    {
+        private SettingsNormal Data { get; set; }
+        internal VMSettingsNormal()
+        {
+            Data = new SettingsNormal();
+        }
+        public string SwizzleX
+        {
+            get => Data.SwizzleX;
+            set { Data.SwizzleX = value; NotifyPropertyChanged(); }
+        }
+        public string SwizzleY
+        {
+            get => Data.SwizzleY;
+            set { Data.SwizzleY = value; NotifyPropertyChanged(); }
+        }
+        public string SwizzleZ
+        {
+            get => Data.SwizzleZ;
+            set { Data.SwizzleZ = value; NotifyPropertyChanged(); }
+        }
+        public bool TangentSpace
+        {
+            get => Data.TangentSpace;
+            set { Data.TangentSpace = value; NotifyPropertyChanged(); }
+        }
+        public Color Color
+        {
+            get => Data.Color;
+            set { Data.Color = value; NotifyPropertyChanged(); }
+        }
     }
 }

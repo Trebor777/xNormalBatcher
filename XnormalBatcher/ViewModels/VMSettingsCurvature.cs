@@ -6,7 +6,15 @@ using System.Threading.Tasks;
 
 namespace XnormalBatcher.ViewModels
 {
-    class VMSettingsCurvature : BaseViewModel
+    internal class SettingsCurvature
     {
+        internal SettingsCurvature()
+        {
+
+        }
+    }
+    internal class VMSettingsCurvature : BaseViewModel
+    {
+        private SettingsCurvature Data { get; set; }
     }
 }

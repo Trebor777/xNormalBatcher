@@ -161,7 +161,7 @@ namespace XnormalBatcher.ViewModels
         /// <summary>
         /// Regenerates the list of bake objects
         /// </summary>
-        private void RefreshBatchItems()
+        internal void RefreshBatchItems()
         {
             if (MainViewModel.Instance.IsLoaded)
             {
