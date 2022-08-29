@@ -502,19 +502,17 @@
                                     </Grid.ColumnDefinitions>
                                     <StackPanel>
                                         <Label Content="NORMALIZATION" />
-                                        <RadioButton Content="Interactive" IsChecked="True" GroupName="HMNormalization" />
-                                        <RadioButton Content="Manual" GroupName="HMNormalization" Name="rdoHMManual"/>
-                                        <RadioButton Content="Raw FP Values" GroupName="HMNormalization" />
+                                        <ListBox SelectedItem="{Binding Normalization}" ItemsSource="{Binding Source={x:Static vm:SettingsViewModel.Instance}, Path=Normalizations}"/>
                                     </StackPanel>
                                     <StackPanel Grid.Column="2">
                                         <Label Content="Background Color"/>
-                                        <xctk:ColorPicker SelectedColor="Black"/>
+                                        <xctk:ColorPicker SelectedColor="{Binding BackgroundColor}"/>
                                     </StackPanel>
-                                    <StackPanel Grid.Column="4" Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=rdoHMManual}">
+                                    <StackPanel Grid.Column="4" Visibility="{Binding IsManual, Converter={StaticResource BooleanToVisibilityConverter}}">
                                         <Label Content="Minimum" Grid.Column="2" />
-                                        <xctk:DoubleUpDown FormatString="F5" Increment="1" Maximum="1000000000.00000" Minimum="-1000000000.00000" Value="0.00000" />
+                                        <xctk:DoubleUpDown FormatString="F5" Increment="1" Maximum="1000000000.00000" Minimum="-1000000000.00000" Value="{Binding Minimum}" />
                                         <Label Content="Maximum" Grid.Column="2"/>
-                                        <xctk:DoubleUpDown FormatString="F5" Increment="1" Maximum="1000000000.00000" Minimum="-1000000000.00000" Value="0.00000" />
+                                        <xctk:DoubleUpDown FormatString="F5" Increment="1" Maximum="1000000000.00000" Minimum="-1000000000.00000" Value="{Binding Maximum}" />
                                     </StackPanel>
                                     <Button Content="R" Height="24"  Grid.Column="6" Grid.Row="2" ToolTip="Reset Settings for this panel" />
                                 </Grid>
@@ -541,38 +539,38 @@
                                                 <ColumnDefinition Width="*" />
                                                 <ColumnDefinition Width="*" />
                                             </Grid.ColumnDefinitions>
-                                            <xctk:IntegerUpDown Grid.Column="0" Increment="1" Maximum="8192" Minimum="8" Value="128"  />
-                                            <CheckBox Content="Jitter" VerticalAlignment="Center"  Grid.Column="1"/>
+                                            <xctk:IntegerUpDown Grid.Column="0" Increment="1" Maximum="8192" Minimum="8" Value="{Binding Rays}"  />
+                                            <CheckBox Content="Jitter" VerticalAlignment="Center"  Grid.Column="1" IsChecked="{Binding Jitter}"/>
                                         </Grid>
                                     </StackPanel>
                                     <StackPanel Grid.Column="0" Grid.Row="1">
                                         <Label Content="Bias:"/>
-                                        <xctk:DoubleUpDown Increment="0.0001" FormatString="F10" Maximum="1.000000" Minimum="0.000000" Value="0.0001" />
+                                        <xctk:DoubleUpDown Increment="0.0001" FormatString="F10" Maximum="1.000000" Minimum="0.000000" Value="{Binding Bias}" />
                                     </StackPanel>
                                     <StackPanel Grid.Column="0" Grid.Row="2">
                                         <Label Content="Spread Angle:" />
-                                        <xctk:DoubleUpDown Increment="1" FormatString="F2" Maximum="179.50" Minimum="0.50" Value="162.00" />
+                                        <xctk:DoubleUpDown Increment="1" FormatString="F2" Maximum="179.50" Minimum="0.50" Value="{Binding SpreadAngle}" />
                                     </StackPanel>
                                     <StackPanel Grid.Column="2" Grid.Row="0">
                                         <Label Content="Algorithm:"/>
-                                        <ComboBox />
+                                        <ComboBox SelectedItem="{Binding Algorithm}" ItemsSource="{Binding Source={x:Static vm:SettingsViewModel.Instance}, Path=Algorithms}"/>
                                     </StackPanel>
                                     <StackPanel Grid.Column="2" Grid.Row="1">
                                         <Label Content="Distribution:"/>
-                                        <ComboBox />
+                                        <ComboBox SelectedItem="{Binding Distribution}" ItemsSource="{Binding Source={x:Static vm:SettingsViewModel.Instance}, Path=Distributions}"/>
                                     </StackPanel>
                                     <StackPanel Grid.Column="2" Grid.Row="2">
                                         <Label Content="Tone Mapping:" />
-                                        <ComboBox />
+                                        <ComboBox SelectedItem="{Binding ToneMapping}" ItemsSource="{Binding Source={x:Static vm:SettingsViewModel.Instance}, Path=ToneMappings}"/>
                                     </StackPanel>
                                     <StackPanel Grid.Column="4" Grid.Row="0">
                                         <Label Content="Search Distance:"/>
-                                        <xctk:DoubleUpDown Increment="1" FormatString="F8" Maximum="10000000" Minimum="0" Value="1" />
+                                        <xctk:DoubleUpDown Increment="1" FormatString="F8" Maximum="10000000" Minimum="0" Value="{Binding SearchDistance}" />
                                     </StackPanel>
-                                    <CheckBox Content="Smoothing" Grid.Column="4" Grid.Row="1" IsChecked="True" VerticalAlignment="Center"/>
+                                    <CheckBox Content="Smoothing" Grid.Column="4" Grid.Row="1" IsChecked="{Binding Smoothing}" VerticalAlignment="Center"/>
                                     <StackPanel Grid.Column="4" Grid.Row="2">
                                         <Label Content="Background Color:" />
-                                        <xctk:ColorPicker SelectedColor="Black" />
+                                        <xctk:ColorPicker SelectedColor="{Binding BackgroundColor}" />
                                     </StackPanel>
                                     <Button Content="R" Grid.Column="5" Grid.Row="1" ToolTip="Reset Settings for this panel" Height="24" />
                                 </Grid>
@@ -588,15 +586,15 @@
                                         <RowDefinition Height="*"/>
                                     </Grid.RowDefinitions>
                                     <StackPanel Width="250">
-                                        <RadioButton Grid.Column="0" Grid.Row="0" Content="Write ObjectID if no texture" GroupName="BakeBaseTexture" VerticalAlignment="Center"/>
+                                        <RadioButton Grid.Column="0" Grid.Row="0" Content="Write ObjectID if no texture" GroupName="BakeBaseTexture" VerticalAlignment="Center" IsChecked="{Binding WriteObjectID}"/>
                                         <StackPanel Orientation="Horizontal">
-                                            <RadioButton Grid.Column="0" Grid.Row="1" Name="rdoBakeBaseTDrawCol" Content="Draw using this color: " GroupName="BakeBaseTexture" IsChecked="True"/>
-                                            <xctk:ColorPicker SelectedColor="Red" Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=rdoBakeBaseTDrawCol}" />
+                                            <RadioButton Grid.Column="0" Grid.Row="1" Name="rdoBakeBaseTDrawCol" Content="Draw using this color: " GroupName="BakeBaseTexture" IsChecked="{Binding UseDrawColor}"/>
+                                            <xctk:ColorPicker SelectedColor="{Binding DrawColor}" Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=rdoBakeBaseTDrawCol}" />
                                         </StackPanel>
                                     </StackPanel>
                                     <StackPanel Grid.Row="1" Width="250">
                                         <Label Content="Background Color"/>
-                                        <xctk:ColorPicker SelectedColor="Black" />
+                                        <xctk:ColorPicker SelectedColor="{Binding BackgroundColor}" />
                                     </StackPanel>
                                     <Button Content="R" Grid.Column="3" Height="24" ToolTip="Reset Settings for this panel" />
                                 </Grid>
@@ -619,25 +617,25 @@
                                                 <ColumnDefinition Width="*"/>
                                                 <ColumnDefinition Width="*"/>
                                             </Grid.ColumnDefinitions>
-                                            <xctk:IntegerUpDown Increment="1" Maximum="8192" Minimum="8"  Value="128" VerticalAlignment="Top" Width="60" />
-                                            <CheckBox Grid.Column="1" Content="Jitter"  VerticalAlignment="Center" />
+                                            <xctk:IntegerUpDown Increment="1" Maximum="8192" Minimum="8"  Value="{Binding Rays}" VerticalAlignment="Top" Width="60" />
+                                            <CheckBox Grid.Column="1" Content="Jitter"  VerticalAlignment="Center" IsChecked="{Binding Jitter}"/>
                                         </Grid>
                                     </StackPanel>
                                     <StackPanel Grid.Column="1">
                                         <Label Content="Radius:" />
-                                        <xctk:DoubleUpDown FormatString="F6" Increment="1" Maximum="100000000" Minimum="0" Value="0.5" />
+                                        <xctk:DoubleUpDown FormatString="F6" Increment="1" Maximum="100000000" Minimum="0" Value="{Binding Radius}" />
                                     </StackPanel>
                                     <StackPanel Grid.Column="2">
                                         <Label Content="Contrast:" />
-                                        <xctk:DoubleUpDown FormatString="F3"  Increment="0.5" Maximum="8" Minimum="0.001" Value="1.250" />
+                                        <xctk:DoubleUpDown FormatString="F3"  Increment="0.5" Maximum="8" Minimum="0.001" Value="{Binding Contrast}" />
                                     </StackPanel>
                                     <StackPanel Grid.Column="3">
                                         <Label Content="Steps:" />
-                                        <xctk:IntegerUpDown  Increment="1" Maximum="128" Minimum="4" Value="4"/>
+                                        <xctk:IntegerUpDown  Increment="1" Maximum="128" Minimum="4" Value="{Binding Steps}"/>
                                     </StackPanel>
                                     <StackPanel Grid.Column="4">
                                         <Label Content="Background Color:" />
-                                        <xctk:ColorPicker Name="ClrCMBackground" SelectedColor="White" />
+                                        <xctk:ColorPicker Name="ClrCMBackground" SelectedColor="{Binding BackgroundColor}" />
                                     </StackPanel>
                                     <Button Content="R" Grid.Column="5" Grid.Row="1" Height="24" ToolTip="Reset Settings for this panel" />
                                 </Grid>
@@ -739,7 +737,7 @@
                                         <Label Content="Tone Map:" />
                                         <ListBox ItemsSource="{Binding Normalizations, Source={x:Static vm:SettingsViewModel.Instance}}" SelectedItem="{Binding ToneMap}"/>
                                     </StackPanel>
-                                    <StackPanel Grid.Column="4" Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=rdoDirMManual}">
+                                    <StackPanel Grid.Column="4" Visibility="{Binding IsManual, Converter={StaticResource BooleanToVisibilityConverter}}">
                                         <Label Content="Minimum:" Grid.Column="2" />
                                         <xctk:DoubleUpDown FormatString="F5" Increment="1" Maximum="1000000000.00000" Minimum="0"  Value="{Binding ToneMinimum}" />
                                         <Label Content="Maximum:" Grid.Column="2" VerticalAlignment="Center" />

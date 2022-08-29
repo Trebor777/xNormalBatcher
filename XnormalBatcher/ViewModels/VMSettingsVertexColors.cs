@@ -3,18 +3,73 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace XnormalBatcher.ViewModels
 {
     internal class SettingsVertexColors
     {
+        internal bool WriteObjectID;
+        internal bool UseDrawColor;
+        internal Color DrawColor;
+        internal Color BackgroundColor;
+
         internal SettingsVertexColors()
         {
-
+            WriteObjectID = false;
+            UseDrawColor = true;
+            DrawColor = Color.FromRgb(255, 0, 0);
+            BackgroundColor = Color.FromRgb(0, 0, 0);
         }
     }
     internal class VMSettingsVertexColors : BaseViewModel
     {
         private SettingsVertexColors Data { get; set; }
+
+        internal VMSettingsVertexColors()
+        {
+            Data = new SettingsVertexColors();
+        }
+        public bool WriteObjectID
+        {
+            get => Data.WriteObjectID;
+            set
+            {
+                Data.WriteObjectID = value;
+                Data.UseDrawColor = !value;
+                NotifyPropertyChanged();
+                NotifyPropertyChanged("UseDrawColor");
+            }
+        }
+        public bool UseDrawColor
+        {
+            get => Data.UseDrawColor;
+            set
+            {
+                Data.UseDrawColor = value;
+                Data.WriteObjectID = !value;
+                NotifyPropertyChanged();
+                NotifyPropertyChanged("WriteObjectID");
+            }
+        }
+        public Color DrawColor
+        {
+            get => Data.DrawColor;
+            set
+            {
+                Data.DrawColor = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public Color BackgroundColor
+        {
+            get => Data.BackgroundColor;
+            set
+            {
+                Data.BackgroundColor = value;
+                NotifyPropertyChanged();
+            }
+        }
+
     }
 }

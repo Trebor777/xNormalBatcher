@@ -89,6 +89,7 @@ namespace XnormalBatcher.ViewModels
             {
                 Data.ToneMap = value;
                 NotifyPropertyChanged();
+                NotifyPropertyChanged("IsManual");
             }
         }
         public double ToneMinimum
@@ -108,6 +109,10 @@ namespace XnormalBatcher.ViewModels
                 Data.ToneMaximum = value;
                 NotifyPropertyChanged();
             }
+        }
+        public bool IsManual
+        {
+            get => Data.ToneMap == "Manual";
         }
     }
 }
