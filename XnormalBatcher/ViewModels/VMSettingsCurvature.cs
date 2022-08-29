@@ -28,9 +28,9 @@ namespace XnormalBatcher.ViewModels
             Jitter = false;
             Smoothing = true;
             BackgroundColor = Color.FromRgb(0, 0, 0);
-            Algorithm = "";
-            Distribution = "";
-            ToneMapping = "";
+            Algorithm = "Average";
+            Distribution = "Cosine";
+            ToneMapping = "3Col";
         }
     }
     internal class VMSettingsCurvature : BaseViewModel

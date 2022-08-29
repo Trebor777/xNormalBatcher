@@ -31,6 +31,11 @@ namespace XnormalBatcher.ViewModels
     
     internal class VMSettingsTranslucency : BaseViewModel
     {
+        public VMSettingsTranslucency()
+        {
+            Data = new SettingsTranslucency();
+        }
+
         private SettingsTranslucency Data { get; set; }
         public int Rays
         {

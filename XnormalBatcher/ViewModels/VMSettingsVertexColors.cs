@@ -29,6 +29,7 @@ namespace XnormalBatcher.ViewModels
         internal VMSettingsVertexColors()
         {
             Data = new SettingsVertexColors();
+            NotifyPropertyChanged("UseDrawColor");
         }
         public bool WriteObjectID
         {
@@ -37,8 +38,7 @@ namespace XnormalBatcher.ViewModels
             {
                 Data.WriteObjectID = value;
                 Data.UseDrawColor = !value;
-                NotifyPropertyChanged();
-                NotifyPropertyChanged("UseDrawColor");
+                NotifyPropertyChanged();                
             }
         }
         public bool UseDrawColor
@@ -48,8 +48,7 @@ namespace XnormalBatcher.ViewModels
             {
                 Data.UseDrawColor = value;
                 Data.WriteObjectID = !value;
-                NotifyPropertyChanged();
-                NotifyPropertyChanged("WriteObjectID");
+                NotifyPropertyChanged();                
             }
         }
         public Color DrawColor
