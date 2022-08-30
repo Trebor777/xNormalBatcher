@@ -26,12 +26,12 @@ namespace XnormalBatcher.ViewModels
         private BatchItemViewModel GlobalBatchItem { get; set; }
         public bool UseCage { get => useCage; set { useCage = value; RefreshBatchItems(); } }
         public bool UseTermsAsPrefix { get => useTermsAsPrefix; set { useTermsAsPrefix = value; RefreshBatchItems(); } }
-        public string SelectedTermSeparator { get => selectedTermSeparator; set { selectedTermSeparator = value; RefreshBatchItems(); } }
-        public string SelectedTermLow { get => selectedTermLow; set { selectedTermLow = value; RefreshBatchItems(); } }
-        public string SelectedTermHigh { get => selectedTermHigh; set { selectedTermHigh = value; RefreshBatchItems(); } }
-        public string SelectedTermCage { get => selectedTermCage; set { selectedTermCage = value; RefreshBatchItems(); } }
+        public Term SelectedTermSeparator { get => selectedTermSeparator; set { selectedTermSeparator = value; RefreshBatchItems(); } }
+        public Term SelectedTermLow { get => selectedTermLow; set { selectedTermLow = value; RefreshBatchItems(); } }
+        public Term SelectedTermHigh { get => selectedTermHigh; set { selectedTermHigh = value; RefreshBatchItems(); } }
+        public Term SelectedTermCage { get => selectedTermCage; set { selectedTermCage = value; RefreshBatchItems(); } }
 
-        public string[] SelectedTerms => new string[] { SelectedTermLow, SelectedTermHigh, SelectedTermCage };
+        public string[] SelectedTerms => new string[] { SelectedTermLow?.Name, SelectedTermHigh?.Name, SelectedTermCage?.Name };
         public string[] SelectedFormats => new string[] { SelectedMeshFormatLow, SelectedMeshFormatHigh, SelectedMeshFormatCage, SettingsViewModel.Instance.SelectedTextureFileFormat };
 
         public string SelectedMeshFormatLow { get => selectedMeshFormatLow; set { selectedMeshFormatLow = value; RefreshBatchItems(); } }
@@ -110,14 +110,14 @@ namespace XnormalBatcher.ViewModels
         private int _fileHCount;
         private int _fileCCount;
         private bool useCage;
-        private string selectedTermLow;
+        private Term selectedTermLow;
         private bool useTermsAsPrefix;
-        private string selectedTermHigh;
-        private string selectedTermCage;
+        private Term selectedTermHigh;
+        private Term selectedTermCage;
         private string selectedMeshFormatLow;
         private string selectedMeshFormatHigh;
         private string selectedMeshFormatCage;
-        private string selectedTermSeparator;
+        private Term selectedTermSeparator;
 
         private BatchViewModel()
         {
@@ -143,12 +143,12 @@ namespace XnormalBatcher.ViewModels
             CMDSetAllMaps = new RelayCommand(SetAllMaps);
             CMDSetAllItemsLow = new RelayCommand(SetAllLow);
             CMDSetAllItemsHigh = new RelayCommand(SetAllHigh);
-
+            
             SelectedTermSeparator = TermsViewModel.Instance.TermsSeparator[0];
             SelectedTermLow = TermsViewModel.Instance.TermsLow[0];
             SelectedTermHigh = TermsViewModel.Instance.TermsHigh[0];
             SelectedTermCage = TermsViewModel.Instance.TermsCage[0];
-
+            
             AutoUpdater.IncludeSubdirectories = true;
             AutoUpdater.NotifyFilter = NotifyFilters.FileName | NotifyFilters.DirectoryName;
             AutoUpdater.Changed += new FileSystemEventHandler(OnRefreshFiles);
@@ -170,7 +170,7 @@ namespace XnormalBatcher.ViewModels
         public string GetSuffix(int slot)
         {
             var term = SelectedTerms[slot];
-            return FileHelper.CreateSuffix(term, SelectedTermSeparator, UseTermsAsPrefix);
+            return FileHelper.CreateSuffix(term, SelectedTermSeparator?.Name, UseTermsAsPrefix);
         }
 
         private void OpenFolder()

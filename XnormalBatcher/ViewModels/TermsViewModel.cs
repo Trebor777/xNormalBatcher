@@ -9,91 +9,95 @@ using System.Windows.Input;
 namespace XnormalBatcher.ViewModels
 {
     // Holds information/logic on what are the usable terms in the different settings...
+    internal class Term
+    {
+        public static Dictionary<string, string> Groups = new Dictionary<string, string>() { ["L"] = "Low", ["H"] = "High", ["C"] = "Cage", ["S"] = "Separator" };
+        private string name;
+        private string group;
+
+        public string Name
+        {
+            get => name; set
+            {
+                name = value;
+                TermsViewModel.Instance?.RefreshFilteredTerms();
+            }
+        }
+        public string Group
+        {
+            get => group; set
+            {
+                group = value;
+                TermsViewModel.Instance?.RefreshFilteredTerms();
+            }
+        }
+    }
+
+
     internal class TermsViewModel : BaseViewModel
     {
         public static TermsViewModel Instance { get; } = new TermsViewModel();
-        public ObservableCollection<string> TermsSeparator { get; set; }
-        public ObservableCollection<string> TermsLow { get; set; }
-        public ObservableCollection<string> TermsHigh { get; set; }
-        public ObservableCollection<string> TermsCage { get; set; }
-        public ICommand AddTerm { get; set; }
-        public string NewSeparatorTerm { get; set; }
-        public string NewLowTerm { get; set; }
-        public string NewHighTerm { get; set; }
-        public string NewCageTerm { get; set; }
-        private string mSelectedEditTermSeparator;
-        public string SelectedEditTermSeparator
+        private ObservableCollection<Term> terms;
+        public ObservableCollection<Term> Terms
         {
-            get
+            get => terms; set
             {
-                return mSelectedEditTermSeparator;
-            }
-            set
-            {
-                if (mSelectedEditTermSeparator == value)
-                    return;
-                mSelectedEditTermSeparator = value;
-                NotifyPropertyChanged();
-                NewSeparatorTerm = value;
-                NotifyPropertyChanged("NewLowTerm");
-            }
-        }
-        private string mSelectedEditTermLow;
-        public string SelectedEditTermLow
-        {
-            get
-            {
-                return mSelectedEditTermLow;
-            }
-            set
-            {
-                if (mSelectedEditTermLow == value)
-                    return;
-                mSelectedEditTermLow = value;
-                NotifyPropertyChanged();
-                NewLowTerm = value;
-                NotifyPropertyChanged("NewLowTerm");
-            }
-        }
-        private string mSelectedEditTermHigh;
-        public string SelectedEditTermHigh
-        {
-            get
-            {
-                return mSelectedEditTermHigh;
-            }
-            set
-            {
-                if (mSelectedEditTermHigh == value)
-                    return;
-                mSelectedEditTermHigh = value;
-                NewHighTerm = value;
-                NotifyPropertyChanged("SelectedEditTermHigh");
-            }
-        }
-        private string mSelectedEditTermCage;
-        public string SelectedEditTermCage
-        {
-            get
-            {
-                return mSelectedEditTermCage;
-            }
-            set
-            {
-                if (mSelectedEditTermCage == value)
-                    return;
-                mSelectedEditTermCage = value;
-                NewCageTerm = value;
-                NotifyPropertyChanged("SelectedEditTermCage");
+                terms = value;
+                RefreshFilteredTerms();
             }
         }
 
+        internal void RefreshFilteredTerms()
+        {
+            TermsLow = new ObservableCollection<Term>(terms.Where(t => t.Group == Term.Groups["L"]));
+            TermsHigh = new ObservableCollection<Term>(terms.Where(t => t.Group == Term.Groups["H"]));
+            TermsCage = new ObservableCollection<Term>(terms.Where(t => t.Group == Term.Groups["C"]));
+            TermsSeparator = new ObservableCollection<Term>(terms.Where(t => t.Group == Term.Groups["S"]));
+            NotifyPropertyChanged();
+            NotifyPropertyChanged("TermsLow");
+            NotifyPropertyChanged("TermsHigh");
+            NotifyPropertyChanged("TermsCage");
+            NotifyPropertyChanged("TermsSeparator");
+
+        }
+
+        public ObservableCollection<string> TermGroups => new ObservableCollection<string>(Term.Groups.Values);
+        public ObservableCollection<Term> TermsSeparator { get; set; }
+        public ObservableCollection<Term> TermsLow { get; set; }
+        public ObservableCollection<Term> TermsHigh { get; set; }
+        public ObservableCollection<Term> TermsCage { get; set; }
+        public ICommand CMDAddTerm { get; set; }
+        public string NewTerm { get; set; }
+
+
         private TermsViewModel()
-        {            
-            TermsLow = new ObservableCollection<string>() { "L", "LP", "Low", "LowPoly", "LPoly", "LWPLY" };
-            TermsHigh = new ObservableCollection<string>() { "H", "HP", "High", "HighPoly", "HPoly", "HGHPLY" };
-            TermsCage = new ObservableCollection<string>() { "C", "Cage", "Cg", "cge" };
-            TermsSeparator = new ObservableCollection<string>() { "_", "\" \"", "-", "." };
+        {
+            Terms = new ObservableCollection<Term>();
+            Terms.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler((sender, arg) =>
+            {
+                RefreshFilteredTerms();
+            }
+            );
+            foreach (var item in new string[] { "L", "LP", "Low", "LowPoly", "LPoly", "LWPLY" })
+            {
+                Term term = new Term() { Name = item, Group = Term.Groups["L"] };
+                Terms.Add(term);
+            }
+            foreach (var item in new string[] { "H", "HP", "High", "HighPoly", "HPoly", "HGHPLY" })
+            {
+                Term term = new Term() { Name = item, Group = Term.Groups["H"] };
+                Terms.Add(term);
+            }
+            foreach (var item in new string[] { "C", "Cage", "Cg", "cge" })
+            {
+                Term term = new Term() { Name = item, Group = Term.Groups["C"] };
+                Terms.Add(term);
+            }
+            foreach (var item in new string[] { "_", "\" \"", "-", "." })
+            {
+                Term term = new Term() { Name = item, Group = Term.Groups["S"] };
+                Terms.Add(term);
+            }
         }
     }
 }

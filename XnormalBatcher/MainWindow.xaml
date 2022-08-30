@@ -66,25 +66,25 @@
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Grid.Column="0">
                                     <Label Content="Sep." Padding="1"/>
-                                    <ComboBox ItemsSource="{Binding TermsSeparator, Source ={x:Static vm:TermsViewModel.Instance}}"  SelectedItem="{Binding SelectedTermSeparator}"/>
+                                    <ComboBox ItemsSource="{Binding TermsSeparator, Source ={x:Static vm:TermsViewModel.Instance}}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedTermSeparator}"/>
                                 </StackPanel>
                                 <Label Grid.Column="1" Content="+" VerticalContentAlignment="Bottom" FontSize="18" FontWeight="Bold"/>
                                 <Border Padding="2" Grid.Column="2">
                                     <StackPanel>
                                         <Label Content="LowPoly" Padding="1"/>
-                                        <ComboBox ItemsSource="{Binding TermsLow, Source ={x:Static vm:TermsViewModel.Instance}}" SelectedItem="{Binding SelectedTermLow}"/>
+                                        <ComboBox ItemsSource="{Binding TermsLow, Source ={x:Static vm:TermsViewModel.Instance}}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedTermLow}"/>
                                     </StackPanel>
                                 </Border>
                                 <Border Padding="2" Grid.Column="3">
                                     <StackPanel>
                                         <Label Content="HighPoly" Padding="1"/>
-                                        <ComboBox ItemsSource="{Binding TermsHigh, Source ={x:Static vm:TermsViewModel.Instance}}" SelectedItem="{Binding SelectedTermHigh}"/>
+                                        <ComboBox ItemsSource="{Binding TermsHigh, Source ={x:Static vm:TermsViewModel.Instance}}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedTermHigh}"/>
                                     </StackPanel>
                                 </Border>
                                 <Border Padding="2" Grid.Column="4" IsEnabled="{Binding IsChecked, ElementName=chkUseCage}">
                                     <StackPanel>
                                         <Label Content="Cage" Padding="1"/>
-                                        <ComboBox ItemsSource="{Binding TermsCage, Source ={x:Static vm:TermsViewModel.Instance}}" SelectedItem="{Binding SelectedTermCage}"/>
+                                        <ComboBox ItemsSource="{Binding TermsCage, Source ={x:Static vm:TermsViewModel.Instance}}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedTermCage}"/>
                                     </StackPanel>
                                 </Border>
                             </Grid>
@@ -998,13 +998,10 @@
                 <Grid Margin="5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="4" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="4" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0">
-                        <Label Content="LOWPOLY SUFFIXES" FontWeight="Bold"/>
+                        <Label Content="TERMS" FontWeight="Bold"/>
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
@@ -1014,48 +1011,18 @@
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="24" />
                             </Grid.RowDefinitions>
-                            <ListBox MinHeight="24" ItemsSource="{Binding TermsLow}" SelectedItem="{Binding SelectedEditTermLow}"/>
-                            <TextBox Grid.Row="1" Margin="0 2 0 0" Text="{Binding NewTermLow}"/>
-                            <Button Grid.Row="1" Grid.Column="1" Width="22" Height="22" Command="{Binding AddTerm}" CommandParameter="low">
-                                <fa5:FontAwesome Icon="Solid_Plus" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                            </Button>
+                            <DataGrid MinHeight="24" ItemsSource="{Binding Terms}" AutoGenerateColumns="false">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
+                                    <DataGridComboBoxColumn Width="*" Header="Group" SelectedItemBinding="{Binding Group}" ItemsSource="{Binding Source={x:Static vm:TermsViewModel.Instance}, Path=TermGroups}" />
+                                </DataGrid.Columns>
+                            </DataGrid>
                         </Grid>
                     </StackPanel>
-                    <StackPanel Grid.Column="2">
-                        <Label Content="HIGHPOLY SUFFIXES" FontWeight="Bold"/>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="24" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="24" />
-                            </Grid.RowDefinitions>
-                            <ListBox MinHeight="24" ItemsSource="{Binding TermsHigh}" SelectedItem="{Binding SelectedEditTermHigh}"/>
-                            <TextBox Grid.Row="1" Margin="0 2 0 0" Text="{Binding NewTermHigh}"/>
-                            <Button Grid.Row="1" Grid.Column="1" Width="22" Height="22" Command="{Binding AddTerm}" CommandParameter="high">
-                                <fa5:FontAwesome Icon="Solid_Plus" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                            </Button>
-                        </Grid>
-                    </StackPanel>
-                    <StackPanel Grid.Column="4">
-                        <Label Content="CAGE SUFFIXES" FontWeight="Bold"/>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="24" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="24" />
-                            </Grid.RowDefinitions>
-                            <ListBox MinHeight="24" ItemsSource="{Binding TermsCage}" SelectedItem="{Binding SelectedEditTermCage}"/>
-                            <TextBox Grid.Row="1" Margin="0 2 0 0" Text="{Binding NewTermCage}"/>
-                            <Button Grid.Row="1" Grid.Column="1" Width="22" Height="22" Command="{Binding AddTerm}" CommandParameter="cage">
-                                <fa5:FontAwesome Icon="Solid_Plus" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                            </Button>
-                        </Grid>
+                    <StackPanel Grid.Column="1">
+                        <TextBlock Text="To add a new term, edit the last empty row and press enter." Margin="4 4 0 0"/>
+                        <TextBlock Text="To remove a term, simply delete the row (del key)." Margin="4 0 4 0" />
+                        <TextBlock Text="Changing group will assign the term to the proper list on the baker tab." Margin="4 0 4 4" />
                     </StackPanel>
                 </Grid>
             </TabItem>
