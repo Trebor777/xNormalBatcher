@@ -8,7 +8,7 @@
         xmlns:local="clr-namespace:XnormalBatcher"
         xmlns:vm="clr-namespace:XnormalBatcher.ViewModels"
         mc:Ignorable="d" Title="{Binding Title}" Height="504" Width="960" MinWidth="960" MinHeight="480" Loaded="Window_Loaded"
-        DataContext="{x:Static vm:MainViewModel.Instance}"
+        DataContext="{x:Static vm:MainViewModel.Instance}" Closed="Window_Closed"
         >
     <Window.Resources>
         <xctk:InverseBoolConverter x:Key="InverseBoolConverter"/>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -33,11 +34,12 @@ namespace XnormalBatcher.ViewModels
         }
     }
 
-
+    [JsonObject(MemberSerialization.OptIn)]
     internal class TermsViewModel : BaseViewModel
     {
         public static TermsViewModel Instance { get; } = new TermsViewModel();
         private ObservableCollection<Term> terms;
+        [JsonProperty]
         public ObservableCollection<Term> Terms
         {
             get => terms; set

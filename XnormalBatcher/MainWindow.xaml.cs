@@ -17,5 +17,10 @@ namespace XnormalBatcher
         {
             MainViewModel.Instance.IsLoaded = true;
         }
+
+        private void Window_Closed(object sender, System.EventArgs e)
+        {
+            MainViewModel.Instance.SaveAndClose();
+        }
     }
 }

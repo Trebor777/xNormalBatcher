@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,6 +13,7 @@ using System.Windows.Input;
 namespace XnormalBatcher.ViewModels
 {
     // Holds information/logic on bake settings...
+    [JsonObject(MemberSerialization.OptIn)]
     internal class SettingsViewModel : BaseViewModel
     {
         public static SettingsViewModel Instance { get; } = new SettingsViewModel();
@@ -79,7 +81,7 @@ namespace XnormalBatcher.ViewModels
         public ICommand BrowseBakingPath { get; set; }
         public ICommand CMDQuickBakes { get; set; }
         public ICommand CMDResetALL { get; set; }
-
+        [JsonProperty]
         public int EdgePadding
         {
             get => edgePadding; set
@@ -88,6 +90,7 @@ namespace XnormalBatcher.ViewModels
                 NotifyPropertyChanged();
             }
         }
+        [JsonProperty]
         public string XNormalPath
         {
             get => _xnPath; set
@@ -96,6 +99,7 @@ namespace XnormalBatcher.ViewModels
                 NotifyPropertyChanged();
             }
         }
+        [JsonProperty]
         public string BakingPath
         {
             get => _bakePath; set
@@ -178,7 +182,7 @@ namespace XnormalBatcher.ViewModels
                 NotifyPropertyChanged();
             }
         }
-
+        [JsonProperty]
         public int SelectedAASize
         {
             get => selectedAASize; set
@@ -187,6 +191,7 @@ namespace XnormalBatcher.ViewModels
                 NotifyPropertyChanged();
             }
         }
+        [JsonProperty]
         public int SelectedBucketSize
         {
             get => selectedBucketSize; set
@@ -195,6 +200,7 @@ namespace XnormalBatcher.ViewModels
                 NotifyPropertyChanged();
             }
         }
+        [JsonProperty]
         public string SelectedTextureFileFormat
         {
             get => selectedTextureFileFormat; set
@@ -203,6 +209,7 @@ namespace XnormalBatcher.ViewModels
                 NotifyPropertyChanged();
             }
         }
+        [JsonProperty]
         public bool BakeNormals
         {
             get => bakeNormals; set
@@ -211,6 +218,7 @@ namespace XnormalBatcher.ViewModels
                 NotifyPropertyChanged();
             }
         }
+        [JsonProperty]
         public bool BothNormalsType
         {
             get => bothNormalsType; set
@@ -219,6 +227,7 @@ namespace XnormalBatcher.ViewModels
                 NotifyPropertyChanged();
             }
         }
+        [JsonProperty]
         public bool BakeAmbient
         {
             get => bakeAmbient; set
@@ -227,6 +236,7 @@ namespace XnormalBatcher.ViewModels
                 NotifyPropertyChanged();
             }
         }
+        [JsonProperty]
         public bool BakeHeight
         {
             get => bakeHeight; set
@@ -235,6 +245,7 @@ namespace XnormalBatcher.ViewModels
                 NotifyPropertyChanged();
             }
         }
+        [JsonProperty]
         public bool BakeCurvature
         {
             get => bakeCurvature; set
@@ -243,6 +254,7 @@ namespace XnormalBatcher.ViewModels
                 NotifyPropertyChanged();
             }
         }
+        [JsonProperty]
         public bool BakeVertexColors
         {
             get => bakeVertexColors; set
@@ -251,6 +263,7 @@ namespace XnormalBatcher.ViewModels
                 NotifyPropertyChanged();
             }
         }
+        [JsonProperty]
         public bool BakeThickness
         {
             get => bakeThickness; set
@@ -259,6 +272,7 @@ namespace XnormalBatcher.ViewModels
                 NotifyPropertyChanged();
             }
         }
+        [JsonProperty]
         public bool BakeCavity
         {
             get => bakeCavity; set
@@ -267,6 +281,7 @@ namespace XnormalBatcher.ViewModels
                 NotifyPropertyChanged();
             }
         }
+        [JsonProperty]
         public bool BakeBentNormals
         {
             get => bakeBentNormals; set
@@ -275,6 +290,7 @@ namespace XnormalBatcher.ViewModels
                 NotifyPropertyChanged();
             }
         }
+        [JsonProperty]
         public bool BakeDirection
         {
             get => bakeDirection; set
@@ -283,6 +299,7 @@ namespace XnormalBatcher.ViewModels
                 NotifyPropertyChanged();
             }
         }
+        [JsonProperty]
         public bool BakeConvexity
         {
             get => bakeConvexity; set
@@ -291,6 +308,7 @@ namespace XnormalBatcher.ViewModels
                 NotifyPropertyChanged();
             }
         }
+        [JsonProperty]
         public bool BakeDerivative
         {
             get => bakeDerivative; set
@@ -299,6 +317,7 @@ namespace XnormalBatcher.ViewModels
                 NotifyPropertyChanged();
             }
         }
+        [JsonProperty]
         public bool BakeRadiosity
         {
             get => bakeRadiosity; set
@@ -307,6 +326,7 @@ namespace XnormalBatcher.ViewModels
                 NotifyPropertyChanged();
             }
         }
+        [JsonProperty]
         public bool BakeProximity
         {
             get => bakeProximity; set
@@ -315,6 +335,7 @@ namespace XnormalBatcher.ViewModels
                 NotifyPropertyChanged();
             }
         }
+        [JsonProperty]
         public bool BakePRTpn
         {
             get => bakePRTpn; set
@@ -323,6 +344,7 @@ namespace XnormalBatcher.ViewModels
                 NotifyPropertyChanged();
             }
         }
+        [JsonProperty]
         public bool BakeBaseTexture
         {
             get => bakeBaseTexture; set
@@ -331,6 +353,7 @@ namespace XnormalBatcher.ViewModels
                 NotifyPropertyChanged();
             }
         }
+        [JsonProperty]
         public bool BakeWireframe
         {
             get => bakeWireframe; set
@@ -339,6 +362,7 @@ namespace XnormalBatcher.ViewModels
                 NotifyPropertyChanged();
             }
         }
+        [JsonProperty]
         public bool BakeTranslucency
         {
             get => bakeTranslucency; set
@@ -347,6 +371,7 @@ namespace XnormalBatcher.ViewModels
                 NotifyPropertyChanged();
             }
         }
+        [JsonProperty]
         public bool ClosestHitRayFails
         {
             get => closestHitRayFails; set
@@ -355,6 +380,7 @@ namespace XnormalBatcher.ViewModels
                 NotifyPropertyChanged();
             }
         }
+        [JsonProperty]
         public bool DiscardBackFaceHit
         {
             get => discardBackFaceHit; set
@@ -363,6 +389,7 @@ namespace XnormalBatcher.ViewModels
                 NotifyPropertyChanged();
             }
         }
+        [JsonProperty]
         public VMSettingsAmbient SettingsAmbient
         {
             get => settingsAmbient; set
@@ -371,6 +398,7 @@ namespace XnormalBatcher.ViewModels
                 NotifyPropertyChanged();
             }
         }
+        [JsonProperty]
         public VMSettingsBaseTexture SettingsBaseTexture
         {
             get => settingsBaseTexture; set
@@ -379,6 +407,7 @@ namespace XnormalBatcher.ViewModels
                 NotifyPropertyChanged();
             }
         }
+        [JsonProperty]
         public VMSettingsBentNormal SettingsBentNormal
         {
             get => settingsBentNormal; set
@@ -387,6 +416,7 @@ namespace XnormalBatcher.ViewModels
                 NotifyPropertyChanged();
             }
         }
+        [JsonProperty]
         public VMSettingsCavity SettingsCavity
         {
             get => settingsCavity; set
@@ -395,6 +425,7 @@ namespace XnormalBatcher.ViewModels
                 NotifyPropertyChanged();
             }
         }
+        [JsonProperty]
         public VMSettingsConvexity SettingsConvexity
         {
             get => settingsConvexity; set
@@ -403,6 +434,7 @@ namespace XnormalBatcher.ViewModels
                 NotifyPropertyChanged();
             }
         }
+        [JsonProperty]
         public VMSettingsCurvature SettingsCurvature
         {
             get => settingsCurvature; set
@@ -411,6 +443,7 @@ namespace XnormalBatcher.ViewModels
                 NotifyPropertyChanged();
             }
         }
+        [JsonProperty]
         public VMSettingsDerivative SettingsDerivative
         {
             get => settingsDerivative; set
@@ -419,6 +452,7 @@ namespace XnormalBatcher.ViewModels
                 NotifyPropertyChanged();
             }
         }
+        [JsonProperty]
         public VMSettingsDirection SettingsDirection
         {
             get => settingsDirection; set
@@ -427,6 +461,7 @@ namespace XnormalBatcher.ViewModels
                 NotifyPropertyChanged();
             }
         }
+        [JsonProperty]
         public VMSettingsHeight SettingsHeight
         {
             get => settingsHeight; set
@@ -435,6 +470,7 @@ namespace XnormalBatcher.ViewModels
                 NotifyPropertyChanged();
             }
         }
+        [JsonProperty]
         public VMSettingsNormal SettingsNormal
         {
             get => settingsNormal; set
@@ -443,6 +479,7 @@ namespace XnormalBatcher.ViewModels
                 NotifyPropertyChanged();
             }
         }
+        [JsonProperty]
         public VMSettingsProximity SettingsProximity
         {
             get => settingsProximity; set
@@ -451,6 +488,7 @@ namespace XnormalBatcher.ViewModels
                 NotifyPropertyChanged();
             }
         }
+        [JsonProperty]
         public VMSettingsPRTpn SettingsPRTpn
         {
             get => settingsPRTpn; set
@@ -459,6 +497,7 @@ namespace XnormalBatcher.ViewModels
                 NotifyPropertyChanged();
             }
         }
+        [JsonProperty]
         public VMSettingsRadiosity SettingsRadiosity
         {
             get => settingsRadiosity; set
@@ -476,7 +515,7 @@ namespace XnormalBatcher.ViewModels
                 NotifyPropertyChanged();
             }
         }*/
-
+        [JsonProperty]
         public VMSettingsTranslucency SettingsTranslucency
         {
             get => settingsTranslucency; set
@@ -485,6 +524,7 @@ namespace XnormalBatcher.ViewModels
                 NotifyPropertyChanged();
             }
         }
+        [JsonProperty]
         public VMSettingsVertexColors SettingsVertexColors
         {
             get => settingsVertexColors; set
@@ -493,6 +533,7 @@ namespace XnormalBatcher.ViewModels
                 NotifyPropertyChanged();
             }
         }
+        [JsonProperty]
         public VMSettingsWireframe SettingsWireframe
         {
             get => settingsWireframe; set

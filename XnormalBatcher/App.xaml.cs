@@ -17,9 +17,9 @@ namespace XnormalBatcher
     {
         internal static string AppFolder { get; set; } = Directory.GetCurrentDirectory();
         internal static string TemplatePath { get; set; } = Path.Combine(AppFolder, "Data", "Template.xml");
-        internal static string DefaultSettingsPath { get; set; } = Path.Combine(AppFolder, "Data", "DefaultSettings.xml");
+        internal static string DefaultSettingsPath { get; set; } = Path.Combine(AppFolder, "Data", "DefaultSettings.xml");        
 
-        void App_Startup(object sender, StartupEventArgs e)
+        private void App_Startup(object sender, StartupEventArgs e)
         {
             SquirrelAwareApp.HandleEvents(
                 onInitialInstall: OnAppInstall,
