@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -43,7 +44,42 @@ namespace XnormalBatcher.ViewModels
         public int FileHighCount { get => _fileHCount; set { _fileHCount = value; NotifyPropertyChanged(); } }
         public int FileCageCount { get => _fileCCount; set { _fileCCount = value; NotifyPropertyChanged(); } }
 
+        private bool isBaking;
+
+        public bool IsBaking
+        {
+            get { return isBaking; }
+            set { isBaking = value; NotifyPropertyChanged(); }
+        }
+
+
+        private double bakingProgress;
+        public double BakingProgress
+        {
+            get { return bakingProgress; }
+            set { bakingProgress = value; NotifyPropertyChanged(); }
+        }
+
+        private ObservableCollection<string> logEntries;
+
+        public ObservableCollection<string> LogEntries
+        {
+            get { return logEntries; }
+            set { logEntries = value; NotifyPropertyChanged(); }
+        }
+
+        public string LastLogEntry => LogEntries.Last();
+
+
         public ICommand CMDOpenFolder { get; set; }
+        public ICommand CMDOpenLog { get; set; }
+
+        //private Window LogWindow = ;
+        private void OpenLog()
+        {
+            new LogWindow().Show();
+        }
+
         public ICommand CMDBakeSelected { get; set; }
         public ICommand CMDBakeAll { get; set; }
 
@@ -85,7 +121,9 @@ namespace XnormalBatcher.ViewModels
 
         private BatchViewModel()
         {
-            
+            IsBaking = false;
+            LogEntries = new ObservableCollection<string>();
+            Log("XNormalBatcher Started.");
             UseCage = false;
             UseTermsAsPrefix = false;
             BakeSeparately = false;
@@ -98,6 +136,7 @@ namespace XnormalBatcher.ViewModels
             FileLowCount = FileHighCount = FileCageCount = 0;
 
             CMDOpenFolder = new RelayCommand(OpenFolder);
+            CMDOpenLog = new RelayCommand(OpenLog);
             CMDBakeSelected = new RelayParametrizedCommand(a => Bake());
             CMDBakeAll = new RelayParametrizedCommand(a => Bake(true));
 
@@ -110,7 +149,6 @@ namespace XnormalBatcher.ViewModels
             SelectedTermHigh = TermsViewModel.Instance.TermsHigh[0];
             SelectedTermCage = TermsViewModel.Instance.TermsCage[0];
 
-
             AutoUpdater.IncludeSubdirectories = true;
             AutoUpdater.NotifyFilter = NotifyFilters.FileName | NotifyFilters.DirectoryName;
             AutoUpdater.Changed += new FileSystemEventHandler(OnRefreshFiles);
@@ -121,6 +159,12 @@ namespace XnormalBatcher.ViewModels
             AutoUpdater.EnableRaisingEvents = SettingsViewModel.Instance.BakingPath != null;
 
             GlobalBatchItem = new BatchItemViewModel("__global__", this);
+        }
+
+        public void Log(string line)
+        {
+            LogEntries.Add(line);
+            NotifyPropertyChanged("LastLogEntry");
         }
 
         public string GetSuffix(int slot)
@@ -137,12 +181,57 @@ namespace XnormalBatcher.ViewModels
             }
         }
 
+        private void BakeWorker(object sender, DoWorkEventArgs e)
+        {
+            var items = BatchItems.Where(b => (b.IsSelected || (bool)e.Argument) && b.IsValid).ToArray();
+            for (int i = 0; i < items.Length; i++)
+            {
+                int result = items[i].BakeWorker();
+                double percentage = (double)(i + 1) / items.Count() * 100;
+                (BatchItemViewModel Item, int Result) data = (Item: items[i], Result: result);
+                (sender as BackgroundWorker).ReportProgress((int)percentage, data);
+            }
+        }
+
         private void Bake(bool all = false)
         {
-            var results = BatchItems.Where(b => (b.IsSelected || all) && b.IsValid).Select(b => b.Bake(true).Result != 0 ? b.Name : null).Select(n => n != null);
-            if (results.Count() > 0)
+            BakingProgress = 0;
+            IsBaking = true;
+            BackgroundWorker worker = new BackgroundWorker
             {
-                MessageBox.Show($"These asset(s) couldn't be baked:\n{string.Join("\n", results)}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                WorkerReportsProgress = true
+            };
+            worker.DoWork += BakeWorker;
+            worker.ProgressChanged += BakeProgressChanged;
+            worker.RunWorkerCompleted += BakeCompleted;
+            worker.RunWorkerAsync(all);
+        }
+
+        private void BakeCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            IsBaking = false;
+            Log($"Bake done!");
+        }
+
+        private void BakeProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            BakingProgress = e.ProgressPercentage;
+            (BatchItemViewModel Item, int Result) = ((BatchItemViewModel Item, int Result))e.UserState;
+            if (Result != 1)
+            {
+                if (Result == -1)
+                {
+                    Log($"ERROR: Asset can't be baked as it's invalid: {Item.Name}");
+                }
+                else
+                {
+                    Log($"ERROR: User aborted or An error has occured(probably Cage different from lowpoly mesh): {Item.Name}");
+                }
+            }
+            else
+            {
+                Log($"{Item.Name}'s maps have been baked successfully!");
+                Item.Validate();
             }
         }
 

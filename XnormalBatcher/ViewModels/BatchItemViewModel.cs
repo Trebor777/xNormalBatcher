@@ -11,6 +11,7 @@ using System.Windows.Input;
 using XnormalBatcher.Helpers;
 using System.ComponentModel;
 using System.Diagnostics;
+using CliWrap;
 
 namespace XnormalBatcher.ViewModels
 {
@@ -51,11 +52,10 @@ namespace XnormalBatcher.ViewModels
         {
             get
             {
-                
                 if (owner.BakeSeparately)
-                    return $@"{GenerateName(FileHelper.SubFolders[3], 3, true, false)}\{Name}";
+                    return $@"{GenerateName(FileHelper.SubFolders[3], 3, true, false)}";
                 else
-                    return GenerateName(FileHelper.SubFolders[3], 3, true, false);
+                    return SettingsViewModel.Instance.BakingPath + FileHelper.SubFolders[3];
             }
         }
 
@@ -106,20 +106,14 @@ namespace XnormalBatcher.ViewModels
             GenerateXml();
         }
 
-
-        private Task<int> StartBake(BakeOutputData data)
+        private string PrepareBake()
         {
             GenerateXml();
-            var tcs = new TaskCompletionSource<int>();
-            if (!IsValid)
-            {
-                tcs.SetResult(-1);
-                return tcs.Task;
-            }
-            if (!Directory.Exists(BasenameMapPath))
+            if (!Directory.Exists(BasenameMapPath) && BatchViewModel.Instance.BakeSeparately)
             {
                 Directory.CreateDirectory(BasenameMapPath);
             }
+
             string args = $"\"{OutputXmlFile}\"";
             if (File.Exists(OutputXmlVCFile))
             {
@@ -129,52 +123,55 @@ namespace XnormalBatcher.ViewModels
             {
                 args += $" \"{OutputXmlOSFile}\"";
             }
-            Console.WriteLine(args);
-            ProcessStartInfo info = new ProcessStartInfo
-            {
-                FileName = Path.GetFileName(SettingsViewModel.Instance.XNormalPath),
-                WorkingDirectory = Path.GetDirectoryName(SettingsViewModel.Instance.XNormalPath),
-                Arguments = args
-            };
-            Process bakeProcess = new Process { StartInfo = info, EnableRaisingEvents = true };
-            
-            
-            bakeProcess.Exited += (sender, e) =>
-            {
-                tcs.SetResult(bakeProcess.ExitCode);
-                bakeProcess.Dispose();
-            };
-
-            bakeProcess.Start();
-
-            return tcs.Task;
-            
+            return args;
         }
 
-        internal struct BakeOutputData
+        internal int BakeWorker()
         {
-            internal bool IsSilent;
-            internal int ExitCode;
+            if (!IsValid)
+            {                
+                return -1;
+            }
+            int result;
+            using (var process = new Process())
+            {
+                process.StartInfo.FileName = SettingsViewModel.Instance.XNormalPath;
+                process.StartInfo.Arguments = PrepareBake();
+                process.Start();
+                process.WaitForExit();
+                result = process.ExitCode;
+            }
+            return result;
+        }
+
+
+        internal async void BakeAsync()
+        {
+            if (!IsValid)
+            {
+                BatchViewModel.Instance.Log($"ERROR: Asset can't be baked: {Name}");
+                return;
+            }
+            var result = await Cli.Wrap(SettingsViewModel.Instance.XNormalPath)
+                .WithArguments(PrepareBake())
+                .WithValidation(CommandResultValidation.None)
+                .ExecuteAsync();
+            if (result.ExitCode != 1)
+            {
+                BatchViewModel.Instance.Log($"ERROR: User aborted or An error has occured(probably Cage different from lowpoly mesh): {Name}");
+            }
+            else
+            {
+                BatchViewModel.Instance.Log($"INFO: {Name}'s maps have been baked successfully!");
+                Validate();
+            }
         }
 
         private void Bake()
         {
-            Bake(false);
-        }
-
-        public async Task<int> Bake(bool silent = false)
-        {
-            BakeOutputData output = new BakeOutputData() { IsSilent = silent };
-            await StartBake(output);
-            if (output.ExitCode != 0 && !output.IsSilent)
-            {
-                MessageBox.Show($"User aborted or An error has occured(probably Cage different from lowpoly mesh):\n{Name}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            else
-            {
-                Validate();
-            }
-            return output.ExitCode;
+            BatchViewModel.Instance.IsBaking = true;
+            BakeAsync();
+            BatchViewModel.Instance.IsBaking = false;
         }
         private string GenerateName(string typePath, int slot, bool addpath = true, bool addExtension = true, string name = null)
         {
@@ -197,7 +194,6 @@ namespace XnormalBatcher.ViewModels
             return final;
         }
 
-
         public bool CheckHighPolyFolder()
         {
             bool hasFiles = false;
@@ -218,13 +214,10 @@ namespace XnormalBatcher.ViewModels
             bool v = File.Exists(path);
             HasCage = (v && owner.UseCage) || !owner.UseCage;
             Baked = false;
-
             if (Directory.Exists(BasenameMapPath))
                 Baked = Directory.GetFiles(BasenameMapPath, Name + "_*." + owner.SelectedFormats[3]).Length > 0;
-
             NotifyPropertyChanged("IsValid");
         }
-
 
         internal void GenerateXml(string file = null)
         {
@@ -245,7 +238,6 @@ namespace XnormalBatcher.ViewModels
             xnbData.SetAttribute("UseMultipleHP", MultipleHP.ToString());
             rootElement.AppendChild(xnbData);
 
-
             highMeshes.RemoveChild(highMesh);
             if (MultipleHP)
             {
@@ -261,10 +253,9 @@ namespace XnormalBatcher.ViewModels
             }
 
             SettingsLow.SetXml(lowPolyMesh, GenerateName(FileHelper.SubFolders[0], 0), GenerateName(FileHelper.SubFolders[2], 2));
-
             genMaps.SetAttribute("Width", Width.ToString());
             genMaps.SetAttribute("Height", Height.ToString());
-            genMaps.SetAttribute("File", $"{BasenameMapPath}.{SettingsViewModel.Instance.SelectedTextureFileFormat}");
+            genMaps.SetAttribute("File", $@"{BasenameMapPath}\{Name}.{SettingsViewModel.Instance.SelectedTextureFileFormat}");
             genMaps.SetAttribute("BakeHighpolyVCols", "false");
 
             if (!string.IsNullOrEmpty(file))
@@ -304,7 +295,7 @@ namespace XnormalBatcher.ViewModels
                 genMaps.SetAttribute("GenNormals", "true");
                 genMaps.SetAttribute("TangentSpace", "false");
 
-                genMaps.SetAttribute("File", $"{BasenameMapPath}_ObjectSpace.{SettingsViewModel.Instance.SelectedTextureFileFormat}");
+                genMaps.SetAttribute("File", $@"{BasenameMapPath}\{Name}_ObjectSpace.{SettingsViewModel.Instance.SelectedTextureFileFormat}");
                 // Disable all other map bakes
                 genMaps.SetAttribute("GenDerivNM", "false");
                 genMaps.SetAttribute("GenCurv", "false");

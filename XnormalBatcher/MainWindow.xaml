@@ -7,10 +7,11 @@
         xmlns:fa5="http://schemas.fontawesome.com/icons/"
         xmlns:local="clr-namespace:XnormalBatcher"
         xmlns:vm="clr-namespace:XnormalBatcher.ViewModels"
-        mc:Ignorable="d" Title="{Binding Title}" Height="480" Width="960" MinWidth="960" MinHeight="480" Loaded="Window_Loaded"
+        mc:Ignorable="d" Title="{Binding Title}" Height="504" Width="960" MinWidth="960" MinHeight="480" Loaded="Window_Loaded"
         DataContext="{x:Static vm:MainViewModel.Instance}"
         >
     <Window.Resources>
+        <xctk:InverseBoolConverter x:Key="InverseBoolConverter"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </Window.Resources>
     <Border Margin="6">
@@ -22,7 +23,11 @@
                         <ColumnDefinition Width="280"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Grid Grid.Column="0" Background="#FFE5E5E5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="24" />
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Column="0" Grid.Row="0" Background="#FFE5E5E5" IsEnabled="{Binding IsBaking, Converter={StaticResource InverseBoolConverter}}">
                         <StackPanel>
                             <CheckBox Name="chkUseCage" Content="DO YOU USE CAGE(S) ?" VerticalAlignment="Center" Margin="5" FontWeight="Bold"  IsChecked="{Binding UseCage}" Foreground="#FFFB0000" />
                             <Label Content="FOLDER STATS" FontWeight="Bold" Padding="5,2"/>
@@ -157,6 +162,7 @@
 
                         </StackPanel>
                     </Grid>
+
                     <!-- BAKING FILE LISTING-->
                     <Grid Grid.Column="1">
                         <Grid.RowDefinitions>
@@ -292,6 +298,32 @@
                             </ListView.View>
                         </ListView>
                     </Grid>
+                    <StatusBar Grid.Row="1" Grid.ColumnSpan="2" >
+                        <StatusBar.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="80" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="100" />
+                                    </Grid.ColumnDefinitions>
+                                </Grid>
+                            </ItemsPanelTemplate>
+                        </StatusBar.ItemsPanel>
+                        <StatusBarItem>
+                            <Button Content="OPEN LOG" Width="74" Command="{Binding CMDOpenLog}"/>
+                        </StatusBarItem>
+                        <Separator Grid.Column="1" />
+                        <StatusBarItem Grid.Column="2">
+                            <TextBlock Text="{Binding LastLogEntry}" />
+                        </StatusBarItem>
+                        <Separator Grid.Column="3" />
+                        <StatusBarItem Grid.Column="4">
+                            <ProgressBar Value="{Binding BakingProgress}" Width="90" Height="16" />
+                        </StatusBarItem>
+                    </StatusBar>
                 </Grid>
             </TabItem>
             <TabItem Header="Settings" DataContext="{x:Static vm:SettingsViewModel.Instance}" d:DataContext="{d:DesignInstance {x:Type vm:SettingsViewModel}, IsDesignTimeCreatable=True}" >

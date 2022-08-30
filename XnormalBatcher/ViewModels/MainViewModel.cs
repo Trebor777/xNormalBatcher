@@ -10,10 +10,16 @@ namespace XnormalBatcher.ViewModels
 {
     internal class MainViewModel : BaseViewModel
     {
-        public static MainViewModel Instance { get; } = new MainViewModel();                
+        public static MainViewModel Instance { get; } = new MainViewModel();
 
         public bool IsLoaded = false;
 
+        private bool isBaking = false;
+        public bool IsBaking
+        {
+            get => isBaking;
+            set { isBaking = value; NotifyPropertyChanged(); }
+        }
         public string Title
         {
             get
