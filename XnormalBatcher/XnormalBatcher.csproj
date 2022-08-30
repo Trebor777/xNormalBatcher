@@ -162,12 +162,14 @@
     <Resource Include="xNBatcherIcon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Data\DefaultSettings.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
+    <AdditionalFiles Include="Data\DefaultSettings.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AdditionalFiles>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Data\Template.xml" />
+    <AdditionalFiles Include="Data\Template.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AdditionalFiles>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -524,7 +524,8 @@ namespace XnormalBatcher.ViewModels
             SelectedBucketSize = BucketSizes[2];
             SelectedTextureFileFormat = TextureFileFormats[4];
             CreateSettings();
-            ToggleAllPanels(true);
+            SetQuickBakes();
+            //ToggleAllPanels(true);
         }
 
         private void ToggleAllPanels(bool show = true)

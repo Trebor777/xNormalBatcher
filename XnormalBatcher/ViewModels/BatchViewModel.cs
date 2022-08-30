@@ -139,7 +139,11 @@ namespace XnormalBatcher.ViewModels
 
         private void Bake(bool all = false)
         {
-            var results = BatchItems.Where(b => (b.IsSelected || all) && b.IsValid).Select(b => b.Bake());
+            var results = BatchItems.Where(b => (b.IsSelected || all) && b.IsValid).Select(b => b.Bake(true).Result != 0 ? b.Name : null).Select(n => n != null);
+            if (results.Count() > 0)
+            {
+                MessageBox.Show($"These asset(s) couldn't be baked:\n{string.Join("\n", results)}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         /// <summary>

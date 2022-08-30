@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Xml;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using XnormalBatcher.Helpers;
+using System.ComponentModel;
+using System.Diagnostics;
 
 namespace XnormalBatcher.ViewModels
 {
@@ -48,17 +51,22 @@ namespace XnormalBatcher.ViewModels
         {
             get
             {
+                
                 if (owner.BakeSeparately)
-                    return GenerateName(FileHelper.SubFolders[3], 3, true, false);
+                    return $@"{GenerateName(FileHelper.SubFolders[3], 3, true, false)}\{Name}";
                 else
-                    return GenerateName(FileHelper.SubFolders[3], 3, true, false) + Name;
+                    return GenerateName(FileHelper.SubFolders[3], 3, true, false);
             }
         }
+
+        private string OutputXmlFile => $"{BasenamePath}.xml";
+        private string OutputXmlVCFile => $"{BasenamePath}.VertexColors.xml";
+        private string OutputXmlOSFile => $"{BasenamePath}.ObjectSpaceNormals.xml";
 
         public BatchItemViewModel(string filename, BatchViewModel Owner = null)
         {
             owner = Owner ?? BatchViewModel.Instance;
-            BakeMe = new RelayCommand(_Bake);
+            BakeMe = new RelayCommand(Bake);
             CMDSetLow = new RelayCommand(SetLowSettings);
             CMDSetHigh = new RelayCommand(SetHighSettings);
             IsSelected = true;
@@ -99,15 +107,74 @@ namespace XnormalBatcher.ViewModels
         }
 
 
-        private void _Bake()
+        private Task<int> StartBake(BakeOutputData data)
         {
+            GenerateXml();
+            var tcs = new TaskCompletionSource<int>();
+            if (!IsValid)
+            {
+                tcs.SetResult(-1);
+                return tcs.Task;
+            }
+            if (!Directory.Exists(BasenameMapPath))
+            {
+                Directory.CreateDirectory(BasenameMapPath);
+            }
+            string args = $"\"{OutputXmlFile}\"";
+            if (File.Exists(OutputXmlVCFile))
+            {
+                args += $" \"{OutputXmlVCFile}\"";
+            }
+            if (File.Exists(OutputXmlOSFile))
+            {
+                args += $" \"{OutputXmlOSFile}\"";
+            }
+            Console.WriteLine(args);
+            ProcessStartInfo info = new ProcessStartInfo
+            {
+                FileName = Path.GetFileName(SettingsViewModel.Instance.XNormalPath),
+                WorkingDirectory = Path.GetDirectoryName(SettingsViewModel.Instance.XNormalPath),
+                Arguments = args
+            };
+            Process bakeProcess = new Process { StartInfo = info, EnableRaisingEvents = true };
+            
+            
+            bakeProcess.Exited += (sender, e) =>
+            {
+                tcs.SetResult(bakeProcess.ExitCode);
+                bakeProcess.Dispose();
+            };
 
+            bakeProcess.Start();
+
+            return tcs.Task;
+            
         }
 
-        public int Bake()
+        internal struct BakeOutputData
         {
-            _Bake();
-            return 0;
+            internal bool IsSilent;
+            internal int ExitCode;
+        }
+
+        private void Bake()
+        {
+            Bake(false);
+        }
+
+        public async Task<int> Bake(bool silent = false)
+        {
+            BakeOutputData output = new BakeOutputData() { IsSilent = silent };
+            await StartBake(output);
+            if (output.ExitCode != 0 && !output.IsSilent)
+            {
+                MessageBox.Show($"User aborted or An error has occured(probably Cage different from lowpoly mesh):\n{Name}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            else
+            {
+                Validate();
+            }
+            return output.ExitCode;
         }
         private string GenerateName(string typePath, int slot, bool addpath = true, bool addExtension = true, string name = null)
         {
@@ -135,7 +202,7 @@ namespace XnormalBatcher.ViewModels
         {
             bool hasFiles = false;
             string hp = GenerateName("", 1, false, true, "*");
-            string path = GenerateName(FileHelper.SubFolders[1], 1, true, false) + @"\";
+            string path = $@"{GenerateName(FileHelper.SubFolders[1], 1, true, false)}\";
             if (Directory.Exists(path))
             {
                 hpList = Directory.GetFiles(path, hp);
@@ -159,9 +226,108 @@ namespace XnormalBatcher.ViewModels
         }
 
 
-        internal void GenerateXml()
+        internal void GenerateXml(string file = null)
         {
-            //throw new NotImplementedException();
+            if (string.IsNullOrEmpty(Name))
+            {
+                return;
+            }
+            XmlDocument document = new XmlDocument();
+            document.Load(App.TemplatePath);
+            var rootElement = document.DocumentElement;
+            var lowPolyMesh = rootElement["LowPolyModel"]["Mesh"];
+            var highMeshes = rootElement["HighPolyModel"];
+            var highMesh = highMeshes["Mesh"];
+            var genMaps = rootElement["GenerateMaps"];
+
+            XmlElement xnbData = document.CreateElement("xNormalBatcherData");
+            xnbData.SetAttribute("Selected", IsSelected.ToString());
+            xnbData.SetAttribute("UseMultipleHP", MultipleHP.ToString());
+            rootElement.AppendChild(xnbData);
+
+
+            highMeshes.RemoveChild(highMesh);
+            if (MultipleHP)
+            {
+                CheckHighPolyFolder();
+                foreach (var hp in hpList)
+                {
+                    SettingsHigh.AppendToXML(highMeshes, document, hp);
+                }
+            }
+            else
+            {
+                SettingsHigh.AppendToXML(highMeshes, document, GenerateName(FileHelper.SubFolders[1], 1));
+            }
+
+            SettingsLow.SetXml(lowPolyMesh, GenerateName(FileHelper.SubFolders[0], 0), GenerateName(FileHelper.SubFolders[2], 2));
+
+            genMaps.SetAttribute("Width", Width.ToString());
+            genMaps.SetAttribute("Height", Height.ToString());
+            genMaps.SetAttribute("File", $"{BasenameMapPath}.{SettingsViewModel.Instance.SelectedTextureFileFormat}");
+            genMaps.SetAttribute("BakeHighpolyVCols", "false");
+
+            if (!string.IsNullOrEmpty(file))
+                document.Save(file);
+            else
+                document.Save(OutputXmlFile);
+
+            if (SettingsViewModel.Instance.BakeVertexColors) // Generate Specific xml files for VertexColor Bake (needs separate bake)
+            {
+                genMaps.SetAttribute("BakeHighpolyVCols", "true");
+                highMesh.SetAttribute("IgnorePerVertexColor", "false");
+                // Disable all other map bakes
+                genMaps.SetAttribute("GenDerivNM", "false");
+                genMaps.SetAttribute("GenCurv", "false");
+                genMaps.SetAttribute("GenRadiosityNormals", "false");
+                genMaps.SetAttribute("GenDirections", "false");
+                genMaps.SetAttribute("GenWireRays", "false");
+                genMaps.SetAttribute("GenCavity", "false");
+                genMaps.SetAttribute("GenProximity", "false");
+                genMaps.SetAttribute("GenThickness", "false");
+                genMaps.SetAttribute("GenConvexity", "false");
+                genMaps.SetAttribute("GenPRT", "false");
+                genMaps.SetAttribute("GenBent", "false");
+                genMaps.SetAttribute("BakeHighpolyBaseTex", "false");
+                genMaps.SetAttribute("GenHeights", "false");
+                genMaps.SetAttribute("GenNormals", "false");
+                genMaps.SetAttribute("GenAO", "false");
+                document.Save(OutputXmlVCFile);
+            }
+            else
+            {
+                if (File.Exists(OutputXmlVCFile))
+                    File.Delete(OutputXmlVCFile);
+            }
+            if (SettingsViewModel.Instance.BothNormalsType) // Generate Specific xml files when baking both normal map types (needs separate bake)
+            {
+                genMaps.SetAttribute("GenNormals", "true");
+                genMaps.SetAttribute("TangentSpace", "false");
+
+                genMaps.SetAttribute("File", $"{BasenameMapPath}_ObjectSpace.{SettingsViewModel.Instance.SelectedTextureFileFormat}");
+                // Disable all other map bakes
+                genMaps.SetAttribute("GenDerivNM", "false");
+                genMaps.SetAttribute("GenCurv", "false");
+                genMaps.SetAttribute("GenRadiosityNormals", "false");
+                genMaps.SetAttribute("GenDirections", "false");
+                genMaps.SetAttribute("GenWireRays", "false");
+                genMaps.SetAttribute("GenCavity", "false");
+                genMaps.SetAttribute("GenProximity", "false");
+                genMaps.SetAttribute("GenThickness", "false");
+                genMaps.SetAttribute("GenConvexity", "false");
+                genMaps.SetAttribute("GenPRT", "false");
+                genMaps.SetAttribute("GenBent", "false");
+                genMaps.SetAttribute("BakeHighpolyBaseTex", "false");
+                genMaps.SetAttribute("GenHeights", "false");
+                genMaps.SetAttribute("GenAO", "false");
+                genMaps.SetAttribute("BakeHighpolyVCols", "false");
+                document.Save(OutputXmlOSFile);
+            }
+            else
+            {
+                if (File.Exists(OutputXmlOSFile))
+                    File.Delete(OutputXmlOSFile);
+            }
         }
     }
 }

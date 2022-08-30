@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Xml;
 using XnormalBatcher.Helpers;
 
 namespace XnormalBatcher.ViewModels
@@ -13,7 +14,7 @@ namespace XnormalBatcher.ViewModels
     [Serializable]
     internal class MeshSettingsLow
     {
-        public object SmoothNormals;
+        public string SmoothNormals;
         public double? MeshScale;
         public double? UOffset;
         public double? VOffset;
@@ -49,7 +50,7 @@ namespace XnormalBatcher.ViewModels
         public static ObservableCollection<string> SmoothMethods = new ObservableCollection<string>() { "Exported", "Average", "Harden" };
         public BatchItemViewModel Owner;
         private MeshSettingsLow data;
-        public object SmoothNormals
+        public string SmoothNormals
         {
             get => data.SmoothNormals; set
             {
@@ -263,6 +264,30 @@ namespace XnormalBatcher.ViewModels
         {
             data = dataBefore.Clone();
             NotifyDataChanged();
+        }
+        public string OffsetString => $"{OffsetX};{OffsetY};{OffsetZ};";
+
+        public void SetXml(XmlElement lowPolyMesh, string file, string cagefile)
+        {
+
+            lowPolyMesh.SetAttribute("File", file);
+            lowPolyMesh.SetAttribute("CageFile", cagefile);
+            var str = $"{(SmoothNormals == "Exported" ? "Use" : "")}{SmoothNormals}Normals";
+            lowPolyMesh.SetAttribute("AverageNormals", str);
+            lowPolyMesh.SetAttribute("MaxRayDistanceFront", MeshFrontRayDistance.ToString());
+            lowPolyMesh.SetAttribute("MaxRayDistanceBack", MeshRearRayDistance.ToString());
+            lowPolyMesh.SetAttribute("HighpolyNormalsOverrideTangentSpace", HighPolyOverrideIsTangent.ToString().ToLower());
+            lowPolyMesh.SetAttribute("MatchUVs", MatchUV.ToString().ToLower());
+            lowPolyMesh.SetAttribute("Scale", MeshScale.ToString());
+            lowPolyMesh.SetAttribute("UOffset", UOffset.ToString());
+            lowPolyMesh.SetAttribute("VOffset", VOffset.ToString());
+            lowPolyMesh.SetAttribute("BatchProtect", BatchProtection.ToString().ToLower());
+            lowPolyMesh.SetAttribute("PositionOffset", OffsetString);
+
+            if (!string.IsNullOrEmpty(HighPolyOverrideFile))
+                lowPolyMesh.SetAttribute("HighpolyNormalsOverride", HighPolyOverrideFile);
+            if (!string.IsNullOrEmpty(BlockerFile))
+                lowPolyMesh.SetAttribute("BlockersFile", BlockerFile);
         }
     }
 }

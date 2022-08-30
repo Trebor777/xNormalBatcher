@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Xml;
 using XnormalBatcher.Helpers;
 
 namespace XnormalBatcher.ViewModels
@@ -175,6 +176,22 @@ namespace XnormalBatcher.ViewModels
         {
             data = dataBefore.Clone();
             NotifyDataChanged();
+        }
+
+        public string OffsetString => $"{OffsetX};{OffsetY};{OffsetZ};";
+
+        public void AppendToXML(XmlElement parent, XmlDocument root, string meshFile)
+        {
+            var child = root.CreateElement("Mesh");
+            child.SetAttribute("Visible", "true");
+            child.SetAttribute("Scale", MeshScale.ToString());
+            child.SetAttribute("IgnorePerVertexColor", IgnoreVertexColor.ToString().ToLower());
+            child.SetAttribute("AverageNormals", (SmoothNormals == "Exported" ? "Use" : "") + SmoothNormals + "Normals");
+            child.SetAttribute("BaseTex", BaseTexture);
+            child.SetAttribute("BaseTexIsTSNM", BaseTextureIsTangent.ToString().ToLower());
+            child.SetAttribute("File", meshFile);
+            child.SetAttribute("PositionOffset", OffsetString);
+            parent.AppendChild(child);
         }
 
     }

@@ -6,6 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.IO;
 
 namespace XnormalBatcher
 {
@@ -14,6 +15,10 @@ namespace XnormalBatcher
     /// </summary>
     public partial class App : Application
     {
+        internal static string AppFolder { get; set; } = Directory.GetCurrentDirectory();
+        internal static string TemplatePath { get; set; } = Path.Combine(AppFolder, "Data", "Template.xml");
+        internal static string DefaultSettingsPath { get; set; } = Path.Combine(AppFolder, "Data", "DefaultSettings.xml");
+
         void App_Startup(object sender, StartupEventArgs e)
         {
             SquirrelAwareApp.HandleEvents(
