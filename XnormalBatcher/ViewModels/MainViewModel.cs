@@ -14,11 +14,11 @@ namespace XnormalBatcher.ViewModels
     internal class DataObject
     {
         [JsonProperty]
-        internal BatchViewModel Batch { get; set; }
+        internal BatchModel Batch { get; set; }
         [JsonProperty]
-        internal SettingsViewModel Settings { get; set; }
+        internal SettingsModel Settings { get; set; }
         [JsonProperty]
-        internal TermsViewModel Terms { get; set; }
+        internal TermsModel Terms { get; set; }
     }
     
     internal class MainViewModel : BaseViewModel
@@ -26,11 +26,13 @@ namespace XnormalBatcher.ViewModels
         public static MainViewModel Instance { get; } = new MainViewModel();
 
         internal static string SessionFile = $@"{Environment.CurrentDirectory}\last.dat";
-        internal static DataObject LastSession = LoadLastSession();
+        private static DataObject _lastSession;
+        internal static DataObject LastSession => _lastSession ?? LoadLastSession();
 
         public bool IsLoaded = false;
 
         private bool isBaking = false;
+
         public bool IsBaking
         {
             get => isBaking;
@@ -54,14 +56,14 @@ namespace XnormalBatcher.ViewModels
             {
                 using (JsonWriter writer = new JsonTextWriter(sw))
                 {
-                    serializer.Serialize(writer, new DataObject { Batch = BatchViewModel.Instance, Settings = SettingsViewModel.Instance, Terms = TermsViewModel.Instance });
+                    serializer.Serialize(writer, new DataObject { Batch = BatchViewModel.Instance.Data, Settings = SettingsViewModel.Instance.Data, Terms = TermsViewModel.Instance.Data });
                 }
             }
         }
 
         internal static DataObject LoadLastSession()
         {
-            DataObject data = null;
+            _lastSession = null;
             if (File.Exists(SessionFile))
             {
                 JsonSerializer serializer = new JsonSerializer();
@@ -69,10 +71,10 @@ namespace XnormalBatcher.ViewModels
                 serializer.NullValueHandling = NullValueHandling.Include;
                 using (StreamReader sr = new StreamReader(SessionFile))
                 {
-                    data = JsonConvert.DeserializeObject<DataObject>(sr.ReadToEnd());                    
+                    _lastSession = JsonConvert.DeserializeObject<DataObject>(sr.ReadToEnd());                    
                 }
             }            
-            return data;
+            return _lastSession;
         }
     }
 }

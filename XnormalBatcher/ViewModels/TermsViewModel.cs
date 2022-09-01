@@ -32,30 +32,84 @@ namespace XnormalBatcher.ViewModels
                 TermsViewModel.Instance?.RefreshFilteredTerms();
             }
         }
+
+        [JsonConstructor]
+        internal Term(string _name, string _grp)
+        {
+            name = _name;
+            group = _grp;
+        }
     }
 
     [JsonObject(MemberSerialization.OptIn)]
+    internal class TermsModel
+    {
+        internal static List<Term> TermsLow = FillTerms(new string[] { "L", "LP", "Low", "LowPoly", "LPoly", "LWPLY" }, Term.Groups["L"]);
+        internal static List<Term> TermsHigh = FillTerms(new string[] { "H", "HP", "High", "HighPoly", "HPoly", "HGHPLY" }, Term.Groups["H"]);
+        internal static List<Term> TermsCage = FillTerms(new string[] { "C", "Cage", "Cg", "cge" }, Term.Groups["C"]);
+        internal static List<Term> TermsSeparator = FillTerms(new string[] { "_", "\" \"", "-", "." }, Term.Groups["S"]);
+        [JsonProperty]
+        public ObservableCollection<Term> Terms { get; set; }
+        internal TermsModel()
+        {
+            Terms = new ObservableCollection<Term>();
+            foreach (var term in TermsLow)
+            {
+                Terms.Add(term);
+            }
+            foreach (var term in TermsHigh)
+            {
+                Terms.Add(term);
+            }
+            foreach (var term in TermsCage)
+            {
+                Terms.Add(term);
+            }
+            foreach (var term in TermsSeparator)
+            {
+                Terms.Add(term);
+            }
+        }
+        [JsonConstructor]
+        internal TermsModel(ObservableCollection<Term> _terms)
+        {
+            Terms = _terms;
+        }
+
+        private static List<Term> FillTerms(string[] terms, string group)
+        {
+            var target = new List<Term>();
+            foreach (var item in terms)
+            {
+                Term term = new Term(item, group);
+                target.Add(term);
+            }
+            return target;
+        }
+    }
+
     internal class TermsViewModel : BaseViewModel
     {
         public static TermsViewModel Instance { get; } = new TermsViewModel();
-        private ObservableCollection<Term> terms;
-        [JsonProperty]
+        internal TermsModel Data;
+
         public ObservableCollection<Term> Terms
         {
-            get => terms; set
+            get => Data.Terms; set
             {
-                terms = value;
+                Data.Terms = value;
                 RefreshFilteredTerms();
             }
         }
 
         internal void RefreshFilteredTerms()
         {
-            TermsLow = new ObservableCollection<Term>(terms.Where(t => t.Group == Term.Groups["L"]));
-            TermsHigh = new ObservableCollection<Term>(terms.Where(t => t.Group == Term.Groups["H"]));
-            TermsCage = new ObservableCollection<Term>(terms.Where(t => t.Group == Term.Groups["C"]));
-            TermsSeparator = new ObservableCollection<Term>(terms.Where(t => t.Group == Term.Groups["S"]));
-            NotifyPropertyChanged();
+            //Data.Terms = new ObservableCollection<Term>(Terms.OrderBy(t => t.Group));
+            TermsLow = new ObservableCollection<Term>(Data.Terms.Where(t => t.Group == Term.Groups["L"]));
+            TermsHigh = new ObservableCollection<Term>(Data.Terms.Where(t => t.Group == Term.Groups["H"]));
+            TermsCage = new ObservableCollection<Term>(Data.Terms.Where(t => t.Group == Term.Groups["C"]));
+            TermsSeparator = new ObservableCollection<Term>(Data.Terms.Where(t => t.Group == Term.Groups["S"]));
+            NotifyPropertyChanged("Terms");
             NotifyPropertyChanged("TermsLow");
             NotifyPropertyChanged("TermsHigh");
             NotifyPropertyChanged("TermsCage");
@@ -74,32 +128,13 @@ namespace XnormalBatcher.ViewModels
 
         private TermsViewModel()
         {
-            Terms = new ObservableCollection<Term>();
+            Data = MainViewModel.LastSession?.Terms ?? new TermsModel();
+            RefreshFilteredTerms();
             Terms.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler((sender, arg) =>
             {
                 RefreshFilteredTerms();
             }
             );
-            foreach (var item in new string[] { "L", "LP", "Low", "LowPoly", "LPoly", "LWPLY" })
-            {
-                Term term = new Term() { Name = item, Group = Term.Groups["L"] };
-                Terms.Add(term);
-            }
-            foreach (var item in new string[] { "H", "HP", "High", "HighPoly", "HPoly", "HGHPLY" })
-            {
-                Term term = new Term() { Name = item, Group = Term.Groups["H"] };
-                Terms.Add(term);
-            }
-            foreach (var item in new string[] { "C", "Cage", "Cg", "cge" })
-            {
-                Term term = new Term() { Name = item, Group = Term.Groups["C"] };
-                Terms.Add(term);
-            }
-            foreach (var item in new string[] { "_", "\" \"", "-", "." })
-            {
-                Term term = new Term() { Name = item, Group = Term.Groups["S"] };
-                Terms.Add(term);
-            }
         }
     }
 }

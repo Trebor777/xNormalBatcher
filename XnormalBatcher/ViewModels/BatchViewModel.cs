@@ -17,132 +17,97 @@ using XnormalBatcher.ViewModels;
 namespace XnormalBatcher.ViewModels
 {
     // Holds information/logic on how to batch, which files to batch, etc...
-    [JsonObject(MemberSerialization.OptIn)]
+    [JsonObject(MemberSerialization.OptOut)]
+    internal class BatchModel
+    {
+        [JsonIgnore]
+        internal static List<int> MapSizes = new List<int>() { 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768 };
+        [JsonIgnore]
+        internal static List<string> MeshFileFormats = new List<string>() { "fbx", "sia", "sib", "x", "ms3d", "off", "dae", "ovb", "dxf", "mesh", "xsi", "3ds", "sbm", "obj", "ase", "ply", "lwo", "lxo" };
+        public bool UseCage { get; set; } = false;
+        public bool UseTermsAsPrefix { get; set; } = false;
+        public Term SelectedTermSeparator { get; set; } = TermsModel.TermsSeparator[0];
+        public Term SelectedTermLow { get; set; } = TermsModel.TermsLow[0];
+        public Term SelectedTermHigh { get; set; } = TermsModel.TermsHigh[0];
+        public Term SelectedTermCage { get; set; } = TermsModel.TermsCage[0];
+        public string SelectedMeshFormatLow { get; set; } = MeshFileFormats[13];
+        public string SelectedMeshFormatHigh { get; set; } = MeshFileFormats[13];
+        public string SelectedMeshFormatCage { get; set; } = MeshFileFormats[13];
+        public bool BakeSeparately { get; set; } = false;
+        public int SelectedMapWidthAll { get; set; } = MapSizes[7];
+        public int SelectedMapHeightAll { get; set; } = MapSizes[7];
+    }
+
     internal class BatchViewModel : BaseViewModel
     {
-        public static BatchViewModel Instance { get; } = new BatchViewModel();
-        public ObservableCollection<int> MapSizes { get; set; }
-        public ObservableCollection<string> MeshFileFormats { get; set; }
-        public ObservableCollection<BatchItemViewModel> BatchItems { get; set; } = new ObservableCollection<BatchItemViewModel>();
-        public BatchItemViewModel SelectedBatchItem { get; set; }
-        private BatchItemViewModel GlobalBatchItem { get; set; }
-        [JsonProperty]
-        public bool UseCage { get => useCage; set { useCage = value; RefreshBatchItems(); } }
-        [JsonProperty]
-        public bool UseTermsAsPrefix { get => useTermsAsPrefix; set { useTermsAsPrefix = value; RefreshBatchItems(); } }
-        [JsonProperty]
-        public Term SelectedTermSeparator { get => selectedTermSeparator; set { selectedTermSeparator = value; RefreshBatchItems(); } }
-        [JsonProperty]
-        public Term SelectedTermLow { get => selectedTermLow; set { selectedTermLow = value; RefreshBatchItems(); } }
-        [JsonProperty]
-        public Term SelectedTermHigh { get => selectedTermHigh; set { selectedTermHigh = value; RefreshBatchItems(); } }
-        [JsonProperty]
-        public Term SelectedTermCage { get => selectedTermCage; set { selectedTermCage = value; RefreshBatchItems(); } }
-
-        public string[] SelectedTerms => new string[] { SelectedTermLow?.Name, SelectedTermHigh?.Name, SelectedTermCage?.Name };
-        public string[] SelectedFormats => new string[] { SelectedMeshFormatLow, SelectedMeshFormatHigh, SelectedMeshFormatCage, SettingsViewModel.Instance.SelectedTextureFileFormat };
-        [JsonProperty]
-        public string SelectedMeshFormatLow { get => selectedMeshFormatLow; set { selectedMeshFormatLow = value; RefreshBatchItems(); } }
-        [JsonProperty]
-        public string SelectedMeshFormatHigh { get => selectedMeshFormatHigh; set { selectedMeshFormatHigh = value; RefreshBatchItems(); } }
-        [JsonProperty]
-        public string SelectedMeshFormatCage { get => selectedMeshFormatCage; set { selectedMeshFormatCage = value; RefreshBatchItems(); } }
-        [JsonProperty]
-        public bool BakeSeparately { get; set; }
-        [JsonProperty]
-        public int SelectedMapWidthAll { get; set; }
-        [JsonProperty]
-        public int SelectedMapHeightAll { get; set; }
-        public int FileLowCount { get => _fileLCount; set { _fileLCount = value; NotifyPropertyChanged(); } }
-        public int FileHighCount { get => _fileHCount; set { _fileHCount = value; NotifyPropertyChanged(); } }
-        public int FileCageCount { get => _fileCCount; set { _fileCCount = value; NotifyPropertyChanged(); } }
-
-        private bool isBaking;
-
-        public bool IsBaking
-        {
-            get { return isBaking; }
-            set { isBaking = value; NotifyPropertyChanged(); }
-        }
-
-
-        private double bakingProgress;
-        public double BakingProgress
-        {
-            get { return bakingProgress; }
-            set { bakingProgress = value; NotifyPropertyChanged(); }
-        }
-
-        private ObservableCollection<string> logEntries;
-
-        public ObservableCollection<string> LogEntries
-        {
-            get { return logEntries; }
-            set { logEntries = value; NotifyPropertyChanged(); }
-        }
-
-        public string LastLogEntry => LogEntries.Last();
-
-
-        public ICommand CMDOpenFolder { get; set; }
-        public ICommand CMDOpenLog { get; set; }
-
-        //private Window LogWindow = ;
-        private void OpenLog()
-        {
-            new LogWindow().Show();
-        }
-
-        public ICommand CMDBakeSelected { get; set; }
-        public ICommand CMDBakeAll { get; set; }
-
-        public ICommand CMDSetAllItemsLow { get; set; }
-        public ICommand CMDSetAllItemsHigh { get; set; }
-        public ICommand CMDSetAllMaps { get; set; }
-
+        internal BatchModel Data;
         private RelayParametrizedCommand checkAllCommand;
-
-        public ICommand CheckAllCommand
-        {
-            get
-            {
-                return checkAllCommand ?? (checkAllCommand = new RelayParametrizedCommand(param => CheckAll(bool.Parse(param.ToString()))));
-            }
-        }
-
-        private void CheckAll(bool selectAll)
-        {
-            foreach (var item in BatchItems)
-            {
-                item.IsSelected = selectAll;
-            }
-        }
-
         public FileSystemWatcher AutoUpdater = new FileSystemWatcher();
         private int _fileLCount;
         private int _fileHCount;
         private int _fileCCount;
-        private bool useCage;
-        private Term selectedTermLow;
-        private bool useTermsAsPrefix;
-        private Term selectedTermHigh;
-        private Term selectedTermCage;
-        private string selectedMeshFormatLow;
-        private string selectedMeshFormatHigh;
-        private string selectedMeshFormatCage;
-        private Term selectedTermSeparator;
+        private bool isBaking;
+        private double bakingProgress;
+        private ObservableCollection<string> logEntries;
+        public static BatchViewModel Instance { get; } = new BatchViewModel();
+        public ObservableCollection<int> MapSizes { get; set; } = new ObservableCollection<int>(BatchModel.MapSizes);
+        public ObservableCollection<string> MeshFileFormats { get; set; } = new ObservableCollection<string>(BatchModel.MeshFileFormats);
+        public ObservableCollection<BatchItemViewModel> BatchItems { get; set; } = new ObservableCollection<BatchItemViewModel>();
+        public BatchItemViewModel SelectedBatchItem { get; set; }
+        private BatchItemViewModel GlobalBatchItem { get; set; }
 
+        public bool UseCage { get => Data.UseCage; set { Data.UseCage = value; RefreshBatchItems(); } }
+        public bool UseTermsAsPrefix { get => Data.UseTermsAsPrefix; set { Data.UseTermsAsPrefix = value; RefreshBatchItems(); } }
+        public Term SelectedTermSeparator { get => Data.SelectedTermSeparator; set { Data.SelectedTermSeparator = value; RefreshBatchItems(); } }
+        public Term SelectedTermLow { get => Data.SelectedTermLow; set { Data.SelectedTermLow = value; RefreshBatchItems(); } }
+        public Term SelectedTermHigh { get => Data.SelectedTermHigh; set { Data.SelectedTermHigh = value; RefreshBatchItems(); } }
+        public Term SelectedTermCage { get => Data.SelectedTermCage; set { Data.SelectedTermCage = value; RefreshBatchItems(); } }
+        public string[] SelectedTerms => new string[] { SelectedTermLow?.Name, SelectedTermHigh?.Name, SelectedTermCage?.Name };
+        public string[] SelectedFormats => new string[] { SelectedMeshFormatLow, SelectedMeshFormatHigh, SelectedMeshFormatCage, SettingsViewModel.Instance.SelectedTextureFileFormat };
+        public string SelectedMeshFormatLow { get => Data.SelectedMeshFormatLow; set { Data.SelectedMeshFormatLow = value; RefreshBatchItems(); } }
+        public string SelectedMeshFormatHigh { get => Data.SelectedMeshFormatHigh; set { Data.SelectedMeshFormatHigh = value; RefreshBatchItems(); } }
+        public string SelectedMeshFormatCage { get => Data.SelectedMeshFormatCage; set { Data.SelectedMeshFormatCage = value; RefreshBatchItems(); } }
+        public bool BakeSeparately { get => Data.BakeSeparately; set => Data.BakeSeparately = value; }
+        public int SelectedMapWidthAll { get => Data.SelectedMapWidthAll; set => Data.SelectedMapWidthAll = value; }
+        public int SelectedMapHeightAll { get => Data.SelectedMapHeightAll; set => Data.SelectedMapHeightAll = value; }
+        public int FileLowCount { get => _fileLCount; set { _fileLCount = value; NotifyPropertyChanged(); } }
+        public int FileHighCount { get => _fileHCount; set { _fileHCount = value; NotifyPropertyChanged(); } }
+        public int FileCageCount { get => _fileCCount; set { _fileCCount = value; NotifyPropertyChanged(); } }
+        public bool IsBaking
+        {
+            get => isBaking;
+            set { isBaking = value; NotifyPropertyChanged(); }
+        }
+        public double BakingProgress
+        {
+            get => bakingProgress;
+            set { bakingProgress = value; NotifyPropertyChanged(); }
+        }
+        public ObservableCollection<string> LogEntries
+        {
+            get => logEntries;
+            set { logEntries = value; NotifyPropertyChanged(); }
+        }
+        public string LastLogEntry => LogEntries.Last();
+        public ICommand CMDOpenFolder { get; set; }
+        public ICommand CMDOpenLog { get; set; }
+        public ICommand CMDBakeSelected { get; set; }
+        public ICommand CMDBakeAll { get; set; }
+        public ICommand CMDSetAllItemsLow { get; set; }
+        public ICommand CMDSetAllItemsHigh { get; set; }
+        public ICommand CMDSetAllMaps { get; set; }
+        public ICommand CheckAllCommand => checkAllCommand ?? (checkAllCommand = new RelayParametrizedCommand(param => CheckAll(bool.Parse(param.ToString()))));
         private BatchViewModel()
         {
             LogEntries = new ObservableCollection<string>();
             Log("XNormalBatcher Started.");
             IsBaking = false;
-            MapSizes = new ObservableCollection<int>() { 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768 };
-            MeshFileFormats = new ObservableCollection<string>() { "fbx", "sia", "sib", "x", "ms3d", "off", "dae", "ovb", "dxf", "mesh", "xsi", "3ds", "sbm", "obj", "ase", "ply", "lwo", "lxo" };
-
             //Default Selection
             FileLowCount = FileHighCount = FileCageCount = 0;
-
+            var lastSessionData = MainViewModel.LastSession;
+            Data = lastSessionData?.Batch ?? new BatchModel();
+            RefreshData();
+            // Commands
             CMDOpenFolder = new RelayCommand(OpenFolder);
             CMDOpenLog = new RelayCommand(OpenLog);
             CMDBakeSelected = new RelayParametrizedCommand(a => Bake());
@@ -150,22 +115,7 @@ namespace XnormalBatcher.ViewModels
             CMDSetAllMaps = new RelayCommand(SetAllMaps);
             CMDSetAllItemsLow = new RelayCommand(SetAllLow);
             CMDSetAllItemsHigh = new RelayCommand(SetAllHigh);
-
-            var lastSessionData = MainViewModel.LastSession;            
-
-            UseCage = lastSessionData?.Batch.UseCage ?? false;
-            UseTermsAsPrefix = lastSessionData?.Batch.UseTermsAsPrefix ?? false;
-            BakeSeparately = lastSessionData?.Batch.BakeSeparately ?? false;
-            SelectedMapWidthAll = lastSessionData?.Batch.SelectedMapWidthAll ?? MapSizes[7];
-            SelectedMapHeightAll = lastSessionData?.Batch.SelectedMapHeightAll ?? MapSizes[7];
-            SelectedMeshFormatLow = lastSessionData?.Batch.SelectedMeshFormatLow ?? MeshFileFormats[13];
-            SelectedMeshFormatHigh = lastSessionData?.Batch.SelectedMeshFormatHigh ?? MeshFileFormats[13];
-            SelectedMeshFormatCage = lastSessionData?.Batch.SelectedMeshFormatCage ?? MeshFileFormats[13];
-            SelectedTermSeparator = lastSessionData?.Batch.SelectedTermSeparator ?? TermsViewModel.Instance.TermsSeparator[0];
-            SelectedTermLow = lastSessionData?.Batch.SelectedTermLow ?? TermsViewModel.Instance.TermsLow[0];
-            SelectedTermHigh = lastSessionData?.Batch.SelectedTermHigh ?? TermsViewModel.Instance.TermsHigh[0];
-            SelectedTermCage = lastSessionData?.Batch.SelectedTermCage ?? TermsViewModel.Instance.TermsCage[0];
-
+            // Events
             AutoUpdater.IncludeSubdirectories = true;
             AutoUpdater.NotifyFilter = NotifyFilters.FileName | NotifyFilters.DirectoryName;
             AutoUpdater.Changed += new FileSystemEventHandler(OnRefreshFiles);
@@ -174,16 +124,41 @@ namespace XnormalBatcher.ViewModels
             AutoUpdater.Renamed += new RenamedEventHandler(OnRefreshFiles);
             AutoUpdater.Path = SettingsViewModel.Instance.BakingPath;
             AutoUpdater.EnableRaisingEvents = SettingsViewModel.Instance.BakingPath != null;
-
+            // Data
             GlobalBatchItem = new BatchItemViewModel("__global__", this);
         }
 
+        private void RefreshData()
+        {
+            NotifyPropertyChanged("UseCage");
+            NotifyPropertyChanged("UseTermsAsPrefix");
+            NotifyPropertyChanged("SelectedTermSeparator");
+            NotifyPropertyChanged("SelectedTermLow");
+            NotifyPropertyChanged("SelectedTermHigh");
+            NotifyPropertyChanged("SelectedTermCage");
+            NotifyPropertyChanged("SelectedMeshFormatLow");
+            NotifyPropertyChanged("SelectedMeshFormatHigh");
+            NotifyPropertyChanged("SelectedMeshFormatCage");
+            NotifyPropertyChanged("BakeSeparately");
+            NotifyPropertyChanged("SelectedMapWidthAll");
+            NotifyPropertyChanged("SelectedMapHeightAll");
+        }
+        private void OpenLog()
+        {
+            new LogWindow().Show();
+        }
         public void Log(string line)
         {
             LogEntries.Add(line);
             NotifyPropertyChanged("LastLogEntry");
         }
-
+        private void CheckAll(bool selectAll)
+        {
+            foreach (var item in BatchItems)
+            {
+                item.IsSelected = selectAll;
+            }
+        }
         public string GetSuffix(int slot)
         {
             var term = SelectedTerms[slot];

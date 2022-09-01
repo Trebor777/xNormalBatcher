@@ -14,12 +14,149 @@ namespace XnormalBatcher.ViewModels
 {
     // Holds information/logic on bake settings...
     [JsonObject(MemberSerialization.OptIn)]
+    internal class SettingsModel
+    {
+        internal static List<int> AASizes = new List<int>() { 1, 2, 4 };
+        internal static List<int> BucketSizes = new List<int>() { 16, 32, 64, 128, 256, 512 };
+        internal static List<string> TextureFileFormats = new List<string>() { "tga", "tif", "tiff", "jpg", "png", "raw", "dds", "j2k", "wdp", "jxr", "hdp", "hdr", "imgj", "webp", "exr" };
+        internal static List<string> Axis = new List<string>() { "X+", "X-", "Y+", "Y-", "Z+", "Z-" };
+        internal static List<string> Distributions = new List<string>() { "Uniform", "Cosine", "CosineSq" };
+        internal static List<string> Algorithms = new List<string>() { "Average", "Gaussian" };
+        internal static List<string> CoordSystems = new List<string>() { "OpenGL", "DirectX", "AliB" };
+        internal static List<string> ToneMappings = new List<string>() { "Monocrome", "2Col", "3Col" };
+        internal static List<string> Normalizations = new List<string>() { "Interactive", "Manual", "Raw FP Values" };
+
+        public SettingsModel()
+        {
+            EdgePadding = 16;
+            BakingPath = @"E:\bake\";
+            BakeNormals = true;
+            BakeAmbient = true;
+            BakeHeight = false;
+            BakeCurvature = false;
+            BakeVertexColors = false;
+            BakeWireframe = false;
+            BakeTranslucency = false;
+            BakeRadiosity = false;
+            BakePRTpn = false;
+            BakeProximity = false;
+            BakeDirection = false;
+            BakeDerivative = false;
+            BakeConvexity = false;
+            BakeCavity = false;
+            BakeBentNormals = false;
+            BakeBaseTexture = false;
+            BakeThickness = false;
+            SelectedAASize = AASizes[0];
+            SelectedBucketSize = BucketSizes[2];
+            SelectedTextureFileFormat = TextureFileFormats[4];
+            SettingsAmbient = new VMSettingsAmbient();
+            SettingsBaseTexture = new VMSettingsBaseTexture();
+            SettingsBentNormal = new VMSettingsBentNormal();
+            SettingsCavity = new VMSettingsCavity();
+            SettingsConvexity = new VMSettingsConvexity();
+            SettingsCurvature = new VMSettingsCurvature();
+            SettingsDerivative = new VMSettingsDerivative();
+            SettingsDirection = new VMSettingsDirection();
+            SettingsHeight = new VMSettingsHeight();
+            SettingsNormal = new VMSettingsNormal();
+            SettingsProximity = new VMSettingsProximity();
+            SettingsPRTpn = new VMSettingsPRTpn();
+            SettingsRadiosity = new VMSettingsRadiosity();
+            SettingsTranslucency = new VMSettingsTranslucency();
+            SettingsVertexColors = new VMSettingsVertexColors();
+            SettingsWireframe = new VMSettingsWireframe();
+        }
+        [JsonProperty]
+        public int EdgePadding { get; set; }
+        [JsonProperty]
+        public string XNormalPath { get; set; }
+        [JsonProperty]
+        public string BakingPath { get; set; }
+        [JsonProperty]
+        public int SelectedAASize { get; set; }
+        [JsonProperty]
+        public int SelectedBucketSize { get; set; }
+        [JsonProperty]
+        public string SelectedTextureFileFormat { get; set; }
+        [JsonProperty]
+        public bool BakeNormals { get; set; }
+        [JsonProperty]
+        public bool BothNormalsType { get; set; }
+        [JsonProperty]
+        public bool BakeAmbient { get; set; }
+        [JsonProperty]
+        public bool BakeHeight { get; set; }
+        [JsonProperty]
+        public bool BakeCurvature { get; set; }
+        [JsonProperty]
+        public bool BakeVertexColors { get; set; }
+        [JsonProperty]
+        public bool BakeWireframe { get; set; }
+        [JsonProperty]
+        public bool BakeTranslucency { get; set; }
+        [JsonProperty]
+        public bool BakeRadiosity { get; set; }
+        [JsonProperty]
+        public bool BakePRTpn { get; set; }
+        [JsonProperty]
+        public bool BakeProximity { get; set; }
+        [JsonProperty]
+        public bool BakeDirection { get; set; }
+        [JsonProperty]
+        public bool BakeDerivative { get; set; }
+        [JsonProperty]
+        public bool BakeConvexity { get; set; }
+        [JsonProperty]
+        public bool BakeCavity { get; set; }
+        [JsonProperty]
+        public bool BakeBentNormals { get; set; }
+        [JsonProperty]
+        public bool BakeBaseTexture { get; set; }
+        [JsonProperty]
+        public bool BakeThickness { get; set; }
+        [JsonProperty]
+        public bool ClosestHitRayFails { get; set; }
+        [JsonProperty]
+        public bool DiscardBackFaceHit { get; set; }
+        [JsonProperty]
+        public VMSettingsAmbient SettingsAmbient { get; set; }
+        [JsonProperty]
+        public VMSettingsBaseTexture SettingsBaseTexture { get; set; }
+        [JsonProperty]
+        public VMSettingsBentNormal SettingsBentNormal { get; set; }
+        [JsonProperty]
+        public VMSettingsCavity SettingsCavity { get; set; }
+        [JsonProperty]
+        public VMSettingsConvexity SettingsConvexity { get; set; }
+        [JsonProperty]
+        public VMSettingsCurvature SettingsCurvature { get; set; }
+        [JsonProperty]
+        public VMSettingsDerivative SettingsDerivative { get; set; }
+        [JsonProperty]
+        public VMSettingsDirection SettingsDirection { get; set; }
+        [JsonProperty]
+        public VMSettingsHeight SettingsHeight { get; set; }
+        [JsonProperty]
+        public VMSettingsNormal SettingsNormal { get; set; }
+        [JsonProperty]
+        public VMSettingsProximity SettingsProximity { get; set; }
+        [JsonProperty]
+        public VMSettingsPRTpn SettingsPRTpn { get; set; }
+        [JsonProperty]
+        public VMSettingsRadiosity SettingsRadiosity { get; set; }
+        [JsonProperty]
+        public VMSettingsTranslucency SettingsTranslucency { get; set; }
+        [JsonProperty]
+        public VMSettingsVertexColors SettingsVertexColors { get; set; }
+        [JsonProperty]
+        public VMSettingsWireframe SettingsWireframe { get; set; }
+    }
     internal class SettingsViewModel : BaseViewModel
     {
         public static SettingsViewModel Instance { get; } = new SettingsViewModel();
-
-        private string _xnPath;
-        private string _bakePath;
+        internal SettingsModel Data;
+        #region Privates        
         private ObservableCollection<int> aaSizes;
         private ObservableCollection<int> bucketSizes;
         private ObservableCollection<string> textureFileFormats;
@@ -28,50 +165,9 @@ namespace XnormalBatcher.ViewModels
         private ObservableCollection<string> algorithms;
         private ObservableCollection<string> coordSystems;
         private ObservableCollection<string> toneMappings;
-        private int selectedAASize;
-        private int selectedBucketSize;
-        private string selectedTextureFileFormat;
-        private bool bakeNormals;
-        private bool bothNormalsType;
-        private bool bakeAmbient;
-        private bool bakeHeight;
-        private bool bakeCurvature;
-        private bool bakeVertexColors;
-        private bool bakeThickness;
-        private bool bakeCavity;
-        private bool bakeBentNormals;
-        private bool bakeDirection;
-        private bool bakeConvexity;
-        private bool bakeDerivative;
-        private bool bakeRadiosity;
-        private bool bakeProximity;
-        private bool bakePRTpn;
-        private bool bakeBaseTexture;
-        private bool bakeWireframe;
-        private bool bakeTranslucency;
-        private bool closestHitRayFails;
-        private bool discardBackFaceHit;
-        private VMSettingsAmbient settingsAmbient;
-        private VMSettingsBaseTexture settingsBaseTexture;
-        private VMSettingsBentNormal settingsBentNormal;
-        private VMSettingsCavity settingsCavity;
-        private VMSettingsConvexity settingsConvexity;
-        private VMSettingsCurvature settingsCurvature;
-        private VMSettingsDerivative settingsDerivative;
-        private VMSettingsDirection settingsDirection;
-        private VMSettingsHeight settingsHeight;
-        private VMSettingsNormal settingsNormal;
-        private VMSettingsProximity settingsProximity;
-        private VMSettingsPRTpn settingsPRTpn;
-        private VMSettingsRadiosity settingsRadiosity;
-        private VMSettingsTranslucency settingsTranslucency;
-        private VMSettingsVertexColors settingsVertexColors;
-        private VMSettingsWireframe settingsWireframe;
-        private int edgePadding;
         private ObservableCollection<string> normalizations;
-
-        //private VMSettingsThickness settingsThickness;
-
+        #endregion
+        #region Properties
         // Show the Settings Panel depending if any map to bake is checked. Else Hide it. Uses a BooleanToVisibilityConverter
         public bool BakeSettingsVisibility => BakeNormals || BakeAmbient || BakeHeight || BakeCurvature || BakeVertexColors
                     || BakeWireframe || BakeTranslucency || BakeRadiosity
@@ -84,27 +180,27 @@ namespace XnormalBatcher.ViewModels
         [JsonProperty]
         public int EdgePadding
         {
-            get => edgePadding; set
+            get => Data.EdgePadding; set
             {
-                edgePadding = value;
+                Data.EdgePadding = value;
                 NotifyPropertyChanged();
             }
         }
         [JsonProperty]
         public string XNormalPath
         {
-            get => _xnPath; set
+            get => Data.XNormalPath; set
             {
-                _xnPath = value;
+                Data.XNormalPath = value;
                 NotifyPropertyChanged();
             }
         }
         [JsonProperty]
         public string BakingPath
         {
-            get => _bakePath; set
+            get => Data.BakingPath; set
             {
-                _bakePath = value;
+                Data.BakingPath = value;
                 NotifyPropertyChanged();
             }
         }
@@ -172,7 +268,6 @@ namespace XnormalBatcher.ViewModels
                 NotifyPropertyChanged();
             }
         }
-
         public ObservableCollection<string> Normalizations
         {
             get => normalizations;
@@ -185,324 +280,324 @@ namespace XnormalBatcher.ViewModels
         [JsonProperty]
         public int SelectedAASize
         {
-            get => selectedAASize; set
+            get => Data.SelectedAASize; set
             {
-                selectedAASize = value;
+                Data.SelectedAASize = value;
                 NotifyPropertyChanged();
             }
         }
         [JsonProperty]
         public int SelectedBucketSize
         {
-            get => selectedBucketSize; set
+            get => Data.SelectedBucketSize; set
             {
-                selectedBucketSize = value;
+                Data.SelectedBucketSize = value;
                 NotifyPropertyChanged();
             }
         }
         [JsonProperty]
         public string SelectedTextureFileFormat
         {
-            get => selectedTextureFileFormat; set
+            get => Data.SelectedTextureFileFormat; set
             {
-                selectedTextureFileFormat = value;
+                Data.SelectedTextureFileFormat = value;
                 NotifyPropertyChanged();
             }
         }
         [JsonProperty]
         public bool BakeNormals
         {
-            get => bakeNormals; set
+            get => Data.BakeNormals; set
             {
-                bakeNormals = value;
+                Data.BakeNormals = value;
                 NotifyPropertyChanged();
             }
         }
         [JsonProperty]
         public bool BothNormalsType
         {
-            get => bothNormalsType; set
+            get => Data.BothNormalsType; set
             {
-                bothNormalsType = value;
+                Data.BothNormalsType = value;
                 NotifyPropertyChanged();
             }
         }
         [JsonProperty]
         public bool BakeAmbient
         {
-            get => bakeAmbient; set
+            get => Data.BakeAmbient; set
             {
-                bakeAmbient = value;
+                Data.BakeAmbient = value;
                 NotifyPropertyChanged();
             }
         }
         [JsonProperty]
         public bool BakeHeight
         {
-            get => bakeHeight; set
+            get => Data.BakeHeight; set
             {
-                bakeHeight = value;
+                Data.BakeHeight = value;
                 NotifyPropertyChanged();
             }
         }
         [JsonProperty]
         public bool BakeCurvature
         {
-            get => bakeCurvature; set
+            get => Data.BakeCurvature; set
             {
-                bakeCurvature = value;
+                Data.BakeCurvature = value;
                 NotifyPropertyChanged();
             }
         }
         [JsonProperty]
         public bool BakeVertexColors
         {
-            get => bakeVertexColors; set
+            get => Data.BakeVertexColors; set
             {
-                bakeVertexColors = value;
+                Data.BakeVertexColors = value;
                 NotifyPropertyChanged();
             }
         }
         [JsonProperty]
         public bool BakeThickness
         {
-            get => bakeThickness; set
+            get => Data.BakeThickness; set
             {
-                bakeThickness = value;
+                Data.BakeThickness = value;
                 NotifyPropertyChanged();
             }
         }
         [JsonProperty]
         public bool BakeCavity
         {
-            get => bakeCavity; set
+            get => Data.BakeCavity; set
             {
-                bakeCavity = value;
+                Data.BakeCavity = value;
                 NotifyPropertyChanged();
             }
         }
         [JsonProperty]
         public bool BakeBentNormals
         {
-            get => bakeBentNormals; set
+            get => Data.BakeBentNormals; set
             {
-                bakeBentNormals = value;
+                Data.BakeBentNormals = value;
                 NotifyPropertyChanged();
             }
         }
         [JsonProperty]
         public bool BakeDirection
         {
-            get => bakeDirection; set
+            get => Data.BakeDirection; set
             {
-                bakeDirection = value;
+                Data.BakeDirection = value;
                 NotifyPropertyChanged();
             }
         }
         [JsonProperty]
         public bool BakeConvexity
         {
-            get => bakeConvexity; set
+            get => Data.BakeConvexity; set
             {
-                bakeConvexity = value;
+                Data.BakeConvexity = value;
                 NotifyPropertyChanged();
             }
         }
         [JsonProperty]
         public bool BakeDerivative
         {
-            get => bakeDerivative; set
+            get => Data.BakeDerivative; set
             {
-                bakeDerivative = value;
+                Data.BakeDerivative = value;
                 NotifyPropertyChanged();
             }
         }
         [JsonProperty]
         public bool BakeRadiosity
         {
-            get => bakeRadiosity; set
+            get => Data.BakeRadiosity; set
             {
-                bakeRadiosity = value;
+                Data.BakeRadiosity = value;
                 NotifyPropertyChanged();
             }
         }
         [JsonProperty]
         public bool BakeProximity
         {
-            get => bakeProximity; set
+            get => Data.BakeProximity; set
             {
-                bakeProximity = value;
+                Data.BakeProximity = value;
                 NotifyPropertyChanged();
             }
         }
         [JsonProperty]
         public bool BakePRTpn
         {
-            get => bakePRTpn; set
+            get => Data.BakePRTpn; set
             {
-                bakePRTpn = value;
+                Data.BakePRTpn = value;
                 NotifyPropertyChanged();
             }
         }
         [JsonProperty]
         public bool BakeBaseTexture
         {
-            get => bakeBaseTexture; set
+            get => Data.BakeBaseTexture; set
             {
-                bakeBaseTexture = value;
+                Data.BakeBaseTexture = value;
                 NotifyPropertyChanged();
             }
         }
         [JsonProperty]
         public bool BakeWireframe
         {
-            get => bakeWireframe; set
+            get => Data.BakeWireframe; set
             {
-                bakeWireframe = value;
+                Data.BakeWireframe = value;
                 NotifyPropertyChanged();
             }
         }
         [JsonProperty]
         public bool BakeTranslucency
         {
-            get => bakeTranslucency; set
+            get => Data.BakeTranslucency; set
             {
-                bakeTranslucency = value;
+                Data.BakeTranslucency = value;
                 NotifyPropertyChanged();
             }
         }
         [JsonProperty]
         public bool ClosestHitRayFails
         {
-            get => closestHitRayFails; set
+            get => Data.ClosestHitRayFails; set
             {
-                closestHitRayFails = value;
+                Data.ClosestHitRayFails = value;
                 NotifyPropertyChanged();
             }
         }
         [JsonProperty]
         public bool DiscardBackFaceHit
         {
-            get => discardBackFaceHit; set
+            get => Data.DiscardBackFaceHit; set
             {
-                discardBackFaceHit = value;
+                Data.DiscardBackFaceHit = value;
                 NotifyPropertyChanged();
             }
         }
         [JsonProperty]
         public VMSettingsAmbient SettingsAmbient
         {
-            get => settingsAmbient; set
+            get => Data.SettingsAmbient; set
             {
-                settingsAmbient = value;
+                Data.SettingsAmbient = value;
                 NotifyPropertyChanged();
             }
         }
         [JsonProperty]
         public VMSettingsBaseTexture SettingsBaseTexture
         {
-            get => settingsBaseTexture; set
+            get => Data.SettingsBaseTexture; set
             {
-                settingsBaseTexture = value;
+                Data.SettingsBaseTexture = value;
                 NotifyPropertyChanged();
             }
         }
         [JsonProperty]
         public VMSettingsBentNormal SettingsBentNormal
         {
-            get => settingsBentNormal; set
+            get => Data.SettingsBentNormal; set
             {
-                settingsBentNormal = value;
+                Data.SettingsBentNormal = value;
                 NotifyPropertyChanged();
             }
         }
         [JsonProperty]
         public VMSettingsCavity SettingsCavity
         {
-            get => settingsCavity; set
+            get => Data.SettingsCavity; set
             {
-                settingsCavity = value;
+                Data.SettingsCavity = value;
                 NotifyPropertyChanged();
             }
         }
         [JsonProperty]
         public VMSettingsConvexity SettingsConvexity
         {
-            get => settingsConvexity; set
+            get => Data.SettingsConvexity; set
             {
-                settingsConvexity = value;
+                Data.SettingsConvexity = value;
                 NotifyPropertyChanged();
             }
         }
         [JsonProperty]
         public VMSettingsCurvature SettingsCurvature
         {
-            get => settingsCurvature; set
+            get => Data.SettingsCurvature; set
             {
-                settingsCurvature = value;
+                Data.SettingsCurvature = value;
                 NotifyPropertyChanged();
             }
         }
         [JsonProperty]
         public VMSettingsDerivative SettingsDerivative
         {
-            get => settingsDerivative; set
+            get => Data.SettingsDerivative; set
             {
-                settingsDerivative = value;
+                Data.SettingsDerivative = value;
                 NotifyPropertyChanged();
             }
         }
         [JsonProperty]
         public VMSettingsDirection SettingsDirection
         {
-            get => settingsDirection; set
+            get => Data.SettingsDirection; set
             {
-                settingsDirection = value;
+                Data.SettingsDirection = value;
                 NotifyPropertyChanged();
             }
         }
         [JsonProperty]
         public VMSettingsHeight SettingsHeight
         {
-            get => settingsHeight; set
+            get => Data.SettingsHeight; set
             {
-                settingsHeight = value;
+                Data.SettingsHeight = value;
                 NotifyPropertyChanged();
             }
         }
         [JsonProperty]
         public VMSettingsNormal SettingsNormal
         {
-            get => settingsNormal; set
+            get => Data.SettingsNormal; set
             {
-                settingsNormal = value;
+                Data.SettingsNormal = value;
                 NotifyPropertyChanged();
             }
         }
         [JsonProperty]
         public VMSettingsProximity SettingsProximity
         {
-            get => settingsProximity; set
+            get => Data.SettingsProximity; set
             {
-                settingsProximity = value;
+                Data.SettingsProximity = value;
                 NotifyPropertyChanged();
             }
         }
         [JsonProperty]
         public VMSettingsPRTpn SettingsPRTpn
         {
-            get => settingsPRTpn; set
+            get => Data.SettingsPRTpn; set
             {
-                settingsPRTpn = value;
+                Data.SettingsPRTpn = value;
                 NotifyPropertyChanged();
             }
         }
         [JsonProperty]
         public VMSettingsRadiosity SettingsRadiosity
         {
-            get => settingsRadiosity; set
+            get => Data.SettingsRadiosity; set
             {
-                settingsRadiosity = value;
+                Data.SettingsRadiosity = value;
                 NotifyPropertyChanged();
             }
         }
@@ -518,55 +613,93 @@ namespace XnormalBatcher.ViewModels
         [JsonProperty]
         public VMSettingsTranslucency SettingsTranslucency
         {
-            get => settingsTranslucency; set
+            get => Data.SettingsTranslucency; set
             {
-                settingsTranslucency = value;
+                Data.SettingsTranslucency = value;
                 NotifyPropertyChanged();
             }
         }
         [JsonProperty]
         public VMSettingsVertexColors SettingsVertexColors
         {
-            get => settingsVertexColors; set
+            get => Data.SettingsVertexColors; set
             {
-                settingsVertexColors = value;
+                Data.SettingsVertexColors = value;
                 NotifyPropertyChanged();
             }
         }
         [JsonProperty]
         public VMSettingsWireframe SettingsWireframe
         {
-            get => settingsWireframe; set
+            get => Data.SettingsWireframe; set
             {
-                settingsWireframe = value;
+                Data.SettingsWireframe = value;
                 NotifyPropertyChanged();
             }
         }
+#endregion
         private SettingsViewModel()
         {
-            BakingPath = @"E:\bake\";
-            EdgePadding = 16;
-            AASizes = new ObservableCollection<int>() { 1, 2, 4 };
-            BucketSizes = new ObservableCollection<int>() { 16, 32, 64, 128, 256, 512 };
-            TextureFileFormats = new ObservableCollection<string>() { "tga", "tif", "tiff", "jpg", "png", "raw", "dds", "j2k", "wdp", "jxr", "hdp", "hdr", "imgj", "webp", "exr" };
-            Axis = new ObservableCollection<string>() { "X+", "X-", "Y+", "Y-", "Z+", "Z-" };
-            Distributions = new ObservableCollection<string>() { "Uniform", "Cosine", "CosineSq" };
-            Algorithms = new ObservableCollection<string>() { "Average", "Gaussian" };
-            CoordSystems = new ObservableCollection<string>() { "OpenGL", "DirectX", "AliB" };
-            ToneMappings = new ObservableCollection<string>() { "Monocrome", "2Col", "3Col" };
-            Normalizations = new ObservableCollection<string>() { "Interactive", "Manual", "Raw FP Values" };
+            Data = MainViewModel.LastSession?.Settings ?? new SettingsModel();
+            RefreshData();
+            AASizes = new ObservableCollection<int>(SettingsModel.AASizes);
+            BucketSizes = new ObservableCollection<int>(SettingsModel.BucketSizes);
+            TextureFileFormats = new ObservableCollection<string>(SettingsModel.TextureFileFormats);
+            Axis = new ObservableCollection<string>(SettingsModel.Axis);
+            Distributions = new ObservableCollection<string>(SettingsModel.Distributions);
+            Algorithms = new ObservableCollection<string>(SettingsModel.Algorithms);
+            CoordSystems = new ObservableCollection<string>(SettingsModel.CoordSystems);
+            ToneMappings = new ObservableCollection<string>(SettingsModel.ToneMappings);
+            Normalizations = new ObservableCollection<string>(SettingsModel.Normalizations);
             BrowseXnormal = new RelayCommand(BrowseXNExecutable);
             BrowseBakingPath = new RelayCommand(BrowseBakePath);
             CMDQuickBakes = new RelayCommand(SetQuickBakes);
             CMDResetALL = new RelayCommand(ResetAll);
             CheckXNPath();
             CheckBakePath();
-            SelectedAASize = AASizes[0];
-            SelectedBucketSize = BucketSizes[2];
-            SelectedTextureFileFormat = TextureFileFormats[4];
-            CreateSettings();
-            SetQuickBakes();
-            //ToggleAllPanels(true);
+            //SetQuickBakes();
+        }
+
+        private void RefreshData()
+        {
+            NotifyPropertyChanged("EdgePadding");
+            NotifyPropertyChanged("BakingPath");
+            NotifyPropertyChanged("BakeNormals");
+            NotifyPropertyChanged("BakeAmbient");
+            NotifyPropertyChanged("BakeHeight");
+            NotifyPropertyChanged("BakeCurvature");
+            NotifyPropertyChanged("BakeVertexColors");
+            NotifyPropertyChanged("BakeWireframe");
+            NotifyPropertyChanged("BakeTranslucency");
+            NotifyPropertyChanged("BakeRadiosity");
+            NotifyPropertyChanged("BakePRTpn");
+            NotifyPropertyChanged("BakeProximity");
+            NotifyPropertyChanged("BakeDirection");
+            NotifyPropertyChanged("BakeDerivative");
+            NotifyPropertyChanged("BakeConvexity");
+            NotifyPropertyChanged("BakeCavity");
+            NotifyPropertyChanged("BakeBentNormals");
+            NotifyPropertyChanged("BakeBaseTexture");
+            NotifyPropertyChanged("BakeThickness");
+            NotifyPropertyChanged("SelectedAASize");
+            NotifyPropertyChanged("SelectedBucketSize");
+            NotifyPropertyChanged("SelectedTextureFileFormat");
+            NotifyPropertyChanged("SettingsAmbient");
+            NotifyPropertyChanged("SettingsBaseTexture");
+            NotifyPropertyChanged("SettingsBentNormal");
+            NotifyPropertyChanged("SettingsCavity");
+            NotifyPropertyChanged("SettingsConvexity");
+            NotifyPropertyChanged("SettingsCurvature");
+            NotifyPropertyChanged("SettingsDerivative");
+            NotifyPropertyChanged("SettingsDirection");
+            NotifyPropertyChanged("SettingsHeight");
+            NotifyPropertyChanged("SettingsNormal");
+            NotifyPropertyChanged("SettingsProximity");
+            NotifyPropertyChanged("SettingsPRTpn");
+            NotifyPropertyChanged("SettingsRadiosity");
+            NotifyPropertyChanged("SettingsTranslucency");
+            NotifyPropertyChanged("SettingsVertexColors");
+            NotifyPropertyChanged("SettingsWireframe");
         }
 
         private void ToggleAllPanels(bool show = true)
@@ -605,26 +738,6 @@ namespace XnormalBatcher.ViewModels
 
         }
 
-        private void CreateSettings()
-        {
-            SettingsAmbient = new VMSettingsAmbient();
-            SettingsBaseTexture = new VMSettingsBaseTexture();
-            SettingsBentNormal = new VMSettingsBentNormal();
-            SettingsCavity = new VMSettingsCavity();
-            SettingsConvexity = new VMSettingsConvexity();
-            SettingsCurvature = new VMSettingsCurvature();
-            SettingsDerivative = new VMSettingsDerivative();
-            SettingsDirection = new VMSettingsDirection();
-            SettingsHeight = new VMSettingsHeight();
-            SettingsNormal = new VMSettingsNormal();
-            SettingsProximity = new VMSettingsProximity();
-            SettingsPRTpn = new VMSettingsPRTpn();
-            SettingsRadiosity = new VMSettingsRadiosity();
-            //SettingsThickness = new VMSettingsThickness();
-            SettingsTranslucency = new VMSettingsTranslucency();
-            SettingsVertexColors = new VMSettingsVertexColors();
-            SettingsWireframe = new VMSettingsWireframe();
-        }
 
         private void CheckXNPath()
         {
