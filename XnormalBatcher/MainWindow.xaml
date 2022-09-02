@@ -7,7 +7,7 @@
         xmlns:fa5="http://schemas.fontawesome.com/icons/"
         xmlns:local="clr-namespace:XnormalBatcher"
         xmlns:vm="clr-namespace:XnormalBatcher.ViewModels"
-        mc:Ignorable="d" Title="{Binding Title}" Height="504" Width="960" MinWidth="960" MinHeight="480" Loaded="Window_Loaded"
+        mc:Ignorable="d" Title="{Binding Title}" Height="504" Width="960" MinWidth="960" MinHeight="720" Loaded="Window_Loaded"
         DataContext="{x:Static vm:MainViewModel.Instance}" Closed="Window_Closed"
         >
     <Window.Resources>
@@ -1011,7 +1011,7 @@
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="24" />
                             </Grid.RowDefinitions>
-                            <DataGrid MinHeight="24" ItemsSource="{Binding Terms}" AutoGenerateColumns="false">
+                            <DataGrid MinHeight="24" ItemsSource="{Binding Terms}" AutoGenerateColumns="false" AlternationCount="1" AlternatingRowBackground="#0C000000" SelectionMode="Single" MinRowHeight="16">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
                                     <DataGridComboBoxColumn Width="*" Header="Group" SelectedItemBinding="{Binding Group}" ItemsSource="{Binding Source={x:Static vm:TermsViewModel.Instance}, Path=TermGroups}" />

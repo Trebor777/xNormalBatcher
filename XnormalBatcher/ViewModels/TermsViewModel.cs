@@ -10,6 +10,7 @@ using System.Windows.Input;
 namespace XnormalBatcher.ViewModels
 {
     // Holds information/logic on what are the usable terms in the different settings...
+    [JsonObject(IsReference = true)]
     internal class Term
     {
         public static Dictionary<string, string> Groups = new Dictionary<string, string>() { ["L"] = "Low", ["H"] = "High", ["C"] = "Cage", ["S"] = "Separator" };
@@ -33,8 +34,12 @@ namespace XnormalBatcher.ViewModels
             }
         }
 
+        public Term()
+        { }
+
+
         [JsonConstructor]
-        internal Term(string _name, string _grp)
+        private Term(string _name, string _grp)
         {
             name = _name;
             group = _grp;
@@ -50,41 +55,19 @@ namespace XnormalBatcher.ViewModels
         internal static List<Term> TermsSeparator = FillTerms(new string[] { "_", "\" \"", "-", "." }, Term.Groups["S"]);
         [JsonProperty]
         public ObservableCollection<Term> Terms { get; set; }
-        internal TermsModel()
+        public TermsModel(int n = 0)
         {
-            Terms = new ObservableCollection<Term>();
-            foreach (var term in TermsLow)
-            {
-                Terms.Add(term);
-            }
-            foreach (var term in TermsHigh)
-            {
-                Terms.Add(term);
-            }
-            foreach (var term in TermsCage)
-            {
-                Terms.Add(term);
-            }
-            foreach (var term in TermsSeparator)
-            {
-                Terms.Add(term);
-            }
+            Terms = new ObservableCollection<Term>(TermsLow.Concat(TermsHigh).Concat(TermsCage).Concat(TermsSeparator));
         }
         [JsonConstructor]
-        internal TermsModel(ObservableCollection<Term> _terms)
+        private TermsModel()
         {
-            Terms = _terms;
+            //Terms = _terms;
         }
 
         private static List<Term> FillTerms(string[] terms, string group)
         {
-            var target = new List<Term>();
-            foreach (var item in terms)
-            {
-                Term term = new Term(item, group);
-                target.Add(term);
-            }
-            return target;
+            return new List<Term>(terms.Select(t => new Term() { Name = t, Group = group }));
         }
     }
 
@@ -128,7 +111,7 @@ namespace XnormalBatcher.ViewModels
 
         private TermsViewModel()
         {
-            Data = MainViewModel.LastSession?.Terms ?? new TermsModel();
+            Data = MainViewModel.LastSession?.Terms ?? new TermsModel(0);
             RefreshFilteredTerms();
             Terms.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler((sender, arg) =>
             {

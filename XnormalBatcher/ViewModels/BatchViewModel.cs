@@ -24,18 +24,39 @@ namespace XnormalBatcher.ViewModels
         internal static List<int> MapSizes = new List<int>() { 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768 };
         [JsonIgnore]
         internal static List<string> MeshFileFormats = new List<string>() { "fbx", "sia", "sib", "x", "ms3d", "off", "dae", "ovb", "dxf", "mesh", "xsi", "3ds", "sbm", "obj", "ase", "ply", "lwo", "lxo" };
-        public bool UseCage { get; set; } = false;
-        public bool UseTermsAsPrefix { get; set; } = false;
-        public Term SelectedTermSeparator { get; set; } = TermsModel.TermsSeparator[0];
-        public Term SelectedTermLow { get; set; } = TermsModel.TermsLow[0];
-        public Term SelectedTermHigh { get; set; } = TermsModel.TermsHigh[0];
-        public Term SelectedTermCage { get; set; } = TermsModel.TermsCage[0];
-        public string SelectedMeshFormatLow { get; set; } = MeshFileFormats[13];
-        public string SelectedMeshFormatHigh { get; set; } = MeshFileFormats[13];
-        public string SelectedMeshFormatCage { get; set; } = MeshFileFormats[13];
-        public bool BakeSeparately { get; set; } = false;
-        public int SelectedMapWidthAll { get; set; } = MapSizes[7];
-        public int SelectedMapHeightAll { get; set; } = MapSizes[7];
+        public bool UseCage { get; set; }
+        public bool UseTermsAsPrefix { get; set; }
+        public Term SelectedTermSeparator { get; set; }
+        public Term SelectedTermLow { get; set; }
+        public Term SelectedTermHigh { get; set; }
+        public Term SelectedTermCage { get; set; }
+        public string SelectedMeshFormatLow { get; set; }
+        public string SelectedMeshFormatHigh { get; set; }
+        public string SelectedMeshFormatCage { get; set; }
+        public bool BakeSeparately { get; set; }
+        public int SelectedMapWidthAll { get; set; }
+        public int SelectedMapHeightAll { get; set; }
+
+
+        [JsonConstructor]
+        private BatchModel()
+        { }
+
+        public BatchModel(int n = 0)
+        {
+            SelectedTermSeparator = TermsModel.TermsSeparator[0];
+            SelectedTermLow = TermsModel.TermsLow[0];
+            SelectedTermHigh = TermsModel.TermsHigh[0];
+            SelectedTermCage = TermsModel.TermsCage[0];
+            SelectedMeshFormatLow = MeshFileFormats[13];
+            SelectedMeshFormatHigh = MeshFileFormats[13];
+            SelectedMeshFormatCage = MeshFileFormats[13];
+            BakeSeparately = false;
+            UseCage = false;
+            UseTermsAsPrefix = false;
+            SelectedMapWidthAll = MapSizes[7];
+            SelectedMapHeightAll = MapSizes[7];
+        }
     }
 
     internal class BatchViewModel : BaseViewModel
@@ -104,8 +125,7 @@ namespace XnormalBatcher.ViewModels
             IsBaking = false;
             //Default Selection
             FileLowCount = FileHighCount = FileCageCount = 0;
-            var lastSessionData = MainViewModel.LastSession;
-            Data = lastSessionData?.Batch ?? new BatchModel();
+            Data = MainViewModel.LastSession?.Batch ?? new BatchModel(0);
             RefreshData();
             // Commands
             CMDOpenFolder = new RelayCommand(OpenFolder);
@@ -130,6 +150,12 @@ namespace XnormalBatcher.ViewModels
 
         private void RefreshData()
         {
+            // Reference fix for terms after deserialisation
+            Data.SelectedTermCage = TermsViewModel.Instance.Terms.FirstOrDefault(t => t.Name == Data.SelectedTermCage.Name && t.Group == Data.SelectedTermCage.Group);
+            Data.SelectedTermLow = TermsViewModel.Instance.Terms.FirstOrDefault(t => t.Name == Data.SelectedTermLow.Name && t.Group == Data.SelectedTermLow.Group);
+            Data.SelectedTermHigh = TermsViewModel.Instance.Terms.FirstOrDefault(t => t.Name == Data.SelectedTermHigh.Name && t.Group == Data.SelectedTermHigh.Group);
+            Data.SelectedTermSeparator = TermsViewModel.Instance.Terms.FirstOrDefault(t => t.Name == Data.SelectedTermSeparator.Name && t.Group == Data.SelectedTermSeparator.Group);
+            //
             NotifyPropertyChanged("UseCage");
             NotifyPropertyChanged("UseTermsAsPrefix");
             NotifyPropertyChanged("SelectedTermSeparator");

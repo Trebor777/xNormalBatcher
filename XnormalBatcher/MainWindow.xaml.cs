@@ -10,6 +10,10 @@ namespace XnormalBatcher
     {
         public MainWindow()
         {
+            _ = MainViewModel.LastSession;
+            _ = TermsViewModel.Instance;
+            _ = SettingsViewModel.Instance;
+            _ = BatchViewModel.Instance;
             InitializeComponent();
         }
 

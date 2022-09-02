@@ -10,17 +10,17 @@ using Newtonsoft.Json;
 
 namespace XnormalBatcher.ViewModels
 {
-    [JsonObject(MemberSerialization.OptIn)]
+    [JsonObject(MemberSerialization.OptIn, IsReference = true)]
     internal class DataObject
     {
         [JsonProperty]
-        internal BatchModel Batch { get; set; }
+        internal TermsModel Terms { get; set; }
         [JsonProperty]
         internal SettingsModel Settings { get; set; }
         [JsonProperty]
-        internal TermsModel Terms { get; set; }
+        internal BatchModel Batch { get; set; }
     }
-    
+
     internal class MainViewModel : BaseViewModel
     {
         public static MainViewModel Instance { get; } = new MainViewModel();
@@ -52,11 +52,12 @@ namespace XnormalBatcher.ViewModels
             JsonSerializer serializer = new JsonSerializer();
             serializer.Formatting = Formatting.Indented;
             serializer.NullValueHandling = NullValueHandling.Include;
+            serializer.PreserveReferencesHandling = PreserveReferencesHandling.All;
             using (StreamWriter sw = new StreamWriter(SessionFile))
             {
                 using (JsonWriter writer = new JsonTextWriter(sw))
                 {
-                    serializer.Serialize(writer, new DataObject { Batch = BatchViewModel.Instance.Data, Settings = SettingsViewModel.Instance.Data, Terms = TermsViewModel.Instance.Data });
+                    serializer.Serialize(writer, new DataObject { Terms = TermsViewModel.Instance.Data, Settings = SettingsViewModel.Instance.Data, Batch = BatchViewModel.Instance.Data });
                 }
             }
         }
@@ -66,14 +67,15 @@ namespace XnormalBatcher.ViewModels
             _lastSession = null;
             if (File.Exists(SessionFile))
             {
-                JsonSerializer serializer = new JsonSerializer();
-                serializer.Formatting = Formatting.Indented;
-                serializer.NullValueHandling = NullValueHandling.Include;
+                JsonSerializerSettings settings = new JsonSerializerSettings();
+                settings.Formatting = Formatting.Indented;
+                settings.NullValueHandling = NullValueHandling.Include;
+                settings.PreserveReferencesHandling = PreserveReferencesHandling.All;
                 using (StreamReader sr = new StreamReader(SessionFile))
                 {
-                    _lastSession = JsonConvert.DeserializeObject<DataObject>(sr.ReadToEnd());                    
+                    _lastSession = JsonConvert.DeserializeObject<DataObject>(sr.ReadToEnd(), settings);
                 }
-            }            
+            }
             return _lastSession;
         }
     }
