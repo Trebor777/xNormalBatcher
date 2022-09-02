@@ -737,7 +737,8 @@ namespace XnormalBatcher.ViewModels
 
         private void ResetAll()
         {
-
+            Data = new SettingsModel();
+            RefreshData();
         }
 
 

@@ -182,7 +182,7 @@
                             </ListView.ItemContainerStyle>
                             <ListView.View >
                                 <GridView AllowsColumnReorder="False" >
-                                    
+
                                     <GridViewColumn Width="28">
                                         <GridViewColumn.Header>
                                             <CheckBox x:Name="CheckAll" Command="{Binding CheckAllCommand}" CommandParameter="{Binding IsChecked, ElementName=CheckAll}" />
@@ -422,543 +422,731 @@
                     <ScrollViewer Grid.Row="1"  >
                         <TabControl>
                             <TabItem Header="01 Normal Map Settings" DataContext="{Binding SettingsNormal}" Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=chkBakeNormals}">
-                                <Grid Margin="5">
+                                <Grid Margin="2">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="24" />
                                     </Grid.ColumnDefinitions>
-                                    <StackPanel Width="250">
-                                        <Label Content="Swizzle Coordinates:" />
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="4" />
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="4" />
-                                                <ColumnDefinition Width="*" />
-                                            </Grid.ColumnDefinitions>
-                                            <StackPanel Grid.Column="0">
-                                                <Label Content="Red" />
-                                                <ComboBox ItemsSource="{Binding Axis, Source ={x:Static vm:SettingsViewModel.Instance}}" SelectedItem="{Binding SwizzleX}"/>
-                                            </StackPanel>
-                                            <StackPanel Grid.Column="2">
-                                                <Label Content="Green"  />
-                                                <ComboBox ItemsSource="{Binding Axis, Source ={x:Static vm:SettingsViewModel.Instance}}"  SelectedItem="{Binding SwizzleY}"/>
-                                            </StackPanel>
-                                            <StackPanel Grid.Column="4">
-                                                <Label Content="Blue" />
-                                                <ComboBox ItemsSource="{Binding Axis, Source ={x:Static vm:SettingsViewModel.Instance}}" SelectedItem="{Binding SwizzleZ}"/>
-                                            </StackPanel>
-                                        </Grid>
-                                        <Label Content="Background Color:"  />
-                                        <xctk:ColorPicker SelectedColor="{Binding Color}" />
-                                        <CheckBox Content="Tangent Space" IsChecked="{Binding TangentSpace}"/>
-                                    </StackPanel>
-                                    <StackPanel Grid.Column="2" >
-                                    </StackPanel>
-                                    <Button Content="R" Grid.Column="3" Height="24" ToolTip="Reset Settings for this panel" />
-                                </Grid>
-                            </TabItem>
-                            <TabItem Header="02 Ambient Occlusion Settings"  DataContext="{Binding SettingsAmbient}" Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=chkBakeAmbient}">
-                                <Grid Margin="5">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="0.6*" />
-                                        <ColumnDefinition Width="0.6*" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="0.5*" />
-                                        <ColumnDefinition Width="2*" />
-                                        <ColumnDefinition Width="24" />
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="26" />
-                                        <RowDefinition Height="26" />
-                                        <RowDefinition Height="26" />
-                                        <RowDefinition Height="26" />
-                                    </Grid.RowDefinitions>
-                                    <!-- Column 0/1 -->
-                                    <Label Content="Rays:" />
-                                    <xctk:IntegerUpDown Grid.Column="1" Increment="1" Maximum="8192" Minimum="8" Value="{Binding Rays}" />
-                                    <Label  Grid.Row="1" Content="Bias:" />
-                                    <xctk:DoubleUpDown  Grid.Row="1" Grid.Column="1" Increment="0.000050" Maximum="1.0" Minimum="0" Value="{Binding Bias}" FormatString="F6" />
-                                    <Label Grid.Row="2" Content="Spread Angle:" />
-                                    <xctk:DoubleUpDown Grid.Row="2" Grid.Column="1" Increment="1" Maximum="179.50" Minimum="0.50" Value="{Binding SpreadAngle}" FormatString="F2" />
-                                    <!-- Column 2 -->
-                                    <CheckBox Content="Limit Ray Distance" Grid.Column="2" VerticalAlignment="Center" IsChecked="{Binding LimitRayDistance}"/>
-                                    <CheckBox Content="Jitter" Grid.Column="2" Grid.Row="1" VerticalAlignment="Center" IsChecked="{Binding Jitter}"/>
-                                    <CheckBox Content="Ignore Backface Hits" Grid.Column="2" Grid.Row="2" VerticalAlignment="Center" IsChecked="{Binding IgnoreBackfaceHits}"/>
-                                    <CheckBox Content="Allow 100% occlusion" Grid.Column="2" Grid.Row="3" VerticalAlignment="Center" IsChecked="{Binding Allow100Occlusion}"/>
-                                    <!-- Column 3 -->
-                                    <Label Content="Attenuation:" Grid.Column="3" />
-                                    <Label Content="Distribution:" Grid.Column="3" Grid.Row="1"/>
-                                    <Border Padding="0" Grid.Column="3" Grid.Row="2" Grid.ColumnSpan="2" Grid.RowSpan="2">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="*" />
-                                            </Grid.ColumnDefinitions>
-                                            <StackPanel Grid.Column="0" Margin="2">
-                                                <Label Content="Occluded Color" />
-                                                <xctk:ColorPicker SelectedColor="{Binding OccludedColor}"/>
-                                            </StackPanel>
-                                            <StackPanel Grid.Column="1" Margin="2">
-                                                <Label Content="Unoccluded Color" />
-                                                <xctk:ColorPicker SelectedColor="{Binding UnoccludedColor}"/>
-                                            </StackPanel>
-                                            <StackPanel Grid.Column="2" Margin="2">
-                                                <Label Content="Background Color" />
-                                                <xctk:ColorPicker SelectedColor="{Binding BackgroundColor}"/>
-                                            </StackPanel>
-                                        </Grid>
-                                    </Border>
-                                    <!-- Column 4 -->
-                                    <Grid Grid.Column="4">
+                                    <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <xctk:DoubleUpDown Grid.Column="0" FormatString="F5" Value="{Binding AttenuationConstant}" Maximum="1000.0" Minimum="1.0" Margin="0 0 2 0"/>
-                                        <xctk:DoubleUpDown Grid.Column="1" FormatString="F5" Value="{Binding AttenuationLinear}" Maximum="1000.0" Minimum="0.0" Margin="2 0"/>
-                                        <xctk:DoubleUpDown Grid.Column="2" FormatString="F5" Value="{Binding AttenuationQuadratic}" Maximum="1000.0" Minimum="0.0" Margin="2 0 0 0"/>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="20"/>
+                                            <RowDefinition Height="70"/>
+                                            <RowDefinition Height="70"/>
+                                        </Grid.RowDefinitions>
+                                        <CheckBox Grid.Column="1" Content="Tangent Space" IsChecked="{Binding TangentSpace}" Grid.Row="0" HorizontalAlignment="Center"/>
+                                        <GroupBox Header="Swizzle Coordinates:" Grid.Column="1" Grid.Row="1">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="4" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="4" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0">
+                                                    <Label Content="Red" />
+                                                    <ComboBox ItemsSource="{Binding Axis, Source ={x:Static vm:SettingsViewModel.Instance}}" SelectedItem="{Binding SwizzleX}"/>
+                                                </StackPanel>
+                                                <StackPanel Grid.Column="2">
+                                                    <Label Content="Green"  />
+                                                    <ComboBox ItemsSource="{Binding Axis, Source ={x:Static vm:SettingsViewModel.Instance}}"  SelectedItem="{Binding SwizzleY}"/>
+                                                </StackPanel>
+                                                <StackPanel Grid.Column="4">
+                                                    <Label Content="Blue" />
+                                                    <ComboBox ItemsSource="{Binding Axis, Source ={x:Static vm:SettingsViewModel.Instance}}" SelectedItem="{Binding SwizzleZ}"/>
+                                                </StackPanel>
+                                            </Grid>
+                                        </GroupBox>
+                                        <GroupBox Header="Background Color:" Grid.Row="2" Grid.Column="1">
+                                            <xctk:ColorPicker SelectedColor="{Binding Color}" Grid.Row="0"/>
+                                        </GroupBox>
                                     </Grid>
-                                    <ComboBox Grid.Column="4" Grid.Row="1" ItemsSource="{Binding Distributions, Source ={x:Static vm:SettingsViewModel.Instance}}" SelectedItem="{Binding Distribution}"/>
-                                    <!-- Column 5 -->
-                                    <Button Grid.Column="5" Content="R" Margin="2"/>
+                                    <Button Grid.Column="1" VerticalAlignment="Top" Height="24" ToolTip="Reset Settings for this panel" Command="{Binding CMDReset}" >
+                                        <fa5:FontAwesome Icon="Solid_UndoAlt" />
+                                    </Button>
+                                </Grid>
+                            </TabItem>
+                            <TabItem Header="02 Ambient Occlusion Settings"  DataContext="{Binding SettingsAmbient}" Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=chkBakeAmbient}">
+                                <Grid Margin="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="24" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid >
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="2*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid Margin="2">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="48"/>
+                                                <RowDefinition Height="48"/>
+                                                <RowDefinition Height="48"/>
+                                            </Grid.RowDefinitions>
+                                            <GroupBox Header="Rays:" >
+                                                <xctk:IntegerUpDown Increment="1" Maximum="8192" Minimum="8" Value="{Binding Rays}" />
+                                            </GroupBox>
+                                            <GroupBox Header="Bias:" Grid.Row="1">
+                                                <xctk:DoubleUpDown  Increment="0.000050" Maximum="1.0" Minimum="0" Value="{Binding Bias}" FormatString="F6" />
+                                            </GroupBox>
+                                            <GroupBox Grid.Row="2" Header="Spread Angle:" >
+                                                <xctk:DoubleUpDown Increment="1" Maximum="179.50" Minimum="0.50" Value="{Binding SpreadAngle}" FormatString="F2" />
+                                            </GroupBox>
+                                        </Grid>
+                                        <GroupBox Grid.Column="1" Header="Options" Margin="2" VerticalAlignment="Top">
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="24"/>
+                                                    <RowDefinition Height="24"/>
+                                                    <RowDefinition Height="24"/>
+                                                    <RowDefinition Height="24"/>
+                                                </Grid.RowDefinitions>
+                                                <CheckBox Content="Limit Ray Distance" VerticalAlignment="Center" IsChecked="{Binding LimitRayDistance}"/>
+                                                <CheckBox Content="Jitter" Grid.Row="1" VerticalAlignment="Center" IsChecked="{Binding Jitter}"/>
+                                                <CheckBox Content="Ignore Backface Hits" Grid.Row="2" VerticalAlignment="Center" IsChecked="{Binding IgnoreBackfaceHits}"/>
+                                                <CheckBox Content="Allow 100% occlusion" Grid.Row="3" VerticalAlignment="Center" IsChecked="{Binding Allow100Occlusion}"/>
+                                            </Grid>
+                                        </GroupBox>
+                                        <Grid Grid.Column="2" Margin="2">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="48"/>
+                                                <RowDefinition Height="48"/>
+                                                <RowDefinition Height="48"/>
+                                            </Grid.RowDefinitions>
+                                            <GroupBox Header="Attenuation:" >
+                                                <Grid Grid.Column="1">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="*" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <xctk:DoubleUpDown Grid.Column="0" FormatString="F5" Value="{Binding AttenuationConstant}" Maximum="1000.0" Minimum="1.0" Margin="0 0 2 0"/>
+                                                    <xctk:DoubleUpDown Grid.Column="1" FormatString="F5" Value="{Binding AttenuationLinear}" Maximum="1000.0" Minimum="0.0" Margin="2 0"/>
+                                                    <xctk:DoubleUpDown Grid.Column="2" FormatString="F5" Value="{Binding AttenuationQuadratic}" Maximum="1000.0" Minimum="0.0" Margin="2 0 0 0"/>
+                                                </Grid>
+                                            </GroupBox>
+                                            <GroupBox Header="Distribution:" Grid.Row="1">
+                                                <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Distributions, Source ={x:Static vm:SettingsViewModel.Instance}}" SelectedItem="{Binding Distribution}"/>
+                                            </GroupBox>
+                                            <Grid Grid.Row="2" Grid.ColumnSpan="2">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <GroupBox Header="Occluded Color" Grid.Column="0" >
+                                                    <xctk:ColorPicker SelectedColor="{Binding OccludedColor}"/>
+                                                </GroupBox>
+                                                <GroupBox Header="Unoccluded Color" Grid.Column="1" >
+                                                    <xctk:ColorPicker SelectedColor="{Binding UnoccludedColor}"/>
+                                                </GroupBox>
+                                                <GroupBox Header="Background Color" Grid.Column="2" >
+                                                    <xctk:ColorPicker SelectedColor="{Binding BackgroundColor}"/>
+                                                </GroupBox>
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+                                    <Button Grid.Column="1" VerticalAlignment="Top" Height="24" ToolTip="Reset Settings for this panel" Command="{Binding CMDReset}" >
+                                        <fa5:FontAwesome Icon="Solid_UndoAlt" />
+                                    </Button>
                                 </Grid>
                             </TabItem>
                             <TabItem Header="03 Height Normal Settings"  DataContext="{Binding SettingsHeight}" Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=chkBakeHeight}">
-                                <Grid Margin="5">
+                                <Grid Margin="2">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="2" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="2" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="2" />
                                         <ColumnDefinition Width="24" />
                                     </Grid.ColumnDefinitions>
-                                    <StackPanel>
-                                        <Label Content="NORMALIZATION" />
-                                        <ListBox SelectedItem="{Binding Normalization}" ItemsSource="{Binding Source={x:Static vm:SettingsViewModel.Instance}, Path=Normalizations}"/>
-                                    </StackPanel>
-                                    <StackPanel Grid.Column="2">
-                                        <Label Content="Background Color"/>
-                                        <xctk:ColorPicker SelectedColor="{Binding BackgroundColor}"/>
-                                    </StackPanel>
-                                    <StackPanel Grid.Column="4" Visibility="{Binding IsManual, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                        <Label Content="Minimum" Grid.Column="2" />
-                                        <xctk:DoubleUpDown FormatString="F5" Increment="1" Maximum="1000000000.00000" Minimum="-1000000000.00000" Value="{Binding Minimum}" />
-                                        <Label Content="Maximum" Grid.Column="2"/>
-                                        <xctk:DoubleUpDown FormatString="F5" Increment="1" Maximum="1000000000.00000" Minimum="-1000000000.00000" Value="{Binding Maximum}" />
-                                    </StackPanel>
-                                    <Button Content="R" Height="24"  Grid.Column="6" Grid.Row="2" ToolTip="Reset Settings for this panel" />
+                                    <Grid Margin="2">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="0.8*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="0.8*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="88" MinHeight="88" />
+                                            <RowDefinition Height="48"/>
+                                        </Grid.RowDefinitions>
+                                        <GroupBox Header="Normalization" Grid.Column="1" VerticalAlignment="Top">
+                                            <ListBox SelectedItem="{Binding Normalization}" ItemsSource="{Binding Source={x:Static vm:SettingsViewModel.Instance}, Path=Normalizations}"/>
+                                        </GroupBox>
+                                        <GroupBox Header="Background Color" Grid.Row="1" Grid.Column="1" VerticalAlignment="Top">
+                                            <xctk:ColorPicker SelectedColor="{Binding BackgroundColor}"/>
+                                        </GroupBox>
+                                        <StackPanel Grid.Column="2" Visibility="{Binding IsManual, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}">
+                                            <GroupBox Header="Minimum" Grid.Column="2" VerticalAlignment="Top">
+                                                <xctk:DoubleUpDown FormatString="F5" Increment="1" Maximum="1000000000.00000" Minimum="-1000000000.00000" Value="{Binding Minimum}" />
+                                            </GroupBox>
+                                            <GroupBox Header="Maximum" Grid.Column="2" VerticalAlignment="Top">
+                                                <xctk:DoubleUpDown FormatString="F5" Increment="1" Maximum="1000000000.00000" Minimum="-1000000000.00000" Value="{Binding Maximum}" />
+                                            </GroupBox>
+                                        </StackPanel>
+                                    </Grid>
+                                    <Button Grid.Column="1" Grid.Row="2" VerticalAlignment="Top" Height="24" ToolTip="Reset Settings for this panel" Command="{Binding CMDReset}" >
+                                        <fa5:FontAwesome Icon="Solid_UndoAlt" />
+                                    </Button>
                                 </Grid>
                             </TabItem>
                             <TabItem Header="04 Curvature Map Settings"  DataContext="{Binding SettingsCurvature}" Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=chkBakeCurvature}">
-                                <Grid Margin="5">
+                                <Grid Margin="2">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="4" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="4" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="24" />
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="24"/>
                                     </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="*" />
-                                        <RowDefinition Height="*" />
-                                        <RowDefinition Height="*" />
-                                    </Grid.RowDefinitions>
-                                    <StackPanel Grid.Column="0">
-                                        <Label Content="Rays:"/>
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="*" />
-                                            </Grid.ColumnDefinitions>
-                                            <xctk:IntegerUpDown Grid.Column="0" Increment="1" Maximum="8192" Minimum="8" Value="{Binding Rays}"  />
-                                            <CheckBox Content="Jitter" VerticalAlignment="Center"  Grid.Column="1" IsChecked="{Binding Jitter}"/>
-                                        </Grid>
-                                    </StackPanel>
-                                    <StackPanel Grid.Column="0" Grid.Row="1">
-                                        <Label Content="Bias:"/>
-                                        <xctk:DoubleUpDown Increment="0.0001" FormatString="F10" Maximum="1.000000" Minimum="0.000000" Value="{Binding Bias}" />
-                                    </StackPanel>
-                                    <StackPanel Grid.Column="0" Grid.Row="2">
-                                        <Label Content="Spread Angle:" />
-                                        <xctk:DoubleUpDown Increment="1" FormatString="F2" Maximum="179.50" Minimum="0.50" Value="{Binding SpreadAngle}" />
-                                    </StackPanel>
-                                    <StackPanel Grid.Column="2" Grid.Row="0">
-                                        <Label Content="Algorithm:"/>
-                                        <ComboBox SelectedItem="{Binding Algorithm}" ItemsSource="{Binding Source={x:Static vm:SettingsViewModel.Instance}, Path=Algorithms}"/>
-                                    </StackPanel>
-                                    <StackPanel Grid.Column="2" Grid.Row="1">
-                                        <Label Content="Distribution:"/>
-                                        <ComboBox SelectedItem="{Binding Distribution}" ItemsSource="{Binding Source={x:Static vm:SettingsViewModel.Instance}, Path=Distributions}"/>
-                                    </StackPanel>
-                                    <StackPanel Grid.Column="2" Grid.Row="2">
-                                        <Label Content="Tone Mapping:" />
-                                        <ComboBox SelectedItem="{Binding ToneMapping}" ItemsSource="{Binding Source={x:Static vm:SettingsViewModel.Instance}, Path=ToneMappings}"/>
-                                    </StackPanel>
-                                    <StackPanel Grid.Column="4" Grid.Row="0">
-                                        <Label Content="Search Distance:"/>
-                                        <xctk:DoubleUpDown Increment="1" FormatString="F8" Maximum="10000000" Minimum="0" Value="{Binding SearchDistance}" />
-                                    </StackPanel>
-                                    <CheckBox Content="Smoothing" Grid.Column="4" Grid.Row="1" IsChecked="{Binding Smoothing}" VerticalAlignment="Center"/>
-                                    <StackPanel Grid.Column="4" Grid.Row="2">
-                                        <Label Content="Background Color:" />
-                                        <xctk:ColorPicker SelectedColor="{Binding BackgroundColor}" />
-                                    </StackPanel>
-                                    <Button Content="R" Grid.Column="5" Grid.Row="1" ToolTip="Reset Settings for this panel" Height="24" />
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="4" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="4" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="48" />
+                                            <RowDefinition Height="48" />
+                                            <RowDefinition Height="48" />
+                                        </Grid.RowDefinitions>
+                                        <GroupBox Header="Rays" Grid.Column="0" >
+                                            <StackPanel>
+                                                <xctk:IntegerUpDown Increment="1" Maximum="8192" Minimum="8" Value="{Binding Rays}" Height="24"/>
+                                                <CheckBox Content="Jitter" VerticalAlignment="Center"  IsChecked="{Binding Jitter}" Margin="0,4,0,0"/>
+                                            </StackPanel>
+                                        </GroupBox>
+                                        <GroupBox Header="Bias" Grid.Column="0" Grid.Row="1" >
+                                            <xctk:DoubleUpDown Increment="0.0001" FormatString="F10" Maximum="1.000000" Minimum="0.000000" Value="{Binding Bias}" Height="24" />
+                                        </GroupBox>
+                                        <GroupBox Header="Spread Angle" Grid.Column="0" Grid.Row="2" >
+                                            <xctk:DoubleUpDown Increment="1" FormatString="F2" Maximum="179.50" Minimum="0.50" Value="{Binding SpreadAngle}" Height="24"/>
+                                        </GroupBox>
+                                        <GroupBox Header="Algorithm" Grid.Column="2" Grid.Row="0"  >
+                                            <ComboBox SelectedItem="{Binding Algorithm}" ItemsSource="{Binding Source={x:Static vm:SettingsViewModel.Instance}, Path=Algorithms}"/>
+                                        </GroupBox>
+                                        <GroupBox Header="Distribution" Grid.Column="2" Grid.Row="1"  >
+                                            <ComboBox SelectedItem="{Binding Distribution}" ItemsSource="{Binding Source={x:Static vm:SettingsViewModel.Instance}, Path=Distributions}"/>
+                                        </GroupBox>
+                                        <GroupBox Header="Tone Mapping" Grid.Column="2" Grid.Row="2"  >
+                                            <ComboBox SelectedItem="{Binding ToneMapping}" ItemsSource="{Binding Source={x:Static vm:SettingsViewModel.Instance}, Path=ToneMappings}"/>
+                                        </GroupBox>
+                                        <GroupBox Header="Search Distance" Grid.Column="4" Grid.Row="0"  >
+                                            <xctk:DoubleUpDown Increment="1" FormatString="F8" Maximum="10000000" Minimum="0" Value="{Binding SearchDistance}" />
+                                        </GroupBox>
+                                        <GroupBox Header="Background Color" Grid.Column="4" Grid.Row="1"  >
+                                            <xctk:ColorPicker SelectedColor="{Binding BackgroundColor}" />
+                                        </GroupBox>
+                                        <GroupBox Header="Options" Grid.Column="4" Grid.Row="2">
+                                            <CheckBox Content="Smoothing"  IsChecked="{Binding Smoothing}" VerticalAlignment="Center"/>
+                                        </GroupBox>
+                                    </Grid>
+
+                                    <Button Grid.Column="1" VerticalAlignment="Top" Height="24" ToolTip="Reset Settings for this panel" Command="{Binding CMDReset}" >
+                                        <fa5:FontAwesome Icon="Solid_UndoAlt" />
+                                    </Button>
                                 </Grid>
                             </TabItem>
                             <TabItem Header="05 Bake Vertex colors Settings"  DataContext="{Binding SettingsVertexColors}" Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=chkBakeVertexColors}">
-                                <Grid Margin="5">
+                                <Grid Margin="2">
                                     <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="24" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="56"/>
+                                            <RowDefinition Height="48"/>
+                                        </Grid.RowDefinitions>
+                                        <GroupBox Header="Draw Options" Grid.Column="1">
+                                            <StackPanel>
+                                                <RadioButton Grid.Column="0" Grid.Row="0" Content="Write ObjectID if no texture" GroupName="BakeBaseTexture" VerticalAlignment="Center" IsChecked="{Binding WriteObjectID}"/>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <RadioButton Grid.Column="0" Grid.Row="1" Name="rdoBakeBaseTDrawCol" Content="Draw using this color: " GroupName="BakeBaseTexture" IsChecked="{Binding UseDrawColor}"/>
+                                                    <xctk:ColorPicker SelectedColor="{Binding DrawColor}" Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=rdoBakeBaseTDrawCol}" />
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </GroupBox>
+                                        <GroupBox Header="Background Color" Grid.Column="1" Grid.Row="1">
+                                            <xctk:ColorPicker SelectedColor="{Binding BackgroundColor}" />
+                                        </GroupBox>
+                                    </Grid>
+                                    <Button Grid.Column="1" Height="24" VerticalAlignment="Top" ToolTip="Reset Settings for this panel" Command="{Binding CMDReset}" >
+                                        <fa5:FontAwesome Icon="Solid_UndoAlt" />
+                                    </Button>
+                                </Grid>
+                            </TabItem>
+                            <TabItem Header="06 Cavity Map Settings"  DataContext="{Binding SettingsCavity}" Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=chkBakeCavity}">
+                                <Grid Margin="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="24" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="64"/>
+                                            <RowDefinition Height="48"/>
+                                            <RowDefinition Height="48"/>
+                                        </Grid.RowDefinitions>
+                                        <GroupBox Header="Rays" Grid.Column="1" >
+                                            <StackPanel>
+                                                <xctk:IntegerUpDown Increment="1" Maximum="8192" Minimum="8" Value="{Binding Rays}" Height="24"/>
+                                                <CheckBox Content="Jitter" VerticalAlignment="Center"  IsChecked="{Binding Jitter}" Margin="0,4,0,0"/>
+                                            </StackPanel>
+                                        </GroupBox>
+                                        <GroupBox Grid.Column="1" Header="Radius" Grid.Row="1">
+                                            <xctk:DoubleUpDown FormatString="F6" Increment="1" Maximum="100000000" Minimum="0" Value="{Binding Radius}" />
+                                        </GroupBox>
+                                        <GroupBox Grid.Column="1" Header="Contrast" Grid.Row="2">
+                                            <xctk:DoubleUpDown FormatString="F3"  Increment="0.5" Maximum="8" Minimum="0.001" Value="{Binding Contrast}" />
+                                        </GroupBox>
+                                        <GroupBox Grid.Column="2" Header="Steps" VerticalAlignment="Top" Height="48">
+                                            <xctk:IntegerUpDown  Increment="1" Maximum="128" Minimum="4" Value="{Binding Steps}"/>
+                                        </GroupBox>
+                                        <GroupBox Grid.Column="2" Header="Background Color" Grid.Row="1">
+                                            <xctk:ColorPicker Name="ClrCMBackground" SelectedColor="{Binding BackgroundColor}" />
+                                        </GroupBox>
+                                    </Grid>
+                                    <Button Grid.Column="5" VerticalAlignment="Top" Height="24" ToolTip="Reset Settings for this panel" Command="{Binding CMDReset}" >
+                                        <fa5:FontAwesome Icon="Solid_UndoAlt" />
+                                    </Button>
+                                </Grid>
+                            </TabItem>
+                            <TabItem Header="07 Bent Normal Settings"  DataContext="{Binding SettingsBentNormal}" Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=chkBakeBentNormals}">
+                                <Grid Margin="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="24" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid Margin="2">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="0.8*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="0.8*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="48"/>
+                                            <RowDefinition Height="48"/>
+                                            <RowDefinition Height="48"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <GroupBox Header="Rays" Grid.Column="1" Grid.Row="0" Height="48" VerticalAlignment="Top">
+                                            <xctk:IntegerUpDown Increment="1" Maximum="8192" Minimum="8" Value="{Binding Rays}"   />
+                                        </GroupBox>
+                                        <GroupBox Header="Bias" Grid.Column="1" Grid.Row="1" Height="48" VerticalAlignment="Top">
+                                            <xctk:DoubleUpDown Increment="0.000050" FormatString="F6" Maximum="1.000000" Minimum="0.000000" Value="{Binding Bias}" />
+                                        </GroupBox>
+                                        <GroupBox Header="Spread Angle" Grid.Column="1" Grid.Row="2" Height="48" VerticalAlignment="Top">
+                                            <xctk:DoubleUpDown Increment="1" FormatString="F2" Maximum="179.50" Minimum="0.50" Value="{Binding SpreadAngle}" />
+                                        </GroupBox>
+                                        <GroupBox Header="Distribution" Grid.Column="1" Grid.Row="3" Height="48" VerticalAlignment="Top">
+                                            <ComboBox ItemsSource="{Binding Distributions, Source ={x:Static vm:SettingsViewModel.Instance}}" SelectedItem="{Binding Distribution}"/>
+                                        </GroupBox>
+                                        <GroupBox Header="Background Color" Grid.Column="2" Grid.Row="0" Height="48" VerticalAlignment="Top">
+                                            <xctk:ColorPicker SelectedColor="{Binding BackgroundColor}" />
+                                        </GroupBox>
+                                        <GroupBox Header="Swizzle Coordinates" Grid.Column="2" Grid.Row="3" Grid.RowSpan="2" VerticalAlignment="Top">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="4" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="4" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0">
+                                                    <Label Content="Red" />
+                                                    <ComboBox ItemsSource="{Binding Axis, Source ={x:Static vm:SettingsViewModel.Instance}}" SelectedItem="{Binding SwizzleX}"/>
+                                                </StackPanel>
+                                                <StackPanel Grid.Column="2">
+                                                    <Label Content="Green"  />
+                                                    <ComboBox ItemsSource="{Binding Axis, Source ={x:Static vm:SettingsViewModel.Instance}}" SelectedItem="{Binding SwizzleY}"/>
+                                                </StackPanel>
+                                                <StackPanel Grid.Column="4">
+                                                    <Label Content="Blue" />
+                                                    <ComboBox ItemsSource="{Binding Axis, Source ={x:Static vm:SettingsViewModel.Instance}}" SelectedItem="{Binding SwizzleZ}"/>
+                                                </StackPanel>
+                                            </Grid>
+                                        </GroupBox>
+                                        <GroupBox Header="Options" Grid.Column="2" Grid.Row="1" Grid.RowSpan="2" VerticalAlignment="Top">
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="20"/>
+                                                    <RowDefinition Height="20"/>
+                                                    <RowDefinition Height="20"/>
+                                                </Grid.RowDefinitions>
+                                                <CheckBox Grid.Row="0" VerticalAlignment="Center" Content="Limit Ray Distance" IsChecked="{Binding LimitRayDistance}"/>
+                                                <CheckBox Grid.Row="1" VerticalAlignment="Center" Content="Jitter" IsChecked="{Binding Jitter}"/>
+                                                <CheckBox Grid.Row="2" VerticalAlignment="Center" Content="Tangent Space"  IsChecked="{Binding TangentSpace}"/>
+                                            </Grid>
+                                        </GroupBox>
+                                        
+                                    </Grid>
+                                    <Button Grid.Column="6" Height="24" VerticalAlignment="Top" ToolTip="Reset Settings for this panel" Command="{Binding CMDReset}" >
+                                        <fa5:FontAwesome Icon="Solid_UndoAlt" />
+                                    </Button>
+                                </Grid>
+                            </TabItem>
+                            <TabItem Header="08 Direction Map Settings"  DataContext="{Binding SettingsDirection}" Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=chkBakeDirection}">
+                                <Grid Margin="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="24" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />                                            
+                                            <ColumnDefinition Width="*" />                                            
+                                            <ColumnDefinition Width="*" />                                            
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="84"/>
+                                            <RowDefinition Height="48"/>
+                                            <RowDefinition Height="48"/>
+                                        </Grid.RowDefinitions>
+                                        <GroupBox Header="Swizzle Coordinates" Grid.Column="1" VerticalAlignment="Top" Height="70">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="4" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="4" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0">
+                                                    <Label Content="Red" />
+                                                    <ComboBox />
+                                                </StackPanel>
+                                                <StackPanel Grid.Column="2">
+                                                    <Label Content="Green"  />
+                                                    <ComboBox />
+                                                </StackPanel>
+                                                <StackPanel Grid.Column="4">
+                                                    <Label Content="Blue" />
+                                                    <ComboBox />
+                                                </StackPanel>
+                                            </Grid>
+                                        </GroupBox>
+                                        <GroupBox Header="Options" Grid.Row="1" Grid.Column="1" >
+                                            <CheckBox Content="Tangent Space" IsChecked="{Binding TangentSpace}" VerticalAlignment="Center"/>
+                                        </GroupBox>
+                                        <GroupBox Header="Background Color" Grid.Row="2" Grid.Column="1">
+                                            <xctk:ColorPicker SelectedColor="{Binding BackgroundColor}"/>
+                                        </GroupBox>
+                                        <GroupBox Header="Tone Map" Grid.Column="2">
+                                            <ListBox ItemsSource="{Binding Normalizations, Source={x:Static vm:SettingsViewModel.Instance}}" SelectedItem="{Binding ToneMap}"/>
+                                        </GroupBox>
+                                        <GroupBox Header="Minimum:" Grid.Column="2" Grid.Row="1">
+                                            <xctk:DoubleUpDown FormatString="F5" Increment="1" Maximum="1000000000.00000" Minimum="0"  Value="{Binding ToneMinimum}" />
+                                        </GroupBox>
+                                        <GroupBox Header="Maximum:" Grid.Column="2" Grid.Row="2">
+                                            <xctk:DoubleUpDown FormatString="F5" Increment="1" Maximum="1000000000.00000" Minimum="-1000000000.00000" Value="{Binding ToneMaximum}" />
+                                        </GroupBox>
+                                        <StackPanel Grid.Column="4" Visibility="{Binding IsManual, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                        </StackPanel>
+                                    </Grid>
+                                    <Button Grid.Column="1" Height="24" VerticalAlignment="Top" ToolTip="Reset Settings for this panel" Command="{Binding CMDReset}" >
+                                        <fa5:FontAwesome Icon="Solid_UndoAlt" />
+                                    </Button>
+                                </Grid>
+                            </TabItem>
+                            <TabItem Header="09 Convexity Map Settings"  DataContext="{Binding SettingsConvexity}" Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=chkBakeConvexity}">
+                                <Grid Margin="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="24" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="48"/>
+                                            <RowDefinition Height="48"/>
+                                        </Grid.RowDefinitions>
+                                        <GroupBox Header="Convexity Scale" Grid.Column="1">
+                                            <xctk:DoubleUpDown Increment="0.025" FormatString="F3" Maximum="1.000" Minimum="0.000" Value="{Binding Scale}" />
+                                        </GroupBox>
+                                        <GroupBox Header="Background Color" Grid.Column="1" Grid.Row="1">
+                                            <xctk:ColorPicker SelectedColor="{Binding BackgroundColor}" />
+                                        </GroupBox>
+                                    </Grid>
+                                    <Button Grid.Column="1" VerticalAlignment="Top" Height="24" ToolTip="Reset Settings for this panel" Command="{Binding CMDReset}" >
+                                        <fa5:FontAwesome Icon="Solid_UndoAlt" />
+                                    </Button>
+                                </Grid>
+                            </TabItem>
+                            <TabItem Header="10 Derivative Map Settings"  DataContext="{Binding SettingsDerivative}" Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=chkBakeDerivative}">
+                                <Grid Margin="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="24" />
+                                    </Grid.ColumnDefinitions>
+                                    <GroupBox Header="Background Color" Grid.Column="1" Height="48" VerticalAlignment="Top">
+                                        <xctk:ColorPicker SelectedColor="{Binding BackgroundColor}" />
+                                    </GroupBox>
+                                    <Button Grid.Column="3" VerticalAlignment="Top" Height="24" ToolTip="Reset Settings for this panel" Command="{Binding CMDReset}" >
+                                        <fa5:FontAwesome Icon="Solid_UndoAlt" />
+                                    </Button>
+                                </Grid>
+                            </TabItem>
+                            <TabItem Header="11 Radiosity Map Settings" DataContext="{Binding SettingsRadiosity}" Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=chkBakeRadiosity}">
+                                <Grid Margin="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="24" />
+                                    </Grid.ColumnDefinitions>
+                                    <Button Grid.Column="1" VerticalAlignment="Top" Height="24" ToolTip="Reset Settings for this panel" Command="{Binding CMDReset}" >
+                                        <fa5:FontAwesome Icon="Solid_UndoAlt" />
+                                    </Button>
+                                    <Grid Margin="2">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="48"/>
+                                            <RowDefinition Height="48"/>
+                                            <RowDefinition Height="48"/>
+                                            <RowDefinition Height="48"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <GroupBox Header="Rays" Grid.Row="0">
+                                            <xctk:IntegerUpDown Increment="1" Maximum="8192" Minimum="8" Value="{Binding Rays}" />
+                                        </GroupBox>
+                                        <GroupBox Header="Bias" Grid.Row="1">
+                                            <xctk:DoubleUpDown Increment="0.00005" FormatString="F6" Maximum="1" Minimum="0.0" Value="{Binding Bias}" />
+                                        </GroupBox>
+                                        <GroupBox Header="Spread Angle" Grid.Row="2">
+                                            <xctk:DoubleUpDown Increment="1" FormatString="F2" Maximum="179.5" Minimum="0.5" Value="{Binding SpreadAngle}" />
+                                        </GroupBox>
+                                        <GroupBox Header="Contrast" Grid.Row="3">
+                                            <xctk:DoubleUpDown Increment="0.1" FormatString="F5" Maximum="50" Minimum="0.05" Value="{Binding Contrast}" />
+                                        </GroupBox>
+                                        <GroupBox Header="Options" Grid.Column="2" Grid.RowSpan="2" Grid.Row="0">
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="18"/>
+                                                    <RowDefinition Height="18"/>
+                                                    <RowDefinition Height="18"/>
+                                                    <RowDefinition Height="18"/>
+                                                </Grid.RowDefinitions>
+                                                <CheckBox Grid.Row="0" Content="Limit ray distance" IsChecked="{Binding LimitRayDistance}" VerticalAlignment="Center"/>
+                                                <CheckBox Grid.Row="1" Content="Jitter" IsChecked="{Binding Jitter}" VerticalAlignment="Center"/>
+                                                <CheckBox Grid.Row="2" Content="Encode Occlusion" IsChecked="{Binding EncodeOcclusion}" VerticalAlignment="Center"/>
+                                                <CheckBox Grid.Row="3" Content="Allow Pure Occlusion" IsChecked="{Binding AllowPureOcclusion}" VerticalAlignment="Center"/>
+                                            </Grid>
+                                        </GroupBox>
+                                        <GroupBox Header="Coordinate System" Grid.Column="1" Grid.Row="0">
+                                            <ComboBox ItemsSource="{Binding CoordSystems, Source={x:Static vm:SettingsViewModel.Instance}}" SelectedItem="{Binding CoordinateSystem}"/>
+                                        </GroupBox>
+                                        <GroupBox Header="Background Color" Grid.Column="1" Grid.Row="2">
+                                            <xctk:ColorPicker SelectedColor="{Binding BackgroundColor}" />
+                                        </GroupBox>
+                                        <GroupBox Header="Distribution " Grid.Column="1" Grid.Row="1">
+                                            <ComboBox ItemsSource="{Binding Distributions, Source={x:Static vm:SettingsViewModel.Instance}}" SelectedItem="{Binding Distribution}"/>
+                                        </GroupBox>
+                                        <GroupBox Header="Attenuation" Grid.Column="1" Grid.Row="3">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="4" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="4" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <xctk:DoubleUpDown Grid.Column="0" FormatString="F5" Increment="0.5" Value="{Binding AttenuationConstant}" Maximum="1000" Minimum="1" ToolTip="Constant" />
+                                                <xctk:DoubleUpDown Grid.Column="2" FormatString="F5" Increment="0.1" Value="{Binding AttenuationLinear}" Maximum="1000" Minimum="0" ToolTip="Linear" />
+                                                <xctk:DoubleUpDown Grid.Column="4" FormatString="F5" Increment="0.05" Maximum="1000" Minimum="0" Value="{Binding AttenuationQuadratic}" ToolTip="Quadratic" />
+                                            </Grid>
+                                        </GroupBox>
+                                    </Grid>
+                                </Grid>
+                            </TabItem>
+                            <TabItem Header="12 Proximity Map Settings" DataContext="{Binding SettingsProximity}"  Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=chkBakeProximity}">
+                                <Grid Margin="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="24" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="1">
+                                        <GroupBox Header="Rays" Height="48">
+                                            <xctk:IntegerUpDown Increment="1" Maximum="8192" Minimum="8" Value="{Binding Rays}" />
+                                        </GroupBox>
+                                        <GroupBox Header="Options" Height="48" >
+                                            <CheckBox Content="Limit ray distance" IsChecked="{Binding LimitRayDistance}" VerticalAlignment="Center"/>
+                                        </GroupBox>
+                                        <GroupBox Header="Spread Angle" Height="48">
+                                            <xctk:DoubleUpDown Increment="1" FormatString="F2" Maximum="179.5" Minimum="0.5" Value="{Binding SpreadAngle}" />
+                                        </GroupBox>
+                                        <GroupBox Header="Background Color" Height="48">
+                                            <xctk:ColorPicker SelectedColor="{Binding BackgroundColor}" />
+                                        </GroupBox>
+                                    </StackPanel>
+                                    <Button Grid.Column="3" Height="24" VerticalAlignment="Top" ToolTip="Reset Settings for this panel" Command="{Binding CMDReset}" >
+                                        <fa5:FontAwesome Icon="Solid_UndoAlt" />
+                                    </Button>
+                                </Grid>
+                            </TabItem>
+                            <TabItem Header="13 PRTpn Settings"  DataContext="{Binding SettingsPRTpn}" Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=chkBakePRTpn}">
+                                <Grid Margin="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="24" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="48"/>
+                                            <RowDefinition Height="48"/>
+                                            <RowDefinition Height="48"/>
+                                            <RowDefinition Height="48"/>
+                                        </Grid.RowDefinitions>
+                                        <GroupBox Header="Rays" Grid.Row="0" Grid.Column="1">
+                                            <xctk:IntegerUpDown Increment="1" Maximum="8192" Minimum="8" Value="{Binding Rays}" />
+                                        </GroupBox>
+                                        <GroupBox Header="Bias" Grid.Row="1" Grid.Column="1">
+                                            <xctk:DoubleUpDown Increment="0.00005" FormatString="F6" Maximum="1" Minimum="0.0" Value="{Binding Bias}" />
+                                        </GroupBox>
+                                        <GroupBox Header="Spread Angle" Grid.Row="2" Grid.Column="1">
+                                            <xctk:DoubleUpDown Increment="1" FormatString="F2" Maximum="179.5" Minimum="0.5" Value="{Binding SpreadAngle}" />
+                                        </GroupBox>
+                                        <GroupBox Header="Threshold" Grid.Row="3" Grid.Column="1">
+                                            <xctk:DoubleUpDown Increment="0.00005" FormatString="F6" Maximum="1" Minimum="0" Value="{Binding Threshold}" />
+                                        </GroupBox>
+                                        <GroupBox Header="Options" Grid.Column="2" Grid.RowSpan="2" Grid.Row="1">
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="20"/>
+                                                    <RowDefinition Height="20"/>
+                                                    <RowDefinition Height="20"/>
+                                                </Grid.RowDefinitions>
+                                                <CheckBox Grid.Row="0" Content="Limit ray distance" IsChecked="{Binding LimitRayDistance}" VerticalAlignment="Center"/>
+                                                <CheckBox Grid.Row="1" Content="Jitter" IsChecked="{Binding Jitter}" VerticalAlignment="Center"/>
+                                                <CheckBox Grid.Row="2" Content="Encode Occlusion" IsChecked="{Binding PRTColorNormalize}" VerticalAlignment="Center"/>
+                                            </Grid>
+                                        </GroupBox>
+                                        <GroupBox Header="Background Color" Grid.Column="2" Grid.Row="0">
+                                            <xctk:ColorPicker SelectedColor="{Binding BackgroundColor}" />
+                                        </GroupBox>
+                                    </Grid>
+                                    <Button Grid.Column="1" VerticalAlignment="Top" Height="24" ToolTip="Reset Settings for this panel" Command="{Binding CMDReset}" >
+                                        <fa5:FontAwesome Icon="Solid_UndoAlt" />
+                                    </Button>
+                                </Grid>
+                            </TabItem>
+                            <TabItem Header="14 Bake Base Texture Settings"  DataContext="{Binding SettingsBaseTexture}" Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=chkBakeBaseTexture}">
+                                <Grid Margin="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="24" />
                                     </Grid.ColumnDefinitions>
                                     <Grid.RowDefinitions>
-                                        <RowDefinition Height="*"/>
-                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="56"/>
+                                        <RowDefinition Height="48"/>
                                     </Grid.RowDefinitions>
-                                    <StackPanel Width="250">
-                                        <RadioButton Grid.Column="0" Grid.Row="0" Content="Write ObjectID if no texture" GroupName="BakeBaseTexture" VerticalAlignment="Center" IsChecked="{Binding WriteObjectID}"/>
-                                        <StackPanel Orientation="Horizontal">
-                                            <RadioButton Grid.Column="0" Grid.Row="1" Name="rdoBakeBaseTDrawCol" Content="Draw using this color: " GroupName="BakeBaseTexture" IsChecked="{Binding UseDrawColor}"/>
-                                            <xctk:ColorPicker SelectedColor="{Binding DrawColor}" Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=rdoBakeBaseTDrawCol}" />
+                                    <GroupBox Header="Draw Options" Grid.Column="1" >
+                                        <StackPanel>
+                                            <RadioButton Content="Write ObjectID if no texture" GroupName="BakeBaseTexture" VerticalAlignment="Center" IsChecked="{Binding WriteObjectID}" />
+                                            <StackPanel Orientation="Horizontal">
+                                                <RadioButton Name="rdoDrawCol" IsChecked="{Binding UseDrawColor}" Content="Draw using this color: " GroupName="BakeBaseTexture" VerticalAlignment="Center"/>
+                                                <xctk:ColorPicker SelectedColor="{Binding DrawColor}" Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=rdoDrawCol}"/>
+                                            </StackPanel>
                                         </StackPanel>
-                                    </StackPanel>
-                                    <StackPanel Grid.Row="1" Width="250">
-                                        <Label Content="Background Color"/>
+                                    </GroupBox>
+                                    <GroupBox Header="Background Color" Grid.Column="1" Grid.Row="1">
                                         <xctk:ColorPicker SelectedColor="{Binding BackgroundColor}" />
-                                    </StackPanel>
-                                    <Button Content="R" Grid.Column="3" Height="24" ToolTip="Reset Settings for this panel" />
-                                </Grid>
-                            </TabItem>
-                            <TabItem Header="06 Cavity Map Settings"  DataContext="{Binding SettingsCavity}" Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=chkBakeCavity}">
-                                <Grid Margin="5">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="24" />
-                                    </Grid.ColumnDefinitions>
-
-                                    <StackPanel Grid.Column="0">
-                                        <Label Content="Rays:" />
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="*"/>
-                                            </Grid.ColumnDefinitions>
-                                            <xctk:IntegerUpDown Increment="1" Maximum="8192" Minimum="8"  Value="{Binding Rays}" VerticalAlignment="Top" Width="60" />
-                                            <CheckBox Grid.Column="1" Content="Jitter"  VerticalAlignment="Center" IsChecked="{Binding Jitter}"/>
-                                        </Grid>
-                                    </StackPanel>
-                                    <StackPanel Grid.Column="1">
-                                        <Label Content="Radius:" />
-                                        <xctk:DoubleUpDown FormatString="F6" Increment="1" Maximum="100000000" Minimum="0" Value="{Binding Radius}" />
-                                    </StackPanel>
-                                    <StackPanel Grid.Column="2">
-                                        <Label Content="Contrast:" />
-                                        <xctk:DoubleUpDown FormatString="F3"  Increment="0.5" Maximum="8" Minimum="0.001" Value="{Binding Contrast}" />
-                                    </StackPanel>
-                                    <StackPanel Grid.Column="3">
-                                        <Label Content="Steps:" />
-                                        <xctk:IntegerUpDown  Increment="1" Maximum="128" Minimum="4" Value="{Binding Steps}"/>
-                                    </StackPanel>
-                                    <StackPanel Grid.Column="4">
-                                        <Label Content="Background Color:" />
-                                        <xctk:ColorPicker Name="ClrCMBackground" SelectedColor="{Binding BackgroundColor}" />
-                                    </StackPanel>
-                                    <Button Content="R" Grid.Column="5" Grid.Row="1" Height="24" ToolTip="Reset Settings for this panel" />
-                                </Grid>
-                            </TabItem>
-                            <TabItem Header="07 Bent Normal Settings"  DataContext="{Binding SettingsBentNormal}" Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=chkBakeBentNormals}">
-                                <Grid Margin="5">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="4" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="4" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="4" />
-                                        <ColumnDefinition Width="24" />
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel>
-                                        <Label Content="Rays:" />
-                                        <xctk:IntegerUpDown Increment="1" Maximum="8192" Minimum="8" Value="{Binding Rays}"   />
-                                        <Label Content="Bias:"/>
-                                        <xctk:DoubleUpDown Increment="0.000050" FormatString="F6" Maximum="1.000000" Minimum="0.000000" Value="{Binding Bias}" />
-                                        <Label Content="Spread Angle:" />
-                                        <xctk:DoubleUpDown Increment="1" FormatString="F2" Maximum="179.50" Minimum="0.50" Value="{Binding SpreadAngle}" />
-                                    </StackPanel>
-                                    <StackPanel Grid.Column="2">
-                                        <Label Content="Swizzle Coordinates:" />
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="4" />
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="4" />
-                                                <ColumnDefinition Width="*" />
-                                            </Grid.ColumnDefinitions>
-                                            <StackPanel Grid.Column="0">
-                                                <Label Content="Red" />
-                                                <ComboBox ItemsSource="{Binding Axis, Source ={x:Static vm:SettingsViewModel.Instance}}" SelectedItem="{Binding SwizzleX}"/>
-                                            </StackPanel>
-                                            <StackPanel Grid.Column="2">
-                                                <Label Content="Green"  />
-                                                <ComboBox ItemsSource="{Binding Axis, Source ={x:Static vm:SettingsViewModel.Instance}}" SelectedItem="{Binding SwizzleY}"/>
-                                            </StackPanel>
-                                            <StackPanel Grid.Column="4">
-                                                <Label Content="Blue" />
-                                                <ComboBox ItemsSource="{Binding Axis, Source ={x:Static vm:SettingsViewModel.Instance}}" SelectedItem="{Binding SwizzleZ}"/>
-                                            </StackPanel>
-                                        </Grid>
-                                        <CheckBox Content="Limit Ray Distance" Margin="0 4 0 2" IsChecked="{Binding LimitRayDistance}"/>
-                                        <CheckBox Content="Jitter" Margin="0 2" IsChecked="{Binding Jitter}"/>
-                                        <CheckBox Content="Tangent Space" Margin="0 2" IsChecked="{Binding TangentSpace}"/>
-                                    </StackPanel>
-                                    <StackPanel Grid.Column="4">
-                                        <Label Content="Distribution:" />
-                                        <ComboBox ItemsSource="{Binding Distributions, Source ={x:Static vm:SettingsViewModel.Instance}}" SelectedItem="{Binding Distribution}"/>
-                                        <Label Content="Background Color:" />
-                                        <xctk:ColorPicker SelectedColor="{Binding BackgroundColor}" />
-                                    </StackPanel>
-                                    <Button Content="R" Grid.Column="6" Height="24" ToolTip="Reset Settings for this panel" />
-                                </Grid>
-                            </TabItem>
-                            <TabItem Header="08 Direction Map Settings"  DataContext="{Binding SettingsDirection}" Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=chkBakeDirection}">
-                                <Grid Margin="5">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="4" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="4" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="4" />
-                                        <ColumnDefinition Width="24" />
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel Grid.Column="0">
-                                        <Label Content="Swizzle Coordinates:" />
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="4" />
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="4" />
-                                                <ColumnDefinition Width="*" />
-                                            </Grid.ColumnDefinitions>
-                                            <StackPanel Grid.Column="0">
-                                                <Label Content="Red" />
-                                                <ComboBox />
-                                            </StackPanel>
-                                            <StackPanel Grid.Column="2">
-                                                <Label Content="Green"  />
-                                                <ComboBox />
-                                            </StackPanel>
-                                            <StackPanel Grid.Column="4">
-                                                <Label Content="Blue" />
-                                                <ComboBox />
-                                            </StackPanel>
-                                        </Grid>
-                                        <CheckBox Content="Tangent Space" IsChecked="{Binding TangentSpace}"/>
-                                    </StackPanel>
-                                    <StackPanel Grid.Column="2" >
-                                        <Label Content="Background Color:" />
-                                        <xctk:ColorPicker SelectedColor="{Binding BackgroundColor}"/>
-                                        <Label Content="Tone Map:" />
-                                        <ListBox ItemsSource="{Binding Normalizations, Source={x:Static vm:SettingsViewModel.Instance}}" SelectedItem="{Binding ToneMap}"/>
-                                    </StackPanel>
-                                    <StackPanel Grid.Column="4" Visibility="{Binding IsManual, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                        <Label Content="Minimum:" Grid.Column="2" />
-                                        <xctk:DoubleUpDown FormatString="F5" Increment="1" Maximum="1000000000.00000" Minimum="0"  Value="{Binding ToneMinimum}" />
-                                        <Label Content="Maximum:" Grid.Column="2" VerticalAlignment="Center" />
-                                        <xctk:DoubleUpDown FormatString="F5" Increment="1" Maximum="1000000000.00000" Minimum="-1000000000.00000" Value="{Binding ToneMaximum}" />
-                                    </StackPanel>
-                                    <Button Content="R" Grid.Column="6" Grid.Row="1" Name="btnResetDirM" Height="24"  ToolTip="Reset Settings for this panel" />
-                                </Grid>
-                            </TabItem>
-                            <TabItem Header="09 Convexity Map Settings"  DataContext="{Binding SettingsConvexity}" Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=chkBakeConvexity}">
-                                <Grid Margin="5">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="24" />
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel Grid.Column="0" Grid.Row="0" Width="250">
-                                        <Label Content="Convexity Scale" />
-                                        <xctk:DoubleUpDown Increment="0.025" FormatString="F3" Maximum="1.000" Minimum="0.000" Value="{Binding Scale}" />
-                                        <Label Content="Background Color" />
-                                        <xctk:ColorPicker SelectedColor="{Binding BackgroundColor}" />
-                                    </StackPanel>
-                                    <Button Content="R" Grid.Column="2" Height="24"  ToolTip="Reset Settings for this panel" />
-                                </Grid>
-                            </TabItem>
-                            <TabItem Header="10 Derivative Map Settings"  DataContext="{Binding SettingsDerivative}" Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=chkBakeDerivative}">
-                                <Grid Margin="5">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="24" />
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel Width="250">
-                                        <Label Content="Background Color" />
-                                        <xctk:ColorPicker SelectedColor="{Binding BackgroundColor}"  />
-                                    </StackPanel>
-                                    <Button Grid.Column="1"  Content="R" Height="24" ToolTip="Reset Settings for this panel" />
-                                </Grid>
-                            </TabItem>
-                            <TabItem Header="11 Radiosity Map Settings" DataContext="{Binding SettingsRadiosity}" Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=chkBakeRadiosity}">
-                                <Grid Margin="5">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="4" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="4" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="4" />
-                                        <ColumnDefinition Width="1.5*" />
-                                        <ColumnDefinition Width="4" />
-                                        <ColumnDefinition Width="24" />
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel>
-                                        <Label Content="Rays:"/>
-                                        <xctk:IntegerUpDown Increment="1" Maximum="8192" Minimum="8" Value="{Binding Rays}" />
-                                        <Label Content="Bias:"/>
-                                        <xctk:DoubleUpDown Increment="0.00005" FormatString="F6" Maximum="1" Minimum="0.0" Value="{Binding Bias}" />
-                                        <Label Content="Spread Angle:"/>
-                                        <xctk:DoubleUpDown Increment="1" FormatString="F2" Maximum="179.5" Minimum="0.5" Value="{Binding SpreadAngle}" />
-                                    </StackPanel>
-                                    <StackPanel Grid.Column="2">
-                                        <Label Content="Contrast:" />
-                                        <xctk:DoubleUpDown Increment="0.1" FormatString="F5" Maximum="50" Minimum="0.05" Value="{Binding Contrast}" />
-                                        <CheckBox Content="Limit ray distance" IsChecked="{Binding LimitRayDistance}" />
-                                        <CheckBox Content="Jitter" IsChecked="{Binding Jitter}"/>
-                                        <CheckBox Content="Encode Occlusion" IsChecked="{Binding EncodeOcclusion}" />
-                                        <CheckBox Content="Allow Pure Occlusion" IsChecked="{Binding AllowPureOcclusion}"/>
-                                    </StackPanel>
-                                    <StackPanel Grid.Column="4">
-                                        <Label Content="Coordinate System:"/>
-                                        <ComboBox ItemsSource="{Binding CoordSystems, Source={x:Static vm:SettingsViewModel.Instance}}" SelectedItem="{Binding CoordinateSystem}"/>
-                                        <Label Content="Background Color:" />
-                                        <xctk:ColorPicker SelectedColor="{Binding BackgroundColor}" />
-                                    </StackPanel>
-                                    <StackPanel Grid.Column="6" Grid.Row="0">
-                                        <Label Content="Distribution:"/>
-                                        <ComboBox ItemsSource="{Binding Distributions, Source={x:Static vm:SettingsViewModel.Instance}}" SelectedItem="{Binding Distribution}"/>
-                                        <Label Content="Attenuation:" />
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="4" />
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="4" />
-                                                <ColumnDefinition Width="*" />
-                                            </Grid.ColumnDefinitions>
-                                            <xctk:DoubleUpDown Grid.Column="0" FormatString="F5" Increment="0.5" Value="{Binding AttenuationConstant}" Maximum="1000" Minimum="1" ToolTip="Constant" />
-                                            <xctk:DoubleUpDown Grid.Column="2" FormatString="F5" Increment="0.1" Value="{Binding AttenuationLinear}" Maximum="1000" Minimum="0" ToolTip="Linear" />
-                                            <xctk:DoubleUpDown Grid.Column="4" FormatString="F5" Increment="0.05" Maximum="1000" Minimum="0" Value="{Binding AttenuationQuadratic}" ToolTip="Quadratic" />
-                                        </Grid>
-                                    </StackPanel>
-                                    <Button Content="R" Grid.Column="8" Height="24" ToolTip="Reset Settings for this panel" />
-                                </Grid>
-                            </TabItem>
-                            <TabItem Header="12 Proximity Map Settings" DataContext="{Binding SettingsProximity}"  Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=chkBakeProximity}">
-                                <Grid Margin="5">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="24" />
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel Width="250">
-                                        <Label Content="Rays"/>
-                                        <xctk:IntegerUpDown Increment="1" Maximum="8192" Minimum="8" Value="{Binding Rays}" />
-                                        <CheckBox Content="Limit ray distance" Grid.Column="1" IsChecked="{Binding LimitRayDistance}"  />
-                                        <Label Content="Spread Angle" />
-                                        <xctk:DoubleUpDown Increment="1" FormatString="F2" Maximum="179.5" Minimum="0.5" Value="{Binding SpreadAngle}" />
-                                        <Label Content="Background Color" />
-                                        <xctk:ColorPicker SelectedColor="{Binding BackgroundColor}"  />
-                                    </StackPanel>
-                                    <StackPanel Grid.Column="1">
-                                    </StackPanel>
-                                    <Button Content="R" Grid.Column="2" Height="24" ToolTip="Reset Settings for this panel" />
-                                </Grid>
-                            </TabItem>
-                            <TabItem Header="13 PRTpn Settings"  DataContext="{Binding SettingsPRTpn}" Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=chkBakePRTpn}">
-                                <Grid Margin="5">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="4" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="4" />
-                                        <ColumnDefinition Width="24" />
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel>
-                                        <Label Content="Rays:"/>
-                                        <xctk:IntegerUpDown Increment="1" Maximum="8192" Minimum="8" Value="{Binding Rays}" />
-                                        <Label Content="Bias:" />
-                                        <xctk:DoubleUpDown Increment="0.00005" FormatString="F6" Maximum="1.000000" Minimum="0.000000" Value="{Binding Bias}" />
-                                        <Label Content="Spread Angle:" />
-                                        <xctk:DoubleUpDown Increment="1" FormatString="F2" Maximum="179.50" Minimum="0.50" Value="{Binding SpreadAngle}" />
-                                    </StackPanel>
-                                    <StackPanel Grid.Column="2">
-                                        <CheckBox Content="Limit ray distance" Grid.Column="1" Grid.Row="0" IsChecked="{Binding LimitRayDistance}"/>
-                                        <CheckBox Content="Jitter" Grid.Column="1" Grid.Row="1" IsChecked="{Binding Jitter}"/>
-                                        <CheckBox Content="PRT Color Normalize" Grid.Column="1" Grid.Row="2" IsChecked="{Binding Jitter}"  />
-                                        <Label Content="Threshold:"/>
-                                        <xctk:DoubleUpDown Increment="0.00005" FormatString="F6" Maximum="1" Minimum="0" Value="{Binding Threshold}" />
-                                        <Label Content="Background Color:" />
-                                        <xctk:ColorPicker SelectedColor="{Binding BackgroundColor}" />
-                                    </StackPanel>
-                                    <Button Content="R" Grid.Column="4" Grid.Row="1" Height="24" ToolTip="Reset Settings for this panel" />
-                                </Grid>
-                            </TabItem>
-                            <TabItem Header="14 Bake Base Texture Settings"  DataContext="{Binding SettingsBaseTexture}" Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=chkBakeBaseTexture}">
-                                <Grid Margin="5">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="24" />
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel Width="400">
-                                        <RadioButton Content="Write ObjectID if no texture" GroupName="BakeBaseTexture" VerticalAlignment="Center" IsChecked="{Binding WriteObjectID}" />
-                                        <StackPanel Orientation="Horizontal">
-                                            <RadioButton Name="rdoDrawCol" IsChecked="{Binding UseDrawColor}" Content="Draw using this color: " GroupName="BakeBaseTexture" VerticalAlignment="Center"/>
-                                            <xctk:ColorPicker SelectedColor="{Binding DrawColor}" Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=rdoDrawCol}"/>
-                                        </StackPanel>
-                                        <Label Content="Background Color:"/>
-                                        <xctk:ColorPicker SelectedColor="{Binding BackgroundColor}"/>
-                                    </StackPanel>
-                                    <Button Content="R" Grid.Column="3" Grid.Row="1" Height="24" ToolTip="Reset Settings for this panel" />
+                                    </GroupBox>
+                                    <Button Grid.Column="3" VerticalAlignment="Top" Height="24" ToolTip="Reset Settings for this panel" Command="{Binding CMDReset}" >
+                                        <fa5:FontAwesome Icon="Solid_UndoAlt" />
+                                    </Button>
                                 </Grid>
                             </TabItem>
                             <TabItem Header="15 Wireframe and Ray fails Settings"  DataContext="{Binding SettingsWireframe}" Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=chkBakeWireframe}">
-                                <Grid Margin="5">
+                                <Grid Margin="2">
                                     <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="24" />
                                     </Grid.ColumnDefinitions>
-                                    <StackPanel Width="350">
-                                        <CheckBox Content="Render wireframe" Name="chkWireRenderWF" IsChecked="{Binding RenderWireFrame}" />
-                                        <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="0" Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=chkWireRenderWF}">
-                                            <Label Content="Color" />
-                                            <xctk:ColorPicker SelectedColor="{Binding Color}" />
-                                            <Label Content="CW" />
-                                            <xctk:ColorPicker SelectedColor="{Binding CWColor}"  />
-                                            <Label Content="Seam"/>
-                                            <xctk:ColorPicker SelectedColor="{Binding SeamColor}" />
-                                        </StackPanel>
-                                        <CheckBox Content="Render ray fails" Name="chkWireRenderRayFails" IsChecked="{Binding RenderRayFails}"  Grid.Row="1"  />
-                                        <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal" Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=chkWireRenderRayFails}">
-                                            <Label Content="Color" />
-                                            <xctk:ColorPicker SelectedColor="{Binding RayFailColor}"/>
-                                        </StackPanel>
-                                        <Label Content="Background Color" />
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="56"/>
+                                        <RowDefinition Height="48"/>
+                                        <RowDefinition Height="48"/>
+                                    </Grid.RowDefinitions>
+                                    <GroupBox Grid.Column="1" Header="Background Color"  Grid.Row="2">
                                         <xctk:ColorPicker SelectedColor="{Binding BackgroundColor}" />
-                                    </StackPanel>
-                                    <Button Content="R" Grid.Column="1" Height="24" ToolTip="Reset Settings for this panel" />
+                                    </GroupBox>
+                                    <Grid Grid.Column="1">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <CheckBox Grid.Column="0" Content="Render wireframe" Name="chkWireRenderWF" IsChecked="{Binding RenderWireFrame}" VerticalAlignment="Center"/>
+                                        <Grid Grid.Column="1" IsEnabled="{Binding IsChecked, ElementName=chkWireRenderWF}" >
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <GroupBox Header="Color" Grid.Column="0">
+                                                <xctk:ColorPicker SelectedColor="{Binding Color}" />
+                                            </GroupBox>
+                                            <GroupBox Header="CW" Grid.Column="1">
+                                                <xctk:ColorPicker SelectedColor="{Binding CWColor}"  />
+                                            </GroupBox>
+                                            <GroupBox Header="Seam" Grid.Column="2">
+                                                <xctk:ColorPicker SelectedColor="{Binding SeamColor}" />
+                                            </GroupBox>
+                                        </Grid>
+                                    </Grid>
+                                    <Grid Grid.Row="1" Grid.Column="1">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <CheckBox Grid.Column="0" Content="Render ray fails" Name="chkWireRenderRayFails" IsChecked="{Binding RenderRayFails}"  Grid.Row="1" VerticalAlignment="Center" />
+                                        <GroupBox Header="Color" Grid.Column="1" Grid.Row="1" IsEnabled="{Binding IsChecked, ElementName=chkWireRenderRayFails}" >
+                                            <xctk:ColorPicker SelectedColor="{Binding RayFailColor}" />
+                                        </GroupBox>
+                                    </Grid>
+                                    <Button Grid.Column="3" VerticalAlignment="Top" Height="24" ToolTip="Reset Settings for this panel" Command="{Binding CMDReset}" >
+                                        <fa5:FontAwesome Icon="Solid_UndoAlt" />
+                                    </Button>
                                 </Grid>
                             </TabItem>
                             <TabItem Header="16 Translucency Map Settings"  DataContext="{Binding SettingsTranslucency}" Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=chkBakeTranslucency}">
@@ -993,7 +1181,9 @@
                                         <Label Content="Angle:" />
                                         <xctk:DoubleUpDown Value="{Binding SpreadAngle}" FormatString="F2" Maximum="179.50" Minimum="0.5" Increment="1"/>
                                     </StackPanel>
-                                    <Button Content="R" Grid.Column="4" Height="24" ToolTip="Reset Settings for this panel" />
+                                    <Button Grid.Column="4" Height="24" ToolTip="Reset Settings for this panel" Command="{Binding CMDReset}" >
+                                        <fa5:FontAwesome Icon="Solid_UndoAlt" />
+                                    </Button>
                                 </Grid>
                             </TabItem>
                         </TabControl>
@@ -1012,11 +1202,13 @@
                             <DataGridComboBoxColumn Width="*" Header="Group" SelectedItemBinding="{Binding Group}" ItemsSource="{Binding Source={x:Static vm:TermsViewModel.Instance}, Path=TermGroups}" />
                         </DataGrid.Columns>
                     </DataGrid>
-                    <StackPanel Grid.Column="1">
-                        <TextBlock Text="To add a new term, edit the last empty row and press enter." Margin="4 4 0 0"/>
-                        <TextBlock Text="To remove a term, simply delete the row (del key)." Margin="4 0 4 0" />
-                        <TextBlock Text="Changing group will assign the term to the proper list on the baker tab." Margin="4 0 4 4" />
-                    </StackPanel>
+                    <TextBlock Grid.Column="1" TextWrapping="Wrap" Margin="4 4 4 4">
+                            To add a new term, edit the last empty row and press enter.
+                            <LineBreak />
+                            To remove a term, simply delete the row (del key).
+                            <LineBreak />
+                            Changing group will assign the term to the proper list on the baker tab.
+                    </TextBlock>
                 </Grid>
             </TabItem>
         </TabControl>
