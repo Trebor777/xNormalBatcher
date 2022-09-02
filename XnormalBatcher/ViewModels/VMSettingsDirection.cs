@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using System.Xml;
+using XnormalBatcher.Helpers;
 
 namespace XnormalBatcher.ViewModels
 {
@@ -113,6 +115,18 @@ namespace XnormalBatcher.ViewModels
         public bool IsManual
         {
             get => Data.ToneMap == "Manual";
+        }
+        internal void SetXML(XmlElement genMaps, SettingsViewModel settings)
+        {
+            genMaps.SetAttribute("GenDirections", $"{settings.BakeDirection}".ToLower());
+            genMaps.SetAttribute("DirectionsTS", $"{TangentSpace}".ToLower());
+            genMaps.SetAttribute("DirectionsSwizzleX", $"{SwizzleX}");
+            genMaps.SetAttribute("DirectionsSwizzleY", $"{SwizzleY}");
+            genMaps.SetAttribute("DirectionsSwizzleZ", $"{SwizzleZ}");
+            genMaps.SetAttribute("DirectionsTonemap", $"{ToneMap}");
+            genMaps.SetAttribute("DirectionsTonemapMin", IsManual ? $"{ToneMinimum}" : "false");
+            genMaps.SetAttribute("DirectionsTonemapMax", IsManual ? $"{ToneMaximum}" : "false");
+            XmlHelper.SetXmlColor(genMaps["VDMBackgroundColor"], BackgroundColor);
         }
     }
 }

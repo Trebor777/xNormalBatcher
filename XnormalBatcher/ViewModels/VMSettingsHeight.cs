@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using System.Xml;
+using XnormalBatcher.Helpers;
 
 namespace XnormalBatcher.ViewModels
 {
@@ -72,6 +74,14 @@ namespace XnormalBatcher.ViewModels
         public bool IsManual
         {
             get => Data.Normalization == "Manual";
+        }
+        internal void SetXML(XmlElement genMaps, SettingsViewModel settings)
+        {
+            genMaps.SetAttribute("GenHeights", $"{settings.BakeHeight}");
+            genMaps.SetAttribute("HeightTonemap", $"{Normalization}");
+            genMaps.SetAttribute("HeightTonemapMin", IsManual ? $"{Minimum}" : "false");
+            genMaps.SetAttribute("HeightTonemapMax", IsManual ? $"{Maximum}" : "false");
+            XmlHelper.SetXmlColor(genMaps["HMBackgroundColor"], BackgroundColor);
         }
     }
 }

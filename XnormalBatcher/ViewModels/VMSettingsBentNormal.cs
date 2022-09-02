@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using System.Xml;
+using XnormalBatcher.Helpers;
 
 namespace XnormalBatcher.ViewModels
 {
@@ -126,6 +128,21 @@ namespace XnormalBatcher.ViewModels
         internal VMSettingsBentNormal()
         {
             Data = new SettingsBentNormal();
+        }
+        internal void SetXML(XmlElement genMaps, SettingsViewModel settings)
+        {
+            genMaps.SetAttribute("GenBent", $"{settings.BakeBentNormals}".ToLower());
+            genMaps.SetAttribute("BentRaysPerSample", $"{Rays}");
+            genMaps.SetAttribute("BentConeAngle", $"{SpreadAngle}");
+            genMaps.SetAttribute("BentBias", $"{Bias}");
+            genMaps.SetAttribute("BentTangentSpace", $"{TangentSpace}".ToLower());
+            genMaps.SetAttribute("BentLimitRayDistance", $"{LimitRayDistance}".ToLower());
+            genMaps.SetAttribute("BentJitter", $"{Jitter}".ToLower());
+            genMaps.SetAttribute("BentDistribution", $"{Distribution}");
+            genMaps.SetAttribute("BentSwizzleX", $"{SwizzleX}");
+            genMaps.SetAttribute("BentSwizzleY", $"{SwizzleY}");
+            genMaps.SetAttribute("BentSwizzleZ", $"{SwizzleZ}");
+            XmlHelper.SetXmlColor(genMaps["BentBackgroundColor"], BackgroundColor);
         }
     }
 }

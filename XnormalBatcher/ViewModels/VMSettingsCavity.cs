@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using XnormalBatcher.ViewModels;
+using System.Xml;
+using XnormalBatcher.Helpers;
 
 namespace XnormalBatcher.ViewModels
 {
@@ -89,6 +91,17 @@ namespace XnormalBatcher.ViewModels
                 Data.BackgroundColor = value;
                 NotifyPropertyChanged();
             }
+        }
+        internal void SetXML(XmlElement genMaps, SettingsViewModel settings)
+        {
+            genMaps.SetAttribute("GenCavity", $"{settings.BakeCavity}".ToLower());
+            genMaps.SetAttribute("CavityRaysPerSample", $"{Rays}");
+            genMaps.SetAttribute("CavityJitter", $"{Jitter}".ToLower());
+            genMaps.SetAttribute("CavitySearchRadius", $"{Radius}");
+            genMaps.SetAttribute("CavityContrast", $"{Contrast}");
+            genMaps.SetAttribute("CavitySteps", $"{Steps}");
+            XmlHelper.SetXmlColor(genMaps["CavityBackgroundColor"], BackgroundColor);
+
         }
     }
 }

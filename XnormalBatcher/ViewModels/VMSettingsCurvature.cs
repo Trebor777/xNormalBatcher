@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using System.Xml;
+using XnormalBatcher.Helpers;
 
 namespace XnormalBatcher.ViewModels
 {
@@ -130,6 +132,20 @@ namespace XnormalBatcher.ViewModels
                 Data.ToneMapping = value;
                 NotifyPropertyChanged();
             }
+        }
+        internal void SetXML(XmlElement genMaps, SettingsViewModel settings)
+        {
+            genMaps.SetAttribute("GenCurv", $"{settings.BakeCurvature}".ToLower());
+            genMaps.SetAttribute("CurvRaysPerSample", $"{Rays}");
+            genMaps.SetAttribute("CurvBias", $"{Bias}");
+            genMaps.SetAttribute("CurvConeAngle", $"{SpreadAngle}");
+            genMaps.SetAttribute("CurvSearchDistance", $"{SearchDistance}");
+            genMaps.SetAttribute("CurvTonemap", $"{ToneMapping}");
+            genMaps.SetAttribute("CurvDistribution", $"{Distribution}");
+            genMaps.SetAttribute("CurvAlgorithm", $"{Algorithm}");
+            genMaps.SetAttribute("CurvSmoothing", $"{Smoothing}".ToLower());
+            genMaps.SetAttribute("CurvJitter", $"{Jitter}".ToLower());
+            XmlHelper.SetXmlColor(genMaps["CurvBackgroundColor"], BackgroundColor);
         }
     }
 }

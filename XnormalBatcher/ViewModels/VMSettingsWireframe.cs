@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using System.Xml;
+using XnormalBatcher.Helpers;
 
 namespace XnormalBatcher.ViewModels
 {
@@ -89,6 +91,19 @@ namespace XnormalBatcher.ViewModels
         internal VMSettingsWireframe()
         {
             Data = new SettingsWireframe();
+        }
+
+        internal void SetXML(XmlElement genMaps, SettingsViewModel settings)
+        {
+            //Bake Wireframe and ray fails
+            genMaps.SetAttribute("GenWireRays", $"{settings.BakeWireframe}");
+            genMaps.SetAttribute("RenderRayFails", $"{RenderRayFails}");
+            genMaps.SetAttribute("RenderWireframe", $"{RenderWireFrame}");
+            XmlHelper.SetXmlColor(genMaps["RenderWireframeCol"], Color);
+            XmlHelper.SetXmlColor(genMaps["RenderCWCol"], CWColor);
+            XmlHelper.SetXmlColor(genMaps["RenderSeamCol"], SeamColor);
+            XmlHelper.SetXmlColor(genMaps["RenderRayFailsCol"], RayFailColor);
+            XmlHelper.SetXmlColor(genMaps["RenderWireframeBackgroundColor"], BackgroundColor);
         }
     }
 }

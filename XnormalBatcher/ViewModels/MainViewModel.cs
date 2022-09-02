@@ -47,7 +47,7 @@ namespace XnormalBatcher.ViewModels
             }
         }
 
-        internal void SaveAndClose()
+        internal void SaveSession()
         {
             JsonSerializer serializer = new JsonSerializer();
             serializer.Formatting = Formatting.Indented;
@@ -59,6 +59,10 @@ namespace XnormalBatcher.ViewModels
                 {
                     serializer.Serialize(writer, new DataObject { Terms = TermsViewModel.Instance.Data, Settings = SettingsViewModel.Instance.Data, Batch = BatchViewModel.Instance.Data });
                 }
+            }
+            foreach (var item in BatchViewModel.Instance.BatchItems)
+            {
+                item.GenerateXml();
             }
         }
 

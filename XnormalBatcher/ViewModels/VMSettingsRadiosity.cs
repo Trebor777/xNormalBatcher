@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using System.Xml;
+using XnormalBatcher.Helpers;
 
 namespace XnormalBatcher.ViewModels
 {
@@ -174,6 +176,24 @@ namespace XnormalBatcher.ViewModels
                 Data.BackgroundColor = value;
                 NotifyPropertyChanged();
             }
+        }
+        internal void SetXML(XmlElement genMaps, SettingsViewModel settings)
+        {
+            genMaps.SetAttribute("GenRadiosityNormals", $"{settings.BakeRadiosity}".ToLower());
+            genMaps.SetAttribute("RadiosityNormalsRaysPerSample", $"{Rays}");
+            genMaps.SetAttribute("RadiosityNormalsConeAngle", $"{SpreadAngle}");
+            genMaps.SetAttribute("RadiosityNormalsBias", $"{Bias}");
+            genMaps.SetAttribute("RadiosityNormalsAttenConstant", $"{AttenuationConstant}");
+            genMaps.SetAttribute("RadiosityNormalsAttenLinear", $"{AttenuationLinear}");
+            genMaps.SetAttribute("RadiosityNormalsAttenCuadratic", $"{AttenuationQuadratic}");
+            genMaps.SetAttribute("RadiosityNormalsContrast", $"{Contrast}");
+            genMaps.SetAttribute("RadiosityNormalsJitter", $"{Jitter}".ToLower());
+            genMaps.SetAttribute("RadiosityNormalsLimitRayDistance", $"{LimitRayDistance}".ToLower());
+            genMaps.SetAttribute("RadiosityNormalsEncodeAO", $"{EncodeOcclusion}".ToLower());
+            genMaps.SetAttribute("RadiosityNormalsAllowPureOcclusion", $"{AllowPureOcclusion}".ToLower());
+            genMaps.SetAttribute("RadiosityNormalsDistribution", $"{Distribution}");
+            genMaps.SetAttribute("RadiosityNormalsCoordSys", $"{CoordinateSystem}");
+            XmlHelper.SetXmlColor(genMaps["RadNMBackgroundColor"], BackgroundColor);
         }
     }
 }

@@ -4,6 +4,8 @@ using System.Windows.Media;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
+using XnormalBatcher.Helpers;
 
 namespace XnormalBatcher.ViewModels
 {
@@ -99,6 +101,20 @@ namespace XnormalBatcher.ViewModels
                 Data.BackgroundColor = value;
                 NotifyPropertyChanged();
             }
+        }
+        internal void SetXML(XmlElement genMaps, SettingsViewModel settings)
+        {
+            //Bake Wireframe and ray fails
+            genMaps.SetAttribute("GenTranslu", $"{settings.BakeTranslucency}".ToLower());
+            genMaps.SetAttribute("TransluRaysPerSample", $"{Rays}");
+            genMaps.SetAttribute("TransluDistribution", $"{Distribution}");
+            genMaps.SetAttribute("TransluConeAngle", $"{SpreadAngle}");
+            genMaps.SetAttribute("TransluBias", $"{Bias}");
+            genMaps.SetAttribute("TransluDist", $"{SearchDistance}");
+            genMaps.SetAttribute("TransluJitter", $"{Jitter}".ToLower());
+            
+            XmlHelper.SetXmlColor(genMaps["TransluBackgroundColor"], BackgroundColor);
+            
         }
     }
 }

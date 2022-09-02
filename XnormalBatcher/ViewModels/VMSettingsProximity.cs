@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using System.Xml;
+using XnormalBatcher.Helpers;
 
 namespace XnormalBatcher.ViewModels
 {
@@ -64,6 +66,14 @@ namespace XnormalBatcher.ViewModels
         internal VMSettingsProximity()
         {
             Data = new SettingsPRTpn();
+        }
+        internal void SetXML(XmlElement genMaps, SettingsViewModel settings)
+        {
+            genMaps.SetAttribute("GenProximity", $"{settings.BakeProximity}".ToLower());
+            genMaps.SetAttribute("ProximityRaysPerSample", $"{Rays}");
+            genMaps.SetAttribute("ProximityConeAngle", $"{SpreadAngle}");
+            genMaps.SetAttribute("ProximityLimitRayDistance", $"{LimitRayDistance}".ToLower());
+            XmlHelper.SetXmlColor(genMaps["ProximityBackgroundColor"], BackgroundColor);
         }
     }
 }

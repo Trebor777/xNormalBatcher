@@ -24,7 +24,7 @@ namespace XnormalBatcher
 
         private void Window_Closed(object sender, System.EventArgs e)
         {
-            MainViewModel.Instance.SaveAndClose();
+            MainViewModel.Instance.SaveSession();
         }
     }
 }

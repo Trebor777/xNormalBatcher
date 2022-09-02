@@ -227,6 +227,7 @@ namespace XnormalBatcher.ViewModels
             }
             XmlDocument document = new XmlDocument();
             document.Load(App.TemplatePath);
+            var settings = SettingsViewModel.Instance;
             var rootElement = document.DocumentElement;
             var lowPolyMesh = rootElement["LowPolyModel"]["Mesh"];
             var highMeshes = rootElement["HighPolyModel"];
@@ -255,9 +256,33 @@ namespace XnormalBatcher.ViewModels
             SettingsLow.SetXml(lowPolyMesh, GenerateName(FileHelper.SubFolders[0], 0), GenerateName(FileHelper.SubFolders[2], 2));
             genMaps.SetAttribute("Width", Width.ToString());
             genMaps.SetAttribute("Height", Height.ToString());
-            genMaps.SetAttribute("File", $@"{BasenameMapPath}\{Name}.{SettingsViewModel.Instance.SelectedTextureFileFormat}");
-            genMaps.SetAttribute("BakeHighpolyVCols", "false");
+            genMaps.SetAttribute("File", $@"{BasenameMapPath}\{Name}.{settings.SelectedTextureFileFormat}");
+            genMaps.SetAttribute("BakeHighpolyVCols", "false"); // Force off then use settings to generate specific file for vertex colors
 
+            lowPolyMesh.SetAttribute("UseCage", $"{BatchViewModel.Instance.UseCage}");
+            genMaps.SetAttribute("EdgePadding", $"{settings.EdgePadding}");
+            genMaps.SetAttribute("AA", $"{settings.SelectedAASize}");
+            genMaps.SetAttribute("BucketSize", $"{settings.SelectedBucketSize}");
+            genMaps.SetAttribute("ClosestIfFails", $"{settings.ClosestHitRayFails}");
+            genMaps.SetAttribute("DiscardRayBackFacesHits", $"{settings.DiscardBackFaceHit}");
+
+            settings.SettingsAmbient.SetXML(genMaps, settings);
+            settings.SettingsBaseTexture.SetXML(genMaps, settings);
+            settings.SettingsBentNormal.SetXML(genMaps, settings);
+            settings.SettingsCavity.SetXML(genMaps, settings);
+            settings.SettingsConvexity.SetXML(genMaps, settings);
+            settings.SettingsCurvature.SetXML(genMaps, settings);
+            settings.SettingsDerivative.SetXML(genMaps, settings);
+            settings.SettingsDirection.SetXML(genMaps, settings);
+            settings.SettingsHeight.SetXML(genMaps, settings);
+            settings.SettingsNormal.SetXML(genMaps, settings);
+            settings.SettingsProximity.SetXML(genMaps, settings);
+            settings.SettingsPRTpn.SetXML(genMaps, settings);
+            settings.SettingsRadiosity.SetXML(genMaps, settings);
+            settings.SettingsTranslucency.SetXML(genMaps, settings);            
+            settings.SettingsWireframe.SetXML(genMaps, settings);
+
+            genMaps.SetAttribute("GenThickness", $"{settings.BakeThickness}");            
             if (!string.IsNullOrEmpty(file))
                 document.Save(file);
             else
@@ -265,7 +290,7 @@ namespace XnormalBatcher.ViewModels
 
             if (SettingsViewModel.Instance.BakeVertexColors) // Generate Specific xml files for VertexColor Bake (needs separate bake)
             {
-                genMaps.SetAttribute("BakeHighpolyVCols", "true");
+                settings.SettingsVertexColors.SetXML(genMaps, settings);
                 highMesh.SetAttribute("IgnorePerVertexColor", "false");
                 // Disable all other map bakes
                 genMaps.SetAttribute("GenDerivNM", "false");
@@ -287,6 +312,7 @@ namespace XnormalBatcher.ViewModels
             }
             else
             {
+                
                 if (File.Exists(OutputXmlVCFile))
                     File.Delete(OutputXmlVCFile);
             }

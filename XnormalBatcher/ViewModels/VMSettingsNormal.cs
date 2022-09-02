@@ -1,4 +1,6 @@
 ﻿using System.Windows.Media;
+using System.Xml;
+using XnormalBatcher.Helpers;
 
 namespace XnormalBatcher.ViewModels
 {
@@ -50,6 +52,15 @@ namespace XnormalBatcher.ViewModels
         {
             get => Data.Color;
             set { Data.Color = value; NotifyPropertyChanged(); }
+        }
+        internal void SetXML(XmlElement genMaps, SettingsViewModel settings)
+        {
+            genMaps.SetAttribute("GenNormals", $"{settings.BakeNormals}");
+            genMaps.SetAttribute("TangentSpace", $"{TangentSpace}".ToLower());
+            genMaps.SetAttribute("SwizzleX", $"{SwizzleX}");
+            genMaps.SetAttribute("SwizzleY", $"{SwizzleY}");
+            genMaps.SetAttribute("SwizzleZ", $"{SwizzleZ}");
+            XmlHelper.SetXmlColor(genMaps["NMBackgroundColor"], Color);
         }
     }
 }

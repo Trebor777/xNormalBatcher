@@ -47,6 +47,8 @@ namespace XnormalBatcher.ViewModels
             BakeBentNormals = false;
             BakeBaseTexture = false;
             BakeThickness = false;
+            ClosestHitRayFails = true;
+            DiscardBackFaceHit = true;
             SelectedAASize = AASizes[0];
             SelectedBucketSize = BucketSizes[2];
             SelectedTextureFileFormat = TextureFileFormats[4];

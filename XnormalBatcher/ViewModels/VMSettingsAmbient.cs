@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using System.Xml;
+using XnormalBatcher.Helpers;
 
 namespace XnormalBatcher.ViewModels
 {
@@ -174,6 +176,24 @@ namespace XnormalBatcher.ViewModels
         internal VMSettingsAmbient()
         {
             Data = new SettingsAmbient();
+        }
+        internal void SetXML(XmlElement genMaps, SettingsViewModel settings)
+        {
+            genMaps.SetAttribute("GenAO", $"{settings.BakeAmbient}".ToLower());
+            genMaps.SetAttribute("AORaysPerSample", $"{Rays}");
+            genMaps.SetAttribute("AODistribution", $"{Distribution}");
+            genMaps.SetAttribute("AOConeAngle", $"{SpreadAngle}");
+            genMaps.SetAttribute("AOBias", $"{Bias}");
+            genMaps.SetAttribute("AOAllowPureOccluded", $"{Allow100Occlusion}".ToLower());
+            genMaps.SetAttribute("AOLimitRayDistance", $"{LimitRayDistance}".ToLower());
+            genMaps.SetAttribute("AOAttenConstant", $"{AttenuationConstant}");
+            genMaps.SetAttribute("AOAttenLinear", $"{AttenuationLinear}");
+            genMaps.SetAttribute("AOAttenCuadratic", $"{AttenuationQuadratic}");
+            genMaps.SetAttribute("AOJitter", $"{Jitter}".ToLower());
+            genMaps.SetAttribute("AOIgnoreBackfaceHits", $"{IgnoreBackfaceHits}".ToLower());
+            XmlHelper.SetXmlColor(genMaps["AOBackgroundColor"], BackgroundColor);
+            XmlHelper.SetXmlColor(genMaps["AOOccludedColor"], OccludedColor);
+            XmlHelper.SetXmlColor(genMaps["AOUnoccludedColor"], UnoccludedColor);
         }
     }
 }

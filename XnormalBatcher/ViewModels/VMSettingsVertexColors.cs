@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using System.Xml;
+using XnormalBatcher.Helpers;
 
 namespace XnormalBatcher.ViewModels
 {
@@ -68,6 +70,11 @@ namespace XnormalBatcher.ViewModels
                 Data.BackgroundColor = value;
                 NotifyPropertyChanged();
             }
+        }
+        internal void SetXML(XmlElement genMaps, SettingsViewModel settings)
+        {
+            genMaps.SetAttribute("BakeHighpolyVCols", $"{settings.BakeVertexColors}");
+            XmlHelper.SetXmlColor(genMaps["BakeHighpolyVColsBackgroundCol"], BackgroundColor);
         }
 
     }

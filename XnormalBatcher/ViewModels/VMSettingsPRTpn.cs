@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using System.Xml;
+using XnormalBatcher.Helpers;
 
 namespace XnormalBatcher.ViewModels
 {
@@ -108,6 +110,18 @@ namespace XnormalBatcher.ViewModels
         internal VMSettingsPRTpn()
         {
             Data = new SettingsPRTpn();
+        }
+        internal void SetXML(XmlElement genMaps, SettingsViewModel settings)
+        {
+            genMaps.SetAttribute("GenPRT", $"{settings.BakePRTpn}".ToLower());
+            genMaps.SetAttribute("PRTRaysPerSample", $"{Rays}");
+            genMaps.SetAttribute("PRTConeAngle", $"{SpreadAngle}");
+            genMaps.SetAttribute("PRTBias", $"{Bias}");
+            genMaps.SetAttribute("PRTThreshold", $"{Threshold}");
+            genMaps.SetAttribute("PRTLimitRayDistance", $"{LimitRayDistance}".ToLower());
+            genMaps.SetAttribute("PRTJitter", $"{Jitter}".ToLower());
+            genMaps.SetAttribute("PRTNormalize", $"{PRTColorNormalize}".ToLower());
+            XmlHelper.SetXmlColor(genMaps["PRTBackgroundColor"], BackgroundColor);
         }
     }
 }

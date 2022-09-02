@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using System.Xml;
+using XnormalBatcher.Helpers;
 
 namespace XnormalBatcher.ViewModels
 {
@@ -67,6 +69,13 @@ namespace XnormalBatcher.ViewModels
         internal VMSettingsBaseTexture()
         {
             Data = new SettingsBaseTexture();
+        }
+        internal void SetXML(XmlElement genMaps, SettingsViewModel settings)
+        {
+            genMaps.SetAttribute("BakeHighpolyBaseTex", $"{settings.BakeBaseTexture}".ToLower());
+            genMaps.SetAttribute("BakeHighpolyBaseTextureDrawObjectIDIfNoTexture", $"{WriteObjectID}".ToLower());
+            XmlHelper.SetXmlColor(genMaps["BakeHighpolyBaseTextureNoTexCol"], DrawColor);
+            XmlHelper.SetXmlColor(genMaps["BakeHighpolyBaseTextureBackgroundColor"], BackgroundColor);
         }
     }
 }
