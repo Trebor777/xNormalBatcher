@@ -1150,38 +1150,47 @@
                                 </Grid>
                             </TabItem>
                             <TabItem Header="16 Translucency Map Settings"  DataContext="{Binding SettingsTranslucency}" Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=chkBakeTranslucency}">
-                                <Grid Margin="5">
+                                <Grid Margin="2">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="4" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="4" />
                                         <ColumnDefinition Width="24" />
                                     </Grid.ColumnDefinitions>
-                                    <StackPanel>
-                                        <Label Content="Rays:"/>
-                                        <xctk:IntegerUpDown Value="{Binding Rays}" Minimum="8" Maximum="8192" Increment="1"/>
-                                        <Label Content="Distribution:"/>
-                                        <ComboBox ItemsSource="{Binding Distributions, Source={x:Static vm:SettingsViewModel.Instance}}" SelectedItem="{Binding Distribution}"/>
-                                        <StackPanel Orientation="Horizontal">
-                                            <Label Content="Background Color:" />
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="48"/>
+                                            <RowDefinition Height="48"/>
+                                            <RowDefinition Height="48"/>
+                                            <RowDefinition Height="48"/>
+                                        </Grid.RowDefinitions>
+                                        <GroupBox Header="Rays" Grid.Row="0" Grid.Column="1">
+                                            <xctk:IntegerUpDown Increment="1" Maximum="8192" Minimum="8" Value="{Binding Rays}" />
+                                        </GroupBox>
+                                        <GroupBox Header="Distribution" Grid.Row="1" Grid.Column="1">
+                                            <ComboBox ItemsSource="{Binding Distributions, Source={x:Static vm:SettingsViewModel.Instance}}" SelectedItem="{Binding Distribution}"/>
+                                        </GroupBox>
+                                        <GroupBox Header="Background Color" Grid.Row="2" Grid.Column="1">
                                             <xctk:ColorPicker SelectedColor="{Binding BackgroundColor}"/>
-                                        </StackPanel>
-                                    </StackPanel>
-                                    <StackPanel Grid.Column="2">
-                                        <Label Content="Bias:" />
-                                        <StackPanel Orientation="Horizontal">
-                                            <xctk:DoubleUpDown Value="{Binding Bias}" FormatString="F6" Minimum="0" Maximum="1" Increment="0.000050"/>
-                                            <CheckBox Content="Jitter" VerticalAlignment="Center" Height="22" VerticalContentAlignment="Center" IsChecked="{Binding Jitter}"/>
-                                        </StackPanel>
-                                        <StackPanel Orientation="Horizontal">
-                                            <Label Content="Search Distance:" />
+                                        </GroupBox>
+                                        <GroupBox Header="Bias" Grid.Row="0" Grid.Column="2" Grid.RowSpan="2" VerticalAlignment="Top">
+                                            <StackPanel>
+                                                <xctk:DoubleUpDown Value="{Binding Bias}" FormatString="F6" Minimum="0" Maximum="1" Increment="0.000050"/>
+                                                <CheckBox Content="Jitter" VerticalAlignment="Center" Height="22" VerticalContentAlignment="Center" IsChecked="{Binding Jitter}"/>
+                                            </StackPanel>
+                                        </GroupBox>
+                                        <GroupBox Header="Search Distance" Grid.Row="2" Grid.Column="2">
                                             <xctk:DoubleUpDown Value="{Binding SearchDistance}" FormatString="F8" Minimum="0.00000001" Maximum="1" Increment="0.00000001"/>
-                                        </StackPanel>
-                                        <Label Content="Angle:" />
-                                        <xctk:DoubleUpDown Value="{Binding SpreadAngle}" FormatString="F2" Maximum="179.50" Minimum="0.5" Increment="1"/>
-                                    </StackPanel>
-                                    <Button Grid.Column="4" Height="24" ToolTip="Reset Settings for this panel" Command="{Binding CMDReset}" >
+                                        </GroupBox>
+                                        <GroupBox Header="Angle" Grid.Row="3" Grid.Column="2">
+                                            <xctk:DoubleUpDown Value="{Binding SpreadAngle}" FormatString="F2" Maximum="179.50" Minimum="0.5" Increment="1"/>
+                                        </GroupBox>
+                                    </Grid>
+                                    <Button Grid.Column="1" VerticalAlignment="Top" Height="24" ToolTip="Reset Settings for this panel" Command="{Binding CMDReset}" >
                                         <fa5:FontAwesome Icon="Solid_UndoAlt" />
                                     </Button>
                                 </Grid>
