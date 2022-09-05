@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using System.Windows.Input;
 using System.Xml;
 using XnormalBatcher.Helpers;
 
@@ -40,8 +41,23 @@ namespace XnormalBatcher.ViewModels
         public VMSettingsCurvature()
         {
             Data = new SettingsCurvature();
+            CMDReset = new RelayCommand(Reset);
         }
-
+        public ICommand CMDReset { get; set; }
+        private void Reset()
+        {
+            Data = new SettingsCurvature();
+            NotifyPropertyChanged("Rays");
+            NotifyPropertyChanged("Bias");
+            NotifyPropertyChanged("SpreadAngle");
+            NotifyPropertyChanged("SearchDistance");
+            NotifyPropertyChanged("Jitter");
+            NotifyPropertyChanged("Smoothing");
+            NotifyPropertyChanged("Algorithm");
+            NotifyPropertyChanged("Distribution");
+            NotifyPropertyChanged("ToneMapping");            
+            NotifyPropertyChanged("BackgroundColor");
+        }
         private SettingsCurvature Data { get; set; }
         public int Rays
         {

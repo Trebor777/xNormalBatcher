@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Xml;
 using XnormalBatcher.Helpers;
@@ -25,6 +26,20 @@ namespace XnormalBatcher.ViewModels
     }
     internal class VMSettingsProximity : BaseViewModel
     {
+        internal VMSettingsProximity()
+        {
+            Data = new SettingsPRTpn();
+            CMDReset = new RelayCommand(Reset);
+        }
+        public ICommand CMDReset { get; set; }
+        private void Reset()
+        {
+            Data = new SettingsPRTpn();
+            NotifyPropertyChanged("Rays");
+            NotifyPropertyChanged("SpreadAngle");
+            NotifyPropertyChanged("LimitRayDistance");
+            NotifyPropertyChanged("BackgroundColor");
+        }
         private SettingsPRTpn Data { get; set; }
         public int Rays
         {
@@ -63,10 +78,6 @@ namespace XnormalBatcher.ViewModels
             }
         }
 
-        internal VMSettingsProximity()
-        {
-            Data = new SettingsPRTpn();
-        }
         internal void SetXML(XmlElement genMaps, SettingsViewModel settings)
         {
             genMaps.SetAttribute("GenProximity", $"{settings.BakeProximity}".ToLower());

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Xml;
 using XnormalBatcher.Helpers;
@@ -28,9 +29,20 @@ namespace XnormalBatcher.ViewModels
         public VMSettingsHeight()
         {
             Data = new SettingsHeight();
+            CMDReset = new RelayCommand(Reset);
         }
-
         private SettingsHeight Data { get; set; }
+
+        public ICommand CMDReset { get; set; }
+        
+        private void Reset()
+        {
+            Data = new SettingsHeight();
+            NotifyPropertyChanged("BackgroundColor");
+            NotifyPropertyChanged("Normalization");
+            NotifyPropertyChanged("Minimum");
+            NotifyPropertyChanged("Maximum");
+        }
 
         public string Normalization
         {

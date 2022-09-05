@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Xml;
 using XnormalBatcher.Helpers;
@@ -91,8 +92,20 @@ namespace XnormalBatcher.ViewModels
         internal VMSettingsWireframe()
         {
             Data = new SettingsWireframe();
+            CMDReset = new RelayCommand(Reset);
         }
-
+        public ICommand CMDReset { get; set; }
+        private void Reset()
+        {
+            Data = new SettingsWireframe();
+            NotifyPropertyChanged("RenderRayFails");
+            NotifyPropertyChanged("RenderWireFrame");
+            NotifyPropertyChanged("Color");
+            NotifyPropertyChanged("CWColor");
+            NotifyPropertyChanged("SeamColor");
+            NotifyPropertyChanged("RayFailColor");
+            NotifyPropertyChanged("BackgroundColor");            
+        }
         internal void SetXML(XmlElement genMaps, SettingsViewModel settings)
         {
             //Bake Wireframe and ray fails

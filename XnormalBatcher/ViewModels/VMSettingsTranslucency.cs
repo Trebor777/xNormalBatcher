@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Media;
+using System.Windows.Input;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,8 +37,20 @@ namespace XnormalBatcher.ViewModels
         public VMSettingsTranslucency()
         {
             Data = new SettingsTranslucency();
+            CMDReset = new RelayCommand(Reset);
         }
-
+        public ICommand CMDReset { get; set; }
+        private void Reset()
+        {
+            Data = new SettingsTranslucency();
+            NotifyPropertyChanged("Rays");
+            NotifyPropertyChanged("Bias");
+            NotifyPropertyChanged("SpreadAngle");
+            NotifyPropertyChanged("SearchDistance");
+            NotifyPropertyChanged("Jitter");
+            NotifyPropertyChanged("Distribution");
+            NotifyPropertyChanged("BackgroundColor");
+        }
         private SettingsTranslucency Data { get; set; }
         public int Rays
         {

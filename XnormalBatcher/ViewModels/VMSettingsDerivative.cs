@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using System.Windows.Input;
 using System.Xml;
 using XnormalBatcher.Helpers;
 
@@ -22,8 +23,14 @@ namespace XnormalBatcher.ViewModels
         public VMSettingsDerivative()
         {
             Data = new SettingsDerivative();
+            CMDReset = new RelayCommand(Reset);
         }
-
+        public ICommand CMDReset { get; set; }
+        private void Reset()
+        {
+            Data = new SettingsDerivative();
+            NotifyPropertyChanged("BackgroundColor");
+        }
         private SettingsDerivative Data { get; set; }
 
         public Color BackgroundColor

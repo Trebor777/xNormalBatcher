@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Xml;
 using XnormalBatcher.Helpers;
@@ -39,6 +40,27 @@ namespace XnormalBatcher.ViewModels
     }
     internal class VMSettingsBentNormal : BaseViewModel
     {
+        internal VMSettingsBentNormal()
+        {
+            Data = new SettingsBentNormal();
+            CMDReset = new RelayCommand(Reset);
+        }
+        public ICommand CMDReset { get; set; }
+        private void Reset()
+        {
+            Data = new SettingsBentNormal();
+            NotifyPropertyChanged("Rays");
+            NotifyPropertyChanged("Bias");
+            NotifyPropertyChanged("SpreadAngle");
+            NotifyPropertyChanged("LimitRayDistance");
+            NotifyPropertyChanged("Jitter");
+            NotifyPropertyChanged("TangentSpace");
+            NotifyPropertyChanged("Distribution");
+            NotifyPropertyChanged("SwizzleX");
+            NotifyPropertyChanged("SwizzleY");
+            NotifyPropertyChanged("SwizzleZ");
+            NotifyPropertyChanged("BackgroundColor");
+        }
         private SettingsBentNormal Data { get; set; }
 
         public int Rays
@@ -125,10 +147,7 @@ namespace XnormalBatcher.ViewModels
                 NotifyPropertyChanged();
             }
         }
-        internal VMSettingsBentNormal()
-        {
-            Data = new SettingsBentNormal();
-        }
+        
         internal void SetXML(XmlElement genMaps, SettingsViewModel settings)
         {
             genMaps.SetAttribute("GenBent", $"{settings.BakeBentNormals}".ToLower());

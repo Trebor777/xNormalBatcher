@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Xml;
 using XnormalBatcher.Helpers;
@@ -46,6 +47,30 @@ namespace XnormalBatcher.ViewModels
 
     internal class VMSettingsAmbient : BaseViewModel
     {
+        internal VMSettingsAmbient()
+        {
+            Data = new SettingsAmbient();
+            CMDReset = new RelayCommand(Reset);
+        }
+        public ICommand CMDReset { get; set; }
+        private void Reset()
+        {
+            Data = new SettingsAmbient();
+            NotifyPropertyChanged("Rays");
+            NotifyPropertyChanged("Bias");
+            NotifyPropertyChanged("SpreadAngle");
+            NotifyPropertyChanged("LimitRayDistance");
+            NotifyPropertyChanged("Jitter");
+            NotifyPropertyChanged("IgnoreBackfaceHits");
+            NotifyPropertyChanged("Allow100Occlusion");
+            NotifyPropertyChanged("Distribution");
+            NotifyPropertyChanged("OccludedColor");
+            NotifyPropertyChanged("UnoccludedColor");
+            NotifyPropertyChanged("BackgroundColor");
+            NotifyPropertyChanged("AttenuationConstant");
+            NotifyPropertyChanged("AttenuationLinear");
+            NotifyPropertyChanged("AttenuationQuadratic");
+        }
         private SettingsAmbient Data { get; set; }
         public int Rays
         {
@@ -172,10 +197,6 @@ namespace XnormalBatcher.ViewModels
                 Data.BackgroundColor = value;
                 NotifyPropertyChanged();
             }
-        }
-        internal VMSettingsAmbient()
-        {
-            Data = new SettingsAmbient();
         }
         internal void SetXML(XmlElement genMaps, SettingsViewModel settings)
         {

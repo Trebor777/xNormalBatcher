@@ -739,6 +739,8 @@ namespace XnormalBatcher.ViewModels
         {
             Data = new SettingsModel();
             RefreshData();
+            CheckXNPath();
+            CheckBakePath();
         }
 
 

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using System.Windows.Input;
 using System.Xml;
 using XnormalBatcher.Helpers;
 
@@ -24,8 +25,15 @@ namespace XnormalBatcher.ViewModels
         public VMSettingsConvexity()
         {
             Data = new SettingsConvexity();
+            CMDReset = new RelayCommand(Reset);
         }
-
+        public ICommand CMDReset { get; set; }
+        private void Reset()
+        {
+            Data = new SettingsConvexity();
+            NotifyPropertyChanged("Scale");            
+            NotifyPropertyChanged("BackgroundColor");
+        }
         private SettingsConvexity Data { get; set; }
 
         public double Scale

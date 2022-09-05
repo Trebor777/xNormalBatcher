@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using System.Windows.Input;
 using System.Xml;
 using XnormalBatcher.Helpers;
 
@@ -27,8 +28,8 @@ namespace XnormalBatcher.ViewModels
             ToneMinimum = 0;
             ToneMaximum = 100.0;
             SwizzleX = "X+";
-            SwizzleX = "Y+";
-            SwizzleX = "Z+";
+            SwizzleY = "Y+";
+            SwizzleZ = "Z+";
         }
     }
     internal class VMSettingsDirection : BaseViewModel
@@ -36,8 +37,21 @@ namespace XnormalBatcher.ViewModels
         public VMSettingsDirection()
         {
             Data = new SettingsDirection();
+            CMDReset = new RelayCommand(Reset);
         }
-
+        public ICommand CMDReset { get; set; }
+        private void Reset()
+        {
+            Data = new SettingsDirection();
+            NotifyPropertyChanged("ToneMap");
+            NotifyPropertyChanged("ToneMaximum");
+            NotifyPropertyChanged("TangentSpace");
+            NotifyPropertyChanged("ToneMinimum");
+            NotifyPropertyChanged("SwizzleX");
+            NotifyPropertyChanged("SwizzleY");
+            NotifyPropertyChanged("SwizzleZ");
+            NotifyPropertyChanged("BackgroundColor");
+        }
         private SettingsDirection Data { get; set; }
         public bool TangentSpace
         {

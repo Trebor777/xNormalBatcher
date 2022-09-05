@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using System.Windows.Input;
 using System.Xml;
 using XnormalBatcher.Helpers;
 
@@ -48,8 +49,27 @@ namespace XnormalBatcher.ViewModels
         public VMSettingsRadiosity()
         {
             Data = new SettingsRadiosity();
+            CMDReset = new RelayCommand(Reset);
         }
-
+        public ICommand CMDReset { get; set; }
+        private void Reset()
+        {
+            Data = new SettingsRadiosity();
+            NotifyPropertyChanged("Rays");
+            NotifyPropertyChanged("Bias");
+            NotifyPropertyChanged("SpreadAngle");
+            NotifyPropertyChanged("Contrast");
+            NotifyPropertyChanged("LimitRayDistance");
+            NotifyPropertyChanged("Jitter");
+            NotifyPropertyChanged("EncodeOcclusion");
+            NotifyPropertyChanged("AllowPureOcclusion");
+            NotifyPropertyChanged("Distribution");
+            NotifyPropertyChanged("CoordinateSystem");
+            NotifyPropertyChanged("AttenuationConstant");
+            NotifyPropertyChanged("AttenuationLinear");
+            NotifyPropertyChanged("AttenuationQuadratic");
+            NotifyPropertyChanged("BackgroundColor");
+        }
         private SettingsRadiosity Data { get; set; }
         public int Rays
         {

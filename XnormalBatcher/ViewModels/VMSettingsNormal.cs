@@ -1,4 +1,5 @@
 ﻿using System.Windows.Media;
+using System.Windows.Input;
 using System.Xml;
 using XnormalBatcher.Helpers;
 
@@ -27,6 +28,17 @@ namespace XnormalBatcher.ViewModels
         internal VMSettingsNormal()
         {
             Data = new SettingsNormal();
+            CMDReset = new RelayCommand(Reset);
+        }
+        public ICommand CMDReset { get; set; }
+        private void Reset()
+        {
+            Data = new SettingsNormal();
+            NotifyPropertyChanged("TangentSpace");
+            NotifyPropertyChanged("SwizzleX");
+            NotifyPropertyChanged("SwizzleY");
+            NotifyPropertyChanged("SwizzleZ");
+            NotifyPropertyChanged("Color");
         }
         public string SwizzleX
         {

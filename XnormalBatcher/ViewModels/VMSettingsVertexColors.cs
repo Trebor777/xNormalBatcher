@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using System.Windows.Input;
 using System.Xml;
 using XnormalBatcher.Helpers;
 
@@ -11,16 +12,10 @@ namespace XnormalBatcher.ViewModels
 {
     internal class SettingsVertexColors
     {
-        internal bool WriteObjectID;
-        internal bool UseDrawColor;
-        internal Color DrawColor;
         internal Color BackgroundColor;
 
         internal SettingsVertexColors()
         {
-            WriteObjectID = false;
-            UseDrawColor = true;
-            DrawColor = Color.FromRgb(255, 0, 0);
             BackgroundColor = Color.FromRgb(0, 0, 0);
         }
     }
@@ -30,38 +25,16 @@ namespace XnormalBatcher.ViewModels
 
         internal VMSettingsVertexColors()
         {
+            Reset();
+            CMDReset = new RelayCommand(Reset);
+        }
+        public ICommand CMDReset { get; set; }
+        private void Reset()
+        {
             Data = new SettingsVertexColors();
-            NotifyPropertyChanged("UseDrawColor");
+            NotifyPropertyChanged("BackgroundColor");
         }
-        public bool WriteObjectID
-        {
-            get => Data.WriteObjectID;
-            set
-            {
-                Data.WriteObjectID = value;
-                Data.UseDrawColor = !value;
-                NotifyPropertyChanged();                
-            }
-        }
-        public bool UseDrawColor
-        {
-            get => Data.UseDrawColor;
-            set
-            {
-                Data.UseDrawColor = value;
-                Data.WriteObjectID = !value;
-                NotifyPropertyChanged();                
-            }
-        }
-        public Color DrawColor
-        {
-            get => Data.DrawColor;
-            set
-            {
-                Data.DrawColor = value;
-                NotifyPropertyChanged();
-            }
-        }
+        
         public Color BackgroundColor
         {
             get => Data.BackgroundColor;

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using System.Windows.Input;
 using XnormalBatcher.ViewModels;
 using System.Xml;
 using XnormalBatcher.Helpers;
@@ -34,8 +35,19 @@ namespace XnormalBatcher.ViewModels
         internal VMSettingsCavity()
         {
             Data = new SettingsCavity();
+            CMDReset = new RelayCommand(Reset);
         }
-
+        public ICommand CMDReset { get; set; }
+        private void Reset()
+        {
+            Data = new SettingsCavity();
+            NotifyPropertyChanged("Rays");
+            NotifyPropertyChanged("Steps");
+            NotifyPropertyChanged("Radius");
+            NotifyPropertyChanged("Contrast");
+            NotifyPropertyChanged("Jitter");            
+            NotifyPropertyChanged("BackgroundColor");
+        }
         private SettingsCavity Data { get; set; }
 
         public int Rays

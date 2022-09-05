@@ -392,7 +392,7 @@
                                     <CheckBox Content="Ambient Occlusion" Name="chkBakeAmbient" IsChecked="{Binding BakeAmbient}"/>
                                     <CheckBox Content="Height" Name="chkBakeHeight" IsChecked="{Binding BakeHeight}"/>
                                     <CheckBox Content="Curvature Map" Name="chkBakeCurvature" IsChecked="{Binding BakeCurvature}"/>
-                                    <CheckBox Content="Bake Vertex Color" Name="chkBakeVertexColors" IsChecked="{Binding BakeVertexColors}"/>
+                                    <CheckBox Content="Bake HighPoly's Vertex Color" Name="chkBakeVertexColors" IsChecked="{Binding BakeVertexColors}"/>
                                     <CheckBox Content="Thickness Map" Name="chkBakeThickness" IsChecked="{Binding BakeThickness}"/>
                                 </StackPanel>
                                 <StackPanel Grid.Column="1">
@@ -583,7 +583,7 @@
                                         <GroupBox Header="Background Color" Grid.Row="1" Grid.Column="1" VerticalAlignment="Top">
                                             <xctk:ColorPicker SelectedColor="{Binding BackgroundColor}"/>
                                         </GroupBox>
-                                        <StackPanel Grid.Column="2" Visibility="{Binding IsManual, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}">
+                                        <StackPanel Grid.Column="2" IsEnabled="{Binding IsManual}">
                                             <GroupBox Header="Minimum" Grid.Column="2" VerticalAlignment="Top">
                                                 <xctk:DoubleUpDown FormatString="F5" Increment="1" Maximum="1000000000.00000" Minimum="-1000000000.00000" Value="{Binding Minimum}" />
                                             </GroupBox>
@@ -666,18 +666,8 @@
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
                                         <Grid.RowDefinitions>
-                                            <RowDefinition Height="56"/>
                                             <RowDefinition Height="48"/>
                                         </Grid.RowDefinitions>
-                                        <GroupBox Header="Draw Options" Grid.Column="1">
-                                            <StackPanel>
-                                                <RadioButton Grid.Column="0" Grid.Row="0" Content="Write ObjectID if no texture" GroupName="BakeBaseTexture" VerticalAlignment="Center" IsChecked="{Binding WriteObjectID}"/>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <RadioButton Grid.Column="0" Grid.Row="1" Name="rdoBakeBaseTDrawCol" Content="Draw using this color: " GroupName="BakeBaseTexture" IsChecked="{Binding UseDrawColor}"/>
-                                                    <xctk:ColorPicker SelectedColor="{Binding DrawColor}" Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=rdoBakeBaseTDrawCol}" />
-                                                </StackPanel>
-                                            </StackPanel>
-                                        </GroupBox>
                                         <GroupBox Header="Background Color" Grid.Column="1" Grid.Row="1">
                                             <xctk:ColorPicker SelectedColor="{Binding BackgroundColor}" />
                                         </GroupBox>
@@ -823,7 +813,7 @@
                                             <RowDefinition Height="48"/>
                                             <RowDefinition Height="48"/>
                                         </Grid.RowDefinitions>
-                                        <GroupBox Header="Swizzle Coordinates" Grid.Column="1" VerticalAlignment="Top" Height="70">
+                                        <GroupBox Header="Swizzle Coordinates" Grid.Column="1" VerticalAlignment="Top" Height="72">
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="*" />
@@ -834,15 +824,15 @@
                                                 </Grid.ColumnDefinitions>
                                                 <StackPanel Grid.Column="0">
                                                     <Label Content="Red" />
-                                                    <ComboBox />
+                                                    <ComboBox ItemsSource="{Binding Axis, Source ={x:Static vm:SettingsViewModel.Instance}}" SelectedItem="{Binding SwizzleX}"/>
                                                 </StackPanel>
                                                 <StackPanel Grid.Column="2">
                                                     <Label Content="Green"  />
-                                                    <ComboBox />
+                                                    <ComboBox ItemsSource="{Binding Axis, Source ={x:Static vm:SettingsViewModel.Instance}}" SelectedItem="{Binding SwizzleY}"/>
                                                 </StackPanel>
                                                 <StackPanel Grid.Column="4">
                                                     <Label Content="Blue" />
-                                                    <ComboBox />
+                                                    <ComboBox ItemsSource="{Binding Axis, Source ={x:Static vm:SettingsViewModel.Instance}}" SelectedItem="{Binding SwizzleZ}"/>
                                                 </StackPanel>
                                             </Grid>
                                         </GroupBox>
@@ -855,10 +845,10 @@
                                         <GroupBox Header="Tone Map" Grid.Column="2">
                                             <ListBox ItemsSource="{Binding Normalizations, Source={x:Static vm:SettingsViewModel.Instance}}" SelectedItem="{Binding ToneMap}"/>
                                         </GroupBox>
-                                        <GroupBox Header="Minimum:" Grid.Column="2" Grid.Row="1">
+                                        <GroupBox Header="Minimum:" Grid.Column="2" Grid.Row="1" IsEnabled="{Binding IsManual}">
                                             <xctk:DoubleUpDown FormatString="F5" Increment="1" Maximum="1000000000.00000" Minimum="0"  Value="{Binding ToneMinimum}" />
                                         </GroupBox>
-                                        <GroupBox Header="Maximum:" Grid.Column="2" Grid.Row="2">
+                                        <GroupBox Header="Maximum:" Grid.Column="2" Grid.Row="2" IsEnabled="{Binding IsManual}">
                                             <xctk:DoubleUpDown FormatString="F5" Increment="1" Maximum="1000000000.00000" Minimum="-1000000000.00000" Value="{Binding ToneMaximum}" />
                                         </GroupBox>
                                         <StackPanel Grid.Column="4" Visibility="{Binding IsManual, Converter={StaticResource BooleanToVisibilityConverter}}">

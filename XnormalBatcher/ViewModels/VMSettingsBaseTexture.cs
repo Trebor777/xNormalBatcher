@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Xml;
 using XnormalBatcher.Helpers;
@@ -27,22 +28,35 @@ namespace XnormalBatcher.ViewModels
     internal class VMSettingsBaseTexture : BaseViewModel
     {
         private SettingsBaseTexture Data { get; set; }
+        internal VMSettingsBaseTexture()
+        {
+            Data = new SettingsBaseTexture();
+            CMDReset = new RelayCommand(Reset);
+        }
 
+        public ICommand CMDReset { get; set; }
+
+        private void Reset()
+        {
+            Data = new SettingsBaseTexture();
+            NotifyPropertyChanged("WriteObjectID");
+            NotifyPropertyChanged("DrawColor");
+            NotifyPropertyChanged("BackgroundColor");
+            NotifyPropertyChanged("UseDrawColor");
+        }
         public bool WriteObjectID
         {
             get => Data.WriteObjectID; set
             {
                 Data.WriteObjectID = value;
-                Data.UseDrawColor = !value;
                 NotifyPropertyChanged();
                 NotifyPropertyChanged("UseDrawColor");
             }
         }
         public bool UseDrawColor
         {
-            get => Data.UseDrawColor; set
+            get => !Data.WriteObjectID; set
             {
-                Data.UseDrawColor = value;
                 Data.WriteObjectID = !value;
                 NotifyPropertyChanged();
                 NotifyPropertyChanged("WriteObjectID");
@@ -63,12 +77,6 @@ namespace XnormalBatcher.ViewModels
                 Data.BackgroundColor = value;
                 NotifyPropertyChanged();
             }
-        }
-
-
-        internal VMSettingsBaseTexture()
-        {
-            Data = new SettingsBaseTexture();
         }
         internal void SetXML(XmlElement genMaps, SettingsViewModel settings)
         {
