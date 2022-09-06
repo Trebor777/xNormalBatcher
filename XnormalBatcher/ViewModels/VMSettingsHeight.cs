@@ -89,10 +89,10 @@ namespace XnormalBatcher.ViewModels
         }
         internal void SetXML(XmlElement genMaps, SettingsViewModel settings)
         {
-            genMaps.SetAttribute("GenHeights", $"{settings.BakeHeight}");
+            genMaps.SetAttribute("GenHeights", $"{settings.BakeHeight}".ToLower());
             genMaps.SetAttribute("HeightTonemap", $"{Normalization}");
             genMaps.SetAttribute("HeightTonemapMin", IsManual ? $"{Minimum}" : "false");
-            genMaps.SetAttribute("HeightTonemapMax", IsManual ? $"{Maximum}" : "false");
+            genMaps.SetAttribute("HeightTonemapMax", IsManual ? $"{Maximum}" : "true");
             XmlHelper.SetXmlColor(genMaps["HMBackgroundColor"], BackgroundColor);
         }
     }

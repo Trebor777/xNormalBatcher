@@ -46,7 +46,7 @@ namespace XnormalBatcher.ViewModels
         }
         internal void SetXML(XmlElement genMaps, SettingsViewModel settings)
         {
-            genMaps.SetAttribute("BakeHighpolyVCols", $"{settings.BakeVertexColors}");
+            genMaps.SetAttribute("BakeHighpolyVCols", $"{settings.BakeVertexColors}".ToLower());
             XmlHelper.SetXmlColor(genMaps["BakeHighpolyVColsBackgroundCol"], BackgroundColor);
         }
 

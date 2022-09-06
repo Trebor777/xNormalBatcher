@@ -156,9 +156,9 @@ namespace XnormalBatcher.ViewModels
                 .WithArguments(PrepareBake())
                 .WithValidation(CommandResultValidation.None)
                 .ExecuteAsync();
-            if (result.ExitCode != 1)
+            if (result.ExitCode == 1)
             {
-                BatchViewModel.Instance.Log($"ERROR: User aborted or An error has occured(probably Cage different from lowpoly mesh): {Name}");
+                BatchViewModel.Instance.Log($"ERROR: User aborted or An error has occured{ (!BatchViewModel.Instance.UseCage ? "" : " (probably Cage different from lowpoly mesh)")} with asset: {Name}");
             }
             else
             {
@@ -264,8 +264,8 @@ namespace XnormalBatcher.ViewModels
             genMaps.SetAttribute("EdgePadding", $"{settings.EdgePadding}");
             genMaps.SetAttribute("AA", $"{settings.SelectedAASize}");
             genMaps.SetAttribute("BucketSize", $"{settings.SelectedBucketSize}");
-            genMaps.SetAttribute("ClosestIfFails", $"{settings.ClosestHitRayFails}");
-            genMaps.SetAttribute("DiscardRayBackFacesHits", $"{settings.DiscardBackFaceHit}");
+            genMaps.SetAttribute("ClosestIfFails", $"{settings.ClosestHitRayFails}".ToLower());
+            genMaps.SetAttribute("DiscardRayBackFacesHits", $"{settings.DiscardBackFaceHit}".ToLower());
 
             settings.SettingsAmbient.SetXML(genMaps, settings);
             settings.SettingsBaseTexture.SetXML(genMaps, settings);
@@ -283,7 +283,7 @@ namespace XnormalBatcher.ViewModels
             settings.SettingsTranslucency.SetXML(genMaps, settings);            
             settings.SettingsWireframe.SetXML(genMaps, settings);
 
-            genMaps.SetAttribute("GenThickness", $"{settings.BakeThickness}");            
+            genMaps.SetAttribute("GenThickness", $"{settings.BakeThickness}".ToLower());            
             if (!string.IsNullOrEmpty(file))
                 document.Save(file);
             else

@@ -339,19 +339,19 @@
             <TabItem Header="OPTIONS" DataContext="{x:Static vm:SettingsViewModel.Instance}" d:DataContext="{d:DesignInstance {x:Type vm:SettingsViewModel}, IsDesignTimeCreatable=True}" >
                 <Grid Background="#FFE5E5E5">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="160"/>
+                        <RowDefinition Height="200"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <Grid Grid.Row="0">
                         <Grid>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="60"/>
+                                <RowDefinition Height="100"/>
                                 <RowDefinition Height="100"/>
                             </Grid.RowDefinitions>
                             <Grid Grid.Row="0" >
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="26"/>
-                                    <RowDefinition Height="26"/>
+                                    <RowDefinition Height="48"/>
+                                    <RowDefinition Height="48"/>
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="0" />
@@ -364,22 +364,39 @@
                                 </Grid.ColumnDefinitions>
 
                                 <Label  Grid.Column="1" Content="Edge Padding:" VerticalAlignment="Center"/>
-                                <xctk:IntegerUpDown Grid.Column="2" Margin="2" Increment="1" Minimum="0" Maximum="128" Value="{Binding EdgePadding}" Name="cbPadding" />
-                                <Label Grid.Column="3" Content="Bucket Size:" VerticalAlignment="Center" />
-                                <ComboBox Grid.Column="4" Margin="2" ItemsSource="{Binding BucketSizes}" SelectedItem="{Binding SelectedBucketSize}"/>
-                                <TextBox Grid.Column="5" Text="{Binding XNormalPath}" Margin="2"/>
-                                <Button Grid.Column="6" Margin="2" Command="{Binding BrowseXnormal}" Width="24">
-                                    <fa5:FontAwesome Icon="Solid_FolderOpen" />
-                                </Button>
+                                <xctk:IntegerUpDown Grid.Column="2" Increment="1" Minimum="0" Maximum="128" Value="{Binding EdgePadding}" Name="cbPadding" VerticalAlignment="Center" Height="24" />
+                                <Label Grid.Column="3" Content="Bucket Size:" VerticalAlignment="Center" Height="24" />
+                                <ComboBox Grid.Column="4" ItemsSource="{Binding BucketSizes}" SelectedItem="{Binding SelectedBucketSize}" Height="24"/>
+                                <GroupBox Header="xNormal path" Grid.Column="5" Grid.ColumnSpan="2" Grid.RowSpan="2" VerticalAlignment="Top">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="24"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox Text="{Binding XNormalPath}"  Height="24" Margin="0,0,4,0"/>
+                                        <Button Grid.Column="1"  Command="{Binding BrowseXnormal}" Width="24">
+                                            <fa5:FontAwesome Icon="Solid_FolderOpen" />
+                                        </Button>
+                                    </Grid>
+                                </GroupBox>
 
-                                <Label Grid.Row="1" Grid.Column="1" Content="Anti-Allasing:" VerticalAlignment="Center" />
-                                <ComboBox Grid.Row="1" Grid.Column="2" Margin="2" ItemsSource="{Binding AASizes}" SelectedItem="{Binding SelectedAASize}"/>
-                                <Label Grid.Row="1" Grid.Column="3" Content="Texture Format:" VerticalAlignment="Center" />
-                                <ComboBox Grid.Row="1" Grid.Column="4" Margin="2" ItemsSource="{Binding TextureFileFormats}" SelectedItem="{Binding SelectedTextureFileFormat}"/>
-                                <TextBox Grid.Row="1" Grid.Column="5" Text="{Binding BakingPath}" Margin="2" />
-                                <Button Grid.Row="1" Grid.Column="6" Margin="2" Command="{Binding BrowseBakingPath}" Width="24">
-                                    <fa5:FontAwesome Icon="Solid_FolderOpen" />
-                                </Button>
+                                <Label Grid.Row="1" Grid.Column="1" Content="Anti-Allasing:" VerticalAlignment="Center" Height="24" />
+                                <ComboBox Grid.Row="1" Grid.Column="2"  ItemsSource="{Binding AASizes}" SelectedItem="{Binding SelectedAASize}" Height="24"/>
+                                <Label Grid.Row="1" Grid.Column="3" Content="Texture Format:" VerticalAlignment="Center" Height="24" />
+                                <ComboBox Grid.Row="1" Grid.Column="4"  ItemsSource="{Binding TextureFileFormats}" SelectedItem="{Binding SelectedTextureFileFormat}" Height="24"/>
+                                <GroupBox Header="Baking Folder" Grid.Row="1" Grid.Column="5" Grid.ColumnSpan="2" Grid.RowSpan="2" VerticalAlignment="Top">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="24"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox  Text="{Binding BakingPath}" Height="24" Margin="0,0,4,0" />
+                                        <Button Grid.Column="1" Command="{Binding BrowseBakingPath}" Width="24">
+                                            <fa5:FontAwesome Icon="Solid_FolderOpen" />
+                                        </Button>
+                                    </Grid>
+                                </GroupBox>
+                                
                             </Grid>
                             <Grid Grid.Row="1">
                                 <Grid.ColumnDefinitions>

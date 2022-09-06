@@ -109,9 +109,9 @@ namespace XnormalBatcher.ViewModels
         internal void SetXML(XmlElement genMaps, SettingsViewModel settings)
         {
             //Bake Wireframe and ray fails
-            genMaps.SetAttribute("GenWireRays", $"{settings.BakeWireframe}");
-            genMaps.SetAttribute("RenderRayFails", $"{RenderRayFails}");
-            genMaps.SetAttribute("RenderWireframe", $"{RenderWireFrame}");
+            genMaps.SetAttribute("GenWireRays", $"{settings.BakeWireframe}".ToLower());
+            genMaps.SetAttribute("RenderRayFails", $"{RenderRayFails}".ToLower());
+            genMaps.SetAttribute("RenderWireframe", $"{RenderWireFrame}".ToLower());
             XmlHelper.SetXmlColor(genMaps["RenderWireframeCol"], Color);
             XmlHelper.SetXmlColor(genMaps["RenderCWCol"], CWColor);
             XmlHelper.SetXmlColor(genMaps["RenderSeamCol"], SeamColor);

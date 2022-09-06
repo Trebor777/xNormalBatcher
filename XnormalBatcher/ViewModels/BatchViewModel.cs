@@ -225,7 +225,7 @@ namespace XnormalBatcher.ViewModels
         {
             BakingProgress = e.ProgressPercentage;
             (BatchItemViewModel Item, int Result) = ((BatchItemViewModel Item, int Result))e.UserState;
-            if (Result != 1)
+            if (Result != 0)
             {
                 if (Result == -1)
                 {
@@ -233,7 +233,7 @@ namespace XnormalBatcher.ViewModels
                 }
                 else
                 {
-                    Log($"ERROR: User aborted or An error has occured(probably Cage different from lowpoly mesh): {Item.Name}");
+                    Log($"ERROR: User aborted or An error has occured{ (!UseCage ? "" : " (probably Cage different from lowpoly mesh)")} with asset: {Item.Name}");
                 }
             }
             else
@@ -265,7 +265,7 @@ namespace XnormalBatcher.ViewModels
         /// </summary>
         internal void RefreshBatchItems()
         {
-            if (MainViewModel.Instance.IsLoaded && AutoUpdater.Path != null)
+            if (MainViewModel.Instance.Initialized && AutoUpdater.Path != null)
             {
                 BatchItems.Clear();
                 foreach (string item in GetRefFolderFiles())

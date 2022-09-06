@@ -67,7 +67,7 @@ namespace XnormalBatcher.ViewModels
         }
         internal void SetXML(XmlElement genMaps, SettingsViewModel settings)
         {
-            genMaps.SetAttribute("GenNormals", $"{settings.BakeNormals}");
+            genMaps.SetAttribute("GenNormals", $"{settings.BakeNormals}".ToLower());
             genMaps.SetAttribute("TangentSpace", $"{TangentSpace}".ToLower());
             genMaps.SetAttribute("SwizzleX", $"{SwizzleX}");
             genMaps.SetAttribute("SwizzleY", $"{SwizzleY}");

@@ -139,7 +139,7 @@ namespace XnormalBatcher.ViewModels
             genMaps.SetAttribute("DirectionsSwizzleZ", $"{SwizzleZ}");
             genMaps.SetAttribute("DirectionsTonemap", $"{ToneMap}");
             genMaps.SetAttribute("DirectionsTonemapMin", IsManual ? $"{ToneMinimum}" : "false");
-            genMaps.SetAttribute("DirectionsTonemapMax", IsManual ? $"{ToneMaximum}" : "false");
+            genMaps.SetAttribute("DirectionsTonemapMax", IsManual ? $"{ToneMaximum}" : "true");
             XmlHelper.SetXmlColor(genMaps["VDMBackgroundColor"], BackgroundColor);
         }
     }

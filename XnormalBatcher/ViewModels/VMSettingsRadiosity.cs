@@ -38,7 +38,7 @@ namespace XnormalBatcher.ViewModels
             AllowPureOcclusion = false;
             CoordinateSystem = "AliB";
             Distribution = "Uniform";
-            AttenuationConstant = 0;
+            AttenuationConstant = 1;
             AttenuationLinear = 0;
             AttenuationQuadratic = 0;
             BackgroundColor = Color.FromRgb(0,0,0);
