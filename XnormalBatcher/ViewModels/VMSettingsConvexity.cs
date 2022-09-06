@@ -56,7 +56,7 @@ namespace XnormalBatcher.ViewModels
         }
         internal void SetXML(XmlElement genMaps, SettingsViewModel settings)
         {
-            genMaps.SetAttribute("GenConvexity", $"{settings.BakeCurvature}".ToLower());
+            genMaps.SetAttribute("GenConvexity", $"{settings.BakeConvexity}".ToLower());
             genMaps.SetAttribute("ConvexityScale", $"{Scale}");
             XmlHelper.SetXmlColor(genMaps["ConvexityBackgroundColor"], BackgroundColor);
         }

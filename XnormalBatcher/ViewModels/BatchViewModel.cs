@@ -134,18 +134,8 @@ namespace XnormalBatcher.ViewModels
             CMDBakeAll = new RelayParametrizedCommand(a => Bake(true));
             CMDSetAllMaps = new RelayCommand(SetAllMaps);
             CMDSetAllItemsLow = new RelayCommand(SetAllLow);
-            CMDSetAllItemsHigh = new RelayCommand(SetAllHigh);
-            // Events
-            AutoUpdater.IncludeSubdirectories = true;
-            AutoUpdater.NotifyFilter = NotifyFilters.FileName | NotifyFilters.DirectoryName;
-            AutoUpdater.Changed += new FileSystemEventHandler(OnRefreshFiles);
-            AutoUpdater.Created += new FileSystemEventHandler(OnRefreshFiles);
-            AutoUpdater.Deleted += new FileSystemEventHandler(OnRefreshFiles);
-            AutoUpdater.Renamed += new RenamedEventHandler(OnRefreshFiles);
-            AutoUpdater.Path = SettingsViewModel.Instance.BakingPath;
-            AutoUpdater.EnableRaisingEvents = SettingsViewModel.Instance.BakingPath != null;
-            // Data
-            GlobalBatchItem = new BatchItemViewModel("__global__", this);
+            CMDSetAllItemsHigh = new RelayCommand(SetAllHigh);            
+            
         }
 
         private void RefreshData()
@@ -250,6 +240,7 @@ namespace XnormalBatcher.ViewModels
             {
                 Log($"{Item.Name}'s maps have been baked successfully!");
                 Item.Validate();
+                Item.IsSelected = false;
             }
         }
 
@@ -274,7 +265,7 @@ namespace XnormalBatcher.ViewModels
         /// </summary>
         internal void RefreshBatchItems()
         {
-            if (MainViewModel.Instance.IsLoaded)
+            if (MainViewModel.Instance.IsLoaded && AutoUpdater.Path != null)
             {
                 BatchItems.Clear();
                 foreach (string item in GetRefFolderFiles())
@@ -356,5 +347,23 @@ namespace XnormalBatcher.ViewModels
             }
         }
 
+        internal void InitializeData(string bakingPath)
+        {
+            if (bakingPath != null && MainViewModel.Instance.Initialized)
+            {
+                // Data
+                GlobalBatchItem = new BatchItemViewModel("__global__", this);
+                // Events
+                AutoUpdater.IncludeSubdirectories = true;
+                AutoUpdater.NotifyFilter = NotifyFilters.FileName | NotifyFilters.DirectoryName;
+                AutoUpdater.Changed += new FileSystemEventHandler(OnRefreshFiles);
+                AutoUpdater.Created += new FileSystemEventHandler(OnRefreshFiles);
+                AutoUpdater.Deleted += new FileSystemEventHandler(OnRefreshFiles);
+                AutoUpdater.Renamed += new RenamedEventHandler(OnRefreshFiles);
+                AutoUpdater.Path = bakingPath;
+                AutoUpdater.EnableRaisingEvents = bakingPath != null;
+                RefreshBatchItems();
+            }
+        }
     }
 }

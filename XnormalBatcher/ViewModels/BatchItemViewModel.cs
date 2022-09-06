@@ -164,6 +164,7 @@ namespace XnormalBatcher.ViewModels
             {
                 BatchViewModel.Instance.Log($"INFO: {Name}'s maps have been baked successfully!");
                 Validate();
+                IsSelected = false;
             }
         }
 

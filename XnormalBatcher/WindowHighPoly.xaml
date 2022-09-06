@@ -40,7 +40,7 @@
         <CheckBox Content="Base Texture is a Tangent Space normal map" Height="16" HorizontalAlignment="Left" Name="chkBaseIsTangent" Grid.Row="2" Grid.ColumnSpan="2" Margin="5,0,0,0" IsChecked="{Binding BaseTextureIsTangent}"/>
         <CheckBox Content="Ignore Vertex Color" Height="16" HorizontalAlignment="Left" Name="chkIgnoreVColors" Grid.Row="3" Margin="5,0,0,0" IsChecked="{Binding IgnoreVertexColor}"/>
         <StackPanel Orientation="Horizontal"  Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Right">
-            <Button Content="OK" HorizontalAlignment="Center" Name="btnOK" Width="75" IsDefault="True" Margin="2" ToolTip="Close this window and applies these values to all the assets to batch."/>
+            <Button Content="OK" HorizontalAlignment="Center" Name="btnOK" Width="75" IsDefault="True" Margin="2" ToolTip="Close this window and applies these values to all the assets to batch." Click="BtnOK_Click"/>
             <Button Content="CANCEL" HorizontalAlignment="Center" Name="btnCancel" Width="75" IsCancel="True" Margin="2" ToolTip="Close this window and do nothing." Click="BtnCancel_Click"/>
             <Button HorizontalAlignment="Center" Name="btnReset" Width="24" Margin="2" ToolTip="Reset values to their default." Command="{Binding CMDReset}">
                 <fa5:FontAwesome Icon="Solid_UndoAlt" />

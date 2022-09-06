@@ -30,6 +30,7 @@ namespace XnormalBatcher.ViewModels
         internal static DataObject LastSession => _lastSession ?? LoadLastSession();
 
         public bool IsLoaded = false;
+        public bool Initialized = false;
 
         private bool isBaking = false;
 

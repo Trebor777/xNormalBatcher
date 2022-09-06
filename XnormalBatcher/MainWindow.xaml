@@ -218,7 +218,7 @@
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
-                                    <GridViewColumn Header="High?" Width="40" >
+                                    <GridViewColumn Header="High?" Width="40">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
                                                 <fa5:FontAwesome x:Name="chkHigh" Icon="Solid_Times" VerticalAlignment="Center" HorizontalAlignment="Center"/>
@@ -238,7 +238,7 @@
                                     <GridViewColumn Header="Cage?"  Width="40">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
-                                                <fa5:FontAwesome x:Name="chkCage" Icon="Solid_Times" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                                <fa5:FontAwesome x:Name="chkCage" Icon="Solid_Times" VerticalAlignment="Center" HorizontalAlignment="Center" />
                                                 <DataTemplate.Triggers>
                                                     <DataTrigger Binding="{Binding HasCage}" Value="True">
                                                         <Setter Property="Icon" TargetName="chkCage" Value="Solid_Check" />
@@ -247,6 +247,10 @@
                                                     <DataTrigger Binding="{Binding HasCage}" Value="False">
                                                         <Setter Property="Icon" TargetName="chkCage" Value="Solid_Times" />
                                                         <Setter Property="Foreground" TargetName="chkCage" Value="Red"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Source={x:Static vm:BatchViewModel.Instance}, Path=UseCage}" Value="False">
+                                                        <Setter Property="Icon" TargetName="chkCage" Value="Solid_Lock" />
+                                                        <Setter Property="Foreground" TargetName="chkCage" Value="Gray"/>
                                                     </DataTrigger>
                                                 </DataTemplate.Triggers>
                                             </DataTemplate>

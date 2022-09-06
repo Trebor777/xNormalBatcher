@@ -29,7 +29,7 @@ namespace XnormalBatcher.ViewModels
         public SettingsModel()
         {
             EdgePadding = 16;
-            BakingPath = @"E:\bake\";
+            BakingPath = null;
             BakeNormals = true;
             BakeAmbient = true;
             BakeHeight = false;
@@ -841,9 +841,9 @@ namespace XnormalBatcher.ViewModels
                 BakingPath = dialog.SelectedPath + @"\";
             }
             Helpers.FileHelper.CreateSubFolders(BakingPath);
-            if (oPath != BakingPath)
+            if (oPath != BakingPath && MainViewModel.Instance.Initialized)
             {
-                BatchViewModel.Instance.RefreshBatchItems();
+                BatchViewModel.Instance.InitializeData(BakingPath);
             }
         }
     }
