@@ -6,13 +6,29 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:fa5="http://schemas.fontawesome.com/icons/"
         xmlns:local="clr-namespace:XnormalBatcher"
-        xmlns:vm="clr-namespace:XnormalBatcher.ViewModels"
+        xmlns:vm="clr-namespace:XnormalBatcher.ViewModels" 
+        xmlns:clr="clr-namespace:System;assembly=mscorlib" 
+        xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+        xmlns:behaviors="clr-namespace:WPFTextBoxAutoComplete;assembly=WPFTextBoxAutoComplete"
+        xmlns:controls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
         mc:Ignorable="d" Title="{Binding Title}" Height="504" Width="880" MinWidth="640" MinHeight="504" Loaded="Window_Loaded"
         DataContext="{x:Static vm:MainViewModel.Instance}" Closed="Window_Closed"
         >
     <Window.Resources>
         <xctk:InverseBoolConverter x:Key="InverseBoolConverter"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <CollectionViewSource x:Key="BatchItems" Source="{Binding BatchItems, Source={x:Static vm:BatchViewModel.Instance}}" IsLiveGroupingRequested="True">
+            <CollectionViewSource.LiveGroupingProperties>
+                <clr:String>BakeGroup</clr:String>
+            </CollectionViewSource.LiveGroupingProperties>
+            <CollectionViewSource.GroupDescriptions>
+                <PropertyGroupDescription PropertyName="BakeGroup" />
+            </CollectionViewSource.GroupDescriptions>
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="BakeGroup" />
+                <scm:SortDescription PropertyName="Name" />
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
     </Window.Resources>
     <Border Margin="6">
         <TabControl x:Name="tabControl">
@@ -169,144 +185,169 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <!-- LIST View-->
-                        <ListView Grid.Column="0" Grid.Row="1" ItemsSource="{Binding BatchItems}" SelectedItem="{Binding SelectedBatchItem}" HorizontalContentAlignment="Stretch">
-                            <ListView.ItemContainerStyle>
-                                <Style TargetType="ListViewItem">
-                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <DataGrid Grid.Column="0" Grid.Row="1" ItemsSource="{Binding Source={StaticResource BatchItems}}" ColumnWidth="*" SelectedItem="{Binding SelectedBatchItem}" HorizontalContentAlignment="Stretch" AutoGenerateColumns="False">
+                            <DataGrid.ItemContainerStyle>
+                                <Style TargetType="DataGridRow">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Path=IsValid}"  Value="true">
                                             <Setter Property="Background" Value="#5500AA00" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
-                            </ListView.ItemContainerStyle>
-                            <ListView.View >
-                                <GridView AllowsColumnReorder="False" >
+                            </DataGrid.ItemContainerStyle>
+                            <DataGrid.GroupStyle>
+                                <GroupStyle>
+                                    <GroupStyle.HeaderTemplate>
+                                        <DataTemplate>
+                                            <TextBlock FontWeight="Bold" FontSize="14" Text="{Binding Name}"/>
+                                        </DataTemplate>
+                                    </GroupStyle.HeaderTemplate>
+                                </GroupStyle>
+                            </DataGrid.GroupStyle>
+                            <DataGrid.Columns >
+                                <DataGridTemplateColumn CanUserResize="False" Width="28">
+                                    <DataGridTemplateColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <CheckBox x:Name="CheckAll" IsChecked="{Binding IsAllSelected, Source={x:Static vm:BatchViewModel.Instance}}" Command="{Binding CheckAllCommand, Source={x:Static vm:BatchViewModel.Instance}}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.HeaderTemplate>
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <CheckBox IsChecked="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}" Command="{Binding CheckItemCMD, Source={x:Static vm:BatchViewModel.Instance}}"  HorizontalAlignment="Center" HorizontalContentAlignment="Center"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn  Header="Asset"  Binding="{Binding Name}" MinWidth="80" IsReadOnly="True"/>
 
-                                    <GridViewColumn Width="28">
-                                        <GridViewColumn.Header>
-                                            <CheckBox x:Name="CheckAll" Command="{Binding CheckAllCommand}" CommandParameter="{Binding IsChecked, ElementName=CheckAll}" />
-                                        </GridViewColumn.Header>
-                                        <GridViewColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <CheckBox IsChecked="{Binding IsSelected}" />
-                                            </DataTemplate>
-                                        </GridViewColumn.CellTemplate>
-                                    </GridViewColumn>
-                                    <GridViewColumn Header="Asset"  DisplayMemberBinding="{Binding Name}" Width="Auto"/>
-                                    <GridViewColumn Header="Multiple HPoly?" Width="90">
-                                        <GridViewColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <CheckBox IsChecked="{Binding MultipleHP}" HorizontalAlignment="Center" HorizontalContentAlignment="Center" />
-                                            </DataTemplate>
-                                        </GridViewColumn.CellTemplate>
-                                    </GridViewColumn>
-                                    <GridViewColumn Header="Low?" Width="40">
-                                        <GridViewColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <fa5:FontAwesome x:Name="chkLow" Icon="Solid_Times" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                                <DataTemplate.Triggers>
-                                                    <DataTrigger Binding="{Binding HasLow}" Value="True">
-                                                        <Setter Property="Icon" TargetName="chkLow" Value="Solid_Check" />
-                                                        <Setter Property="Foreground" TargetName="chkLow" Value="Green"/>
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding HasLow}" Value="False">
-                                                        <Setter Property="Icon" TargetName="chkLow" Value="Solid_Times" />
-                                                        <Setter Property="Foreground" TargetName="chkLow" Value="Red"/>
-                                                    </DataTrigger>
-                                                </DataTemplate.Triggers>
-                                            </DataTemplate>
-                                        </GridViewColumn.CellTemplate>
-                                    </GridViewColumn>
-                                    <GridViewColumn Header="High?" Width="40">
-                                        <GridViewColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <fa5:FontAwesome x:Name="chkHigh" Icon="Solid_Times" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                                <DataTemplate.Triggers>
-                                                    <DataTrigger Binding="{Binding HasHigh}" Value="True">
-                                                        <Setter Property="Icon" TargetName="chkHigh" Value="Solid_Check" />
-                                                        <Setter Property="Foreground" TargetName="chkHigh" Value="Green"/>
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding HasHigh}" Value="False">
-                                                        <Setter Property="Icon" TargetName="chkHigh" Value="Solid_Times" />
-                                                        <Setter Property="Foreground" TargetName="chkHigh" Value="Red"/>
-                                                    </DataTrigger>
-                                                </DataTemplate.Triggers>
-                                            </DataTemplate>
-                                        </GridViewColumn.CellTemplate>
-                                    </GridViewColumn>
-                                    <GridViewColumn Header="Cage?"  Width="40">
-                                        <GridViewColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <fa5:FontAwesome x:Name="chkCage" Icon="Solid_Times" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                                                <DataTemplate.Triggers>
-                                                    <DataTrigger Binding="{Binding HasCage}" Value="True">
-                                                        <Setter Property="Icon" TargetName="chkCage" Value="Solid_Check" />
-                                                        <Setter Property="Foreground" TargetName="chkCage" Value="Green"/>
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding HasCage}" Value="False">
-                                                        <Setter Property="Icon" TargetName="chkCage" Value="Solid_Times" />
-                                                        <Setter Property="Foreground" TargetName="chkCage" Value="Red"/>
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding Source={x:Static vm:BatchViewModel.Instance}, Path=UseCage}" Value="False">
-                                                        <Setter Property="Icon" TargetName="chkCage" Value="Solid_Lock" />
-                                                        <Setter Property="Foreground" TargetName="chkCage" Value="Gray"/>
-                                                    </DataTrigger>
-                                                </DataTemplate.Triggers>
-                                            </DataTemplate>
-                                        </GridViewColumn.CellTemplate>
-                                    </GridViewColumn>
-                                    <GridViewColumn Header="Width" Width="80">
-                                        <GridViewColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <ComboBox ItemsSource="{Binding MapSizes, Source ={x:Static vm:BatchViewModel.Instance}}" SelectedValue="{Binding Width}" />
-                                            </DataTemplate>
-                                        </GridViewColumn.CellTemplate>
-                                    </GridViewColumn>
-                                    <GridViewColumn Header="Height" Width="80"  >
-                                        <GridViewColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <ComboBox ItemsSource="{Binding MapSizes, Source ={x:Static vm:BatchViewModel.Instance}}" SelectedValue="{Binding Height}" />
-                                            </DataTemplate>
-                                        </GridViewColumn.CellTemplate>
-                                    </GridViewColumn>
-                                    <GridViewColumn Header="" Width="80">
-                                        <GridViewColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <Button Command="{Binding CMDSetLow}" Width="20" Height="20" ToolTip="LowPoly Settings">
-                                                        <fa5:FontAwesome Icon="Solid_Cog" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                                    </Button>
-                                                    <Button Command="{Binding CMDSetHigh}" Width="20" Height="20" ToolTip="HighPoly Settings">
-                                                        <fa5:FontAwesome Icon="Solid_Cogs" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                                    </Button>
-                                                    <Button Command="{Binding BakeMe}" Width="20" Height="20" ToolTip="Bake this item." IsEnabled="{Binding IsValid}">
-                                                        <fa5:FontAwesome Icon="Solid_Blender" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                                    </Button>
-                                                </StackPanel>
-                                            </DataTemplate>
-                                        </GridViewColumn.CellTemplate>
-                                    </GridViewColumn>
-                                    <GridViewColumn Header="Baked?" Width="44">
-                                        <GridViewColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <fa5:FontAwesome x:Name="chkBaked" Icon="Solid_Times" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                                <DataTemplate.Triggers>
-                                                    <DataTrigger Binding="{Binding Baked}" Value="True">
-                                                        <Setter Property="Icon" TargetName="chkBaked" Value="Solid_Check" />
-                                                        <Setter Property="Foreground" TargetName="chkBaked" Value="Green"/>
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding Baked}" Value="False">
-                                                        <Setter Property="Icon" TargetName="chkBaked" Value="Solid_Times" />
-                                                        <Setter Property="Foreground" TargetName="chkBaked" Value="Red"/>
-                                                    </DataTrigger>
-                                                </DataTemplate.Triggers>
-                                            </DataTemplate>
-                                        </GridViewColumn.CellTemplate>
-                                    </GridViewColumn>
-                                </GridView>
-                            </ListView.View>
-                        </ListView>
+                                <!--
+                                <DataGridComboBoxColumn Header="Bake Group" MinWidth="120" SelectedItemBinding="{Binding BakeGroup}" ItemsSource="{Binding BakeGroups, Source ={x:Static vm:BatchViewModel.Instance}}" TextBinding="{Binding NewGroup, UpdateSourceTrigger=LostFocus}"/>
+                                <DataGridTemplateColumn Header="Bake Group" MinWidth="120"  >
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <ComboBox ItemsSource="{Binding BakeGroups, Source ={x:Static vm:BatchViewModel.Instance}}" SelectedItem="{Binding BakeGroup}" IsEditable="True" Text="{Binding NewGroup, UpdateSourceTrigger=LostFocus}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Header="Bake Group" Binding="{Binding BakeGroup}" MinWidth="80" />
+                                -->
+                                
+                                <DataGridTemplateColumn Header="Bake Group" MinWidth="80" >
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <controls:AutoCompleteBox Text="{Binding BakeGroup, UpdateSourceTrigger=LostFocus}"  ItemsSource="{Binding BakeGroups, Source={x:Static vm:BatchViewModel.Instance}}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridCheckBoxColumn Binding="{Binding MultipleHP}" Header="Multiple HPoly?" MinWidth="96"/>
+                                <DataGridTemplateColumn Header="Low?" MinWidth="50">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <fa5:FontAwesome x:Name="chkLow" Icon="Solid_Times" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                            <DataTemplate.Triggers>
+                                                <DataTrigger Binding="{Binding HasLow}" Value="True">
+                                                    <Setter Property="Icon" TargetName="chkLow" Value="Solid_Check" />
+                                                    <Setter Property="Foreground" TargetName="chkLow" Value="Green"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding HasLow}" Value="False">
+                                                    <Setter Property="Icon" TargetName="chkLow" Value="Solid_Times" />
+                                                    <Setter Property="Foreground" TargetName="chkLow" Value="Red"/>
+                                                </DataTrigger>
+                                            </DataTemplate.Triggers>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="High?" MinWidth="50">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <fa5:FontAwesome x:Name="chkHigh" Icon="Solid_Times" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                            <DataTemplate.Triggers>
+                                                <DataTrigger Binding="{Binding HasHigh}" Value="True">
+                                                    <Setter Property="Icon" TargetName="chkHigh" Value="Solid_Check" />
+                                                    <Setter Property="Foreground" TargetName="chkHigh" Value="Green"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding HasHigh}" Value="False">
+                                                    <Setter Property="Icon" TargetName="chkHigh" Value="Solid_Times" />
+                                                    <Setter Property="Foreground" TargetName="chkHigh" Value="Red"/>
+                                                </DataTrigger>
+                                            </DataTemplate.Triggers>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="Cage?"  MinWidth="50">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <fa5:FontAwesome x:Name="chkCage" Icon="Solid_Times" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                            <DataTemplate.Triggers>
+                                                <DataTrigger Binding="{Binding HasCage}" Value="True">
+                                                    <Setter Property="Icon" TargetName="chkCage" Value="Solid_Check" />
+                                                    <Setter Property="Foreground" TargetName="chkCage" Value="Green"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding HasCage}" Value="False">
+                                                    <Setter Property="Icon" TargetName="chkCage" Value="Solid_Times" />
+                                                    <Setter Property="Foreground" TargetName="chkCage" Value="Red"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Source={x:Static vm:BatchViewModel.Instance}, Path=UseCage}" Value="False">
+                                                    <Setter Property="Icon" TargetName="chkCage" Value="Solid_Lock" />
+                                                    <Setter Property="Foreground" TargetName="chkCage" Value="Gray"/>
+                                                </DataTrigger>
+                                            </DataTemplate.Triggers>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+                                <DataGridTemplateColumn Header="Width" MinWidth="80">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <ComboBox ItemsSource="{Binding MapSizes, Source ={x:Static vm:BatchViewModel.Instance}}" SelectedValue="{Binding Width}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="Height" MinWidth="80"  >
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <ComboBox ItemsSource="{Binding MapSizes, Source ={x:Static vm:BatchViewModel.Instance}}" SelectedValue="{Binding Height}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+
+                                <DataGridTemplateColumn Header="" MinWidth="80">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Button Command="{Binding CMDSetLow}" Width="20" Height="20" ToolTip="LowPoly Settings">
+                                                    <fa5:FontAwesome Icon="Solid_Cog" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                                </Button>
+                                                <Button Command="{Binding CMDSetHigh}" Width="20" Height="20" ToolTip="HighPoly Settings">
+                                                    <fa5:FontAwesome Icon="Solid_Cogs" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                                </Button>
+                                                <Button Command="{Binding BakeMe}" Width="20" Height="20" ToolTip="Bake this item." IsEnabled="{Binding IsValid}">
+                                                    <fa5:FontAwesome Icon="Solid_Blender" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                                </Button>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="Baked?" MinWidth="44">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <fa5:FontAwesome x:Name="chkBaked" Icon="Solid_Times" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                            <DataTemplate.Triggers>
+                                                <DataTrigger Binding="{Binding Baked}" Value="True">
+                                                    <Setter Property="Icon" TargetName="chkBaked" Value="Solid_Check" />
+                                                    <Setter Property="Foreground" TargetName="chkBaked" Value="Green"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Baked}" Value="False">
+                                                    <Setter Property="Icon" TargetName="chkBaked" Value="Solid_Times" />
+                                                    <Setter Property="Foreground" TargetName="chkBaked" Value="Red"/>
+                                                </DataTrigger>
+                                            </DataTemplate.Triggers>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+                            </DataGrid.Columns>
+                        </DataGrid>
                     </Grid>
                     <StatusBar Grid.Row="1" Grid.ColumnSpan="2" >
                         <StatusBar.ItemsPanel>
@@ -373,7 +414,7 @@
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="24"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBox Text="{Binding XNormalPath}"  Height="24" Margin="0,0,4,0"/>
+                                        <xctk:WatermarkTextBox Text="{Binding XNormalPath}" Watermark="Path to Xnormal.exe" Height="24" Margin="0,0,4,0"/>
                                         <Button Grid.Column="1"  Command="{Binding BrowseXnormal}" Width="24">
                                             <fa5:FontAwesome Icon="Solid_FolderOpen" />
                                         </Button>
@@ -390,13 +431,13 @@
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="24"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBox  Text="{Binding BakingPath}" Height="24" Margin="0,0,4,0" />
+                                        <xctk:WatermarkTextBox  Text="{Binding BakingPath}" Watermark="Path to Baking Folder"  Height="24" Margin="0,0,4,0" />
                                         <Button Grid.Column="1" Command="{Binding BrowseBakingPath}" Width="24">
                                             <fa5:FontAwesome Icon="Solid_FolderOpen" />
                                         </Button>
                                     </Grid>
                                 </GroupBox>
-                                
+
                             </Grid>
                             <Grid Grid.Row="1">
                                 <Grid.ColumnDefinitions>
@@ -809,7 +850,7 @@
                                                 <CheckBox Grid.Row="2" VerticalAlignment="Center" Content="Tangent Space"  IsChecked="{Binding TangentSpace}"/>
                                             </Grid>
                                         </GroupBox>
-                                        
+
                                     </Grid>
                                     <Button Grid.Column="6" Height="24" VerticalAlignment="Top" ToolTip="Reset Settings for this panel" Command="{Binding CMDReset}" >
                                         <fa5:FontAwesome Icon="Solid_UndoAlt" />
@@ -824,9 +865,9 @@
                                     </Grid.ColumnDefinitions>
                                     <Grid>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" />                                            
-                                            <ColumnDefinition Width="*" />                                            
-                                            <ColumnDefinition Width="*" />                                            
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
                                         <Grid.RowDefinitions>

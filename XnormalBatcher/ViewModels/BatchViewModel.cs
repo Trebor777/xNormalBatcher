@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
 using XnormalBatcher.Helpers;
@@ -62,17 +63,19 @@ namespace XnormalBatcher.ViewModels
     internal class BatchViewModel : BaseViewModel
     {
         internal BatchModel Data;
-        private RelayParametrizedCommand checkAllCommand;
+        private RelayCommand checkAllCommand;
         public FileSystemWatcher AutoUpdater = new FileSystemWatcher();
         private int _fileLCount;
         private int _fileHCount;
         private int _fileCCount;
         private bool isBaking;
+        private bool? isAllSelected;
         private double bakingProgress;
         private ObservableCollection<string> logEntries;
         public static BatchViewModel Instance { get; } = new BatchViewModel();
         public ObservableCollection<int> MapSizes { get; set; } = new ObservableCollection<int>(BatchModel.MapSizes);
         public ObservableCollection<string> MeshFileFormats { get; set; } = new ObservableCollection<string>(BatchModel.MeshFileFormats);
+        public ObservableCollection<string> BakeGroups { get; set; } = new ObservableCollection<string>() { "GRP0", "GRP1", "GRP2"};
         public ObservableCollection<BatchItemViewModel> BatchItems { get; set; } = new ObservableCollection<BatchItemViewModel>();
         public BatchItemViewModel SelectedBatchItem { get; set; }
         private BatchItemViewModel GlobalBatchItem { get; set; }
@@ -94,6 +97,12 @@ namespace XnormalBatcher.ViewModels
         public int FileLowCount { get => _fileLCount; set { _fileLCount = value; NotifyPropertyChanged(); } }
         public int FileHighCount { get => _fileHCount; set { _fileHCount = value; NotifyPropertyChanged(); } }
         public int FileCageCount { get => _fileCCount; set { _fileCCount = value; NotifyPropertyChanged(); } }
+       
+        public bool? IsAllSelected
+        {
+            get { return isAllSelected; }
+            set { isAllSelected = value; NotifyPropertyChanged(); }
+        }
         public bool IsBaking
         {
             get => isBaking;
@@ -109,6 +118,8 @@ namespace XnormalBatcher.ViewModels
             get => logEntries;
             set { logEntries = value; NotifyPropertyChanged(); }
         }
+
+
         public string LastLogEntry => LogEntries.Last();
         public ICommand CMDOpenFolder { get; set; }
         public ICommand CMDOpenLog { get; set; }
@@ -117,7 +128,8 @@ namespace XnormalBatcher.ViewModels
         public ICommand CMDSetAllItemsLow { get; set; }
         public ICommand CMDSetAllItemsHigh { get; set; }
         public ICommand CMDSetAllMaps { get; set; }
-        public ICommand CheckAllCommand => checkAllCommand ?? (checkAllCommand = new RelayParametrizedCommand(param => CheckAll(bool.Parse(param.ToString()))));
+        public ICommand CheckAllCommand => checkAllCommand ?? (checkAllCommand = new RelayCommand(CheckAll));
+        public ICommand CheckItemCMD { get; set; }
         private BatchViewModel()
         {
             LogEntries = new ObservableCollection<string>();
@@ -134,8 +146,9 @@ namespace XnormalBatcher.ViewModels
             CMDBakeAll = new RelayParametrizedCommand(a => Bake(true));
             CMDSetAllMaps = new RelayCommand(SetAllMaps);
             CMDSetAllItemsLow = new RelayCommand(SetAllLow);
-            CMDSetAllItemsHigh = new RelayCommand(SetAllHigh);            
-            
+            CMDSetAllItemsHigh = new RelayCommand(SetAllHigh);
+
+            CheckItemCMD = new RelayCommand(CheckItem);
         }
 
         private void RefreshData()
@@ -144,7 +157,7 @@ namespace XnormalBatcher.ViewModels
             Data.SelectedTermCage = TermsViewModel.Instance.Terms.FirstOrDefault(t => t.Name == Data.SelectedTermCage.Name && t.Group == Data.SelectedTermCage.Group);
             Data.SelectedTermLow = TermsViewModel.Instance.Terms.FirstOrDefault(t => t.Name == Data.SelectedTermLow.Name && t.Group == Data.SelectedTermLow.Group);
             Data.SelectedTermHigh = TermsViewModel.Instance.Terms.FirstOrDefault(t => t.Name == Data.SelectedTermHigh.Name && t.Group == Data.SelectedTermHigh.Group);
-            Data.SelectedTermSeparator = TermsViewModel.Instance.Terms.FirstOrDefault(t => t.Name == Data.SelectedTermSeparator.Name && t.Group == Data.SelectedTermSeparator.Group);
+            Data.SelectedTermSeparator = TermsViewModel.Instance.Terms.FirstOrDefault(t => t.Name == Data.SelectedTermSeparator.Name && t.Group == Data.SelectedTermSeparator.Group);            
             //
             NotifyPropertyChanged("UseCage");
             NotifyPropertyChanged("UseTermsAsPrefix");
@@ -168,13 +181,24 @@ namespace XnormalBatcher.ViewModels
             LogEntries.Add(line);
             NotifyPropertyChanged("LastLogEntry");
         }
-        private void CheckAll(bool selectAll)
+        private void CheckAll()
         {
             foreach (var item in BatchItems)
             {
-                item.IsSelected = selectAll;
+                item.IsSelected = IsAllSelected == true;
             }
         }
+
+        private void CheckItem()
+        {
+            if (BatchItems.All(x => x.IsSelected))
+                IsAllSelected = true;
+            else if (BatchItems.All(x => !x.IsSelected))
+                IsAllSelected = false;
+            else
+                IsAllSelected = null;
+        }
+
         public string GetSuffix(int slot)
         {
             var term = SelectedTerms[slot];

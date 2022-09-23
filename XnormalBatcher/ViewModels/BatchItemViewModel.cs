@@ -19,6 +19,7 @@ namespace XnormalBatcher.ViewModels
     {
         private bool isSelected;
         private string name;
+        private string bakegroup;
         private bool multipleHP;
         private bool baked;
         private int width;
@@ -33,6 +34,44 @@ namespace XnormalBatcher.ViewModels
         {
             get => name; set { name = value; NotifyPropertyChanged(); }
         }
+        public string BakeGroup
+        {
+            get => bakegroup;
+            set
+            {
+                bakegroup = value;
+                if (!string.IsNullOrEmpty(value) && BatchViewModel.Instance != null)
+                {
+                    if (!BatchViewModel.Instance.BakeGroups.Contains(value))
+                    {
+                        BatchViewModel.Instance.BakeGroups.Add(value);
+                        BatchViewModel.Instance.NotifyPropertyChanged("BakeGroups");
+                    }
+                }
+                NotifyPropertyChanged();
+            }
+        }
+
+
+        public string NewGroup
+        {
+            set
+            {
+                if (BakeGroup != null)
+                {
+                    return;
+                }
+                if (!string.IsNullOrEmpty(value) && BatchViewModel.Instance != null)
+                {
+                    if (!BatchViewModel.Instance.BakeGroups.Contains(value))
+                    {
+                        BatchViewModel.Instance.BakeGroups.Add(value);
+                    }
+                    BakeGroup = value;
+                }
+            }
+        }
+
         public bool MultipleHP { get => multipleHP; set { multipleHP = value; NotifyPropertyChanged(); Validate(); } }
         public bool Baked { get => baked; set { baked = value; NotifyPropertyChanged(); } }
         public int Width { get => width; set { width = value; NotifyPropertyChanged(); } }
@@ -129,7 +168,7 @@ namespace XnormalBatcher.ViewModels
         internal int BakeWorker()
         {
             if (!IsValid)
-            {                
+            {
                 return -1;
             }
             int result;
@@ -280,10 +319,10 @@ namespace XnormalBatcher.ViewModels
             settings.SettingsProximity.SetXML(genMaps, settings);
             settings.SettingsPRTpn.SetXML(genMaps, settings);
             settings.SettingsRadiosity.SetXML(genMaps, settings);
-            settings.SettingsTranslucency.SetXML(genMaps, settings);            
+            settings.SettingsTranslucency.SetXML(genMaps, settings);
             settings.SettingsWireframe.SetXML(genMaps, settings);
 
-            genMaps.SetAttribute("GenThickness", $"{settings.BakeThickness}".ToLower());            
+            genMaps.SetAttribute("GenThickness", $"{settings.BakeThickness}".ToLower());
             if (!string.IsNullOrEmpty(file))
                 document.Save(file);
             else
@@ -313,7 +352,7 @@ namespace XnormalBatcher.ViewModels
             }
             else
             {
-                
+
                 if (File.Exists(OutputXmlVCFile))
                     File.Delete(OutputXmlVCFile);
             }
