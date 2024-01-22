@@ -44,6 +44,24 @@ namespace XnormalBatcher.ViewModels
             OffsetY = 0.0;
             OffsetZ = 0.0;
         }
+
+        internal MeshSettingsLow DeepCopy()
+        {
+            return new MeshSettingsLow() {
+                MeshScale = MeshScale,                                
+                UOffset = UOffset, 
+                VOffset = VOffset, 
+                MeshFrontRayDistance = MeshFrontRayDistance, 
+                MeshRearRayDistance = MeshRearRayDistance,
+                SmoothNormals = SmoothNormals,
+                HighPolyOverrideIsTangent= HighPolyOverrideIsTangent,
+                MatchUV = MatchUV,
+                BatchProtection = BatchProtection,
+                OffsetX = OffsetX,
+                OffsetY = OffsetY,
+                OffsetZ = OffsetZ 
+            };                
+        }
     }
     internal class MeshSettingsLowVM : BaseViewModel
     {
@@ -199,7 +217,7 @@ namespace XnormalBatcher.ViewModels
 
         internal MeshSettingsLowVM(MeshSettingsLowVM dataIn)
         {
-            data = dataIn.data.Clone();
+            data = dataIn.data.DeepCopy();
             NotifyDataChanged();
         }
 
@@ -257,12 +275,12 @@ namespace XnormalBatcher.ViewModels
         private MeshSettingsLow dataBefore;
         public void PrepareDataChange()
         {
-            dataBefore = data.Clone();
+            dataBefore = data.DeepCopy();
         }
 
         public void RevertDataChange()
         {
-            data = dataBefore.Clone();
+            data = dataBefore.DeepCopy();
             NotifyDataChanged();
         }
         public string OffsetString => $"{OffsetX};{OffsetY};{OffsetZ};";

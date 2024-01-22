@@ -50,8 +50,10 @@ namespace XnormalBatcher.Helpers
 
         public static string GenerateExtensionFilter(string title, List<string> extensions)
         {
-            var list = string.Join(", ", extensions.Select(e => $"*.{e}"));
-            return $"{title}({list})|{list}";
+            var starred_extensions = extensions.Select(e => $"*.{e}");
+            var listA = string.Join(", ", starred_extensions);
+            var listB = string.Join(";", starred_extensions);
+            return $"{title}({listA})|{listB}";
         }
     }
 }

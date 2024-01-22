@@ -192,10 +192,16 @@ namespace XnormalBatcher.ViewModels
         private void BakeWorker(object sender, DoWorkEventArgs e)
         {
             var items = BatchItems.Where(b => (b.IsSelected || (bool)e.Argument) && b.IsValid).ToArray();
+            if (items.Length == 0)
+                Log($"WARNING: No valid items to bake...");
+            else
+            {
+                Log($"INFO: Processing {items.Length} items...");
+            }
             for (int i = 0; i < items.Length; i++)
             {
                 int result = items[i].BakeWorker();
-                double percentage = (double)(i + 1) / items.Count() * 100;
+                double percentage = (double)(i + 1) / items.Length * 100;
                 (BatchItemViewModel Item, int Result) data = (Item: items[i], Result: result);
                 (sender as BackgroundWorker).ReportProgress((int)percentage, data);
             }
@@ -205,7 +211,7 @@ namespace XnormalBatcher.ViewModels
         {
             BakingProgress = 0;
             IsBaking = true;
-            BackgroundWorker worker = new BackgroundWorker
+            BackgroundWorker worker = new()
             {
                 WorkerReportsProgress = true
             };
@@ -218,7 +224,7 @@ namespace XnormalBatcher.ViewModels
         private void BakeCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             IsBaking = false;
-            Log($"Bake done!");
+            Log($"Processing done!");
         }
 
         private void BakeProgressChanged(object sender, ProgressChangedEventArgs e)

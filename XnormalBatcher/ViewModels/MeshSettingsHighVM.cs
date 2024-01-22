@@ -33,6 +33,19 @@ namespace XnormalBatcher.ViewModels
             OffsetY = 0.0;
             OffsetZ = 0.0;
         }
+
+        internal MeshSettingsHigh DeepCopy()
+        {
+            return new MeshSettingsHigh() {
+                MeshScale = MeshScale,
+                BaseTextureIsTangent = BaseTextureIsTangent,
+                IgnoreVertexColor = IgnoreVertexColor,
+                SmoothNormals = SmoothNormals,
+                OffsetX = OffsetX,
+                OffsetY = OffsetY,
+                OffsetZ = OffsetZ
+            };
+        }
     }
 
     internal class MeshSettingsHighVM : BaseViewModel
@@ -132,7 +145,7 @@ namespace XnormalBatcher.ViewModels
 
         internal MeshSettingsHighVM(MeshSettingsHighVM dataIn)
         {
-            data = dataIn.data.Clone();
+            data = dataIn.data.DeepCopy();
         }
 
         private void BrowseBaseTexture()
@@ -169,12 +182,12 @@ namespace XnormalBatcher.ViewModels
         private MeshSettingsHigh dataBefore;
         public void PrepareDataChange() // Clone current data state, before any modifications from dialog
         {
-            dataBefore = data.Clone();
+            dataBefore = data.DeepCopy();
         }
 
         public void RevertDataChange() // Revert data state, after any modifications from dialog when cancelling.
         {
-            data = dataBefore.Clone();
+            data = dataBefore.DeepCopy();
             NotifyDataChanged();
         }
 
