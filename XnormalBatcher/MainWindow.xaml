@@ -5,7 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:fa5="http://schemas.fontawesome.com/icons/"
-        xmlns:local="clr-namespace:XnormalBatcher"
         xmlns:vm="clr-namespace:XnormalBatcher.ViewModels"
         mc:Ignorable="d" Title="{Binding Title}" Height="504" Width="880" MinWidth="640" MinHeight="504" Loaded="Window_Loaded"
         DataContext="{x:Static vm:MainViewModel.Instance}" Closed="Window_Closed"

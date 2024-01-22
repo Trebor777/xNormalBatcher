@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0-windows</TargetFramework>
+    <TargetFramework>net8.0-windows10.0.17763.0</TargetFramework>
     <OutputType>WinExe</OutputType>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>ftp://xnormal%40xnormal.trebor777.net/</PublishUrl>
@@ -14,7 +14,7 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>2.0.4.%2a</ApplicationVersion>
+    <ApplicationVersion>2.0.5.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -22,20 +22,20 @@
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>XnormalBatcher.App</StartupObject>
+    <StartupObject>XnormalBatcher.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>xNBatcherIcon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Authors>Marc.Robert</Authors>
+    <Company />
+    <PackageIcon></PackageIcon>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="CliWrap">
       <Version>3.6.6</Version>
-    </PackageReference>
-    <PackageReference Include="Clowd.Squirrel">
-      <Version>2.11.1</Version>
     </PackageReference>
     <PackageReference Include="Extended.Wpf.Toolkit">
       <Version>4.5.1</Version>
@@ -50,8 +50,10 @@
       <Version>1.1.5</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Velopack" Version="0.0.212" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="xNBatcherIcon.ico" />
@@ -77,5 +79,14 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Images\xNBatcherIcon.ico">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Releases\" />
   </ItemGroup>
 </Project>

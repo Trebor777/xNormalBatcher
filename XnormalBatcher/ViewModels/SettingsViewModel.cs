@@ -829,16 +829,15 @@ namespace XnormalBatcher.ViewModels
         private void BrowseBakePath()
         {
             var oPath = BakingPath;
-            var dialog = new FolderBrowserDialog
+            var dialog = new OpenFolderDialog
             {
-                Description = "Open a folder which will contains the baking directories:",
-                RootFolder = Environment.SpecialFolder.MyComputer,
-                SelectedPath = BakingPath
-            };
-            DialogResult result = dialog.ShowDialog();
-            if (result == DialogResult.OK)
+                //Description = "Open a folder which will contains the baking directories:",
+                RootDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyComputer),
+                InitialDirectory = BakingPath,                
+            };            
+            if (dialog.ShowDialog() == true)
             {
-                BakingPath = dialog.SelectedPath + @"\";
+                BakingPath = dialog.FolderName + @"\";
             }
             Helpers.FileHelper.CreateSubFolders(BakingPath);
             if (oPath != BakingPath && MainViewModel.Instance.Initialized)

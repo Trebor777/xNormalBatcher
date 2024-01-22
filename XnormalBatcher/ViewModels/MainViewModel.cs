@@ -43,8 +43,9 @@ namespace XnormalBatcher.ViewModels
         {
             get
             {
-                Version version = Assembly.GetEntryAssembly().GetName().Version;
-                return $"XNormal Batcher {version.ToString(3)} by trebor777.art@outlook.com";
+                //Version version = Assembly.GetEntryAssembly().GetName().Version;
+                var version = Program.GetVersion();
+                return $"XNormal Batcher {version} by trebor777.art@outlook.com";
             }
         }
 
