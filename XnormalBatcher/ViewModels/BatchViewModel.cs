@@ -175,10 +175,10 @@ namespace XnormalBatcher.ViewModels
                 item.IsSelected = selectAll;
             }
         }
-        public string GetSuffix(int slot)
+        public string GetMeshSuffix(FileHelper.Slot slot)
         {
-            var term = SelectedTerms[slot];
-            return FileHelper.CreateSuffix(term, SelectedTermSeparator?.Name, UseTermsAsPrefix);
+            var term = SelectedTerms[(int)slot];
+            return FileHelper.CreateMeshSuffix(term, SelectedTermSeparator?.Name, UseTermsAsPrefix);
         }
 
         private void OpenFolder()
@@ -257,9 +257,9 @@ namespace XnormalBatcher.ViewModels
         private string[] GetRefFolderFiles()
         {
             var path = SettingsViewModel.Instance.BakingPath;
-            string[] files_L = FileHelper.GetItems(path + FileHelper.SubFolders[0], SelectedMeshFormatLow, GetSuffix(0), UseTermsAsPrefix);
-            string[] files_H = FileHelper.GetItems(path + FileHelper.SubFolders[1], SelectedMeshFormatHigh, GetSuffix(1), UseTermsAsPrefix);
-            string[] files_C = FileHelper.GetItems(path + FileHelper.SubFolders[2], SelectedMeshFormatCage, GetSuffix(2), UseTermsAsPrefix);
+            string[] files_L = FileHelper.GetItems(path + FileHelper.SubFolders[(int)FileHelper.Slot.LP],   SelectedMeshFormatLow,  GetMeshSuffix(FileHelper.Slot.LP),      UseTermsAsPrefix);
+            string[] files_H = FileHelper.GetItems(path + FileHelper.SubFolders[(int)FileHelper.Slot.HP],   SelectedMeshFormatHigh, GetMeshSuffix(FileHelper.Slot.HP),      UseTermsAsPrefix);
+            string[] files_C = FileHelper.GetItems(path + FileHelper.SubFolders[(int)FileHelper.Slot.Cage], SelectedMeshFormatCage, GetMeshSuffix(FileHelper.Slot.Cage),    UseTermsAsPrefix);
             List<string[]> mains = new List<string[]>() { files_L, files_H, files_C };
             FileLowCount = files_L.Length;
             FileHighCount = files_H.Length;
@@ -271,20 +271,27 @@ namespace XnormalBatcher.ViewModels
         /// </summary>
         internal void RefreshBatchItems()
         {
-            if (MainViewModel.Instance.Initialized && AutoUpdater.Path != null)
+            if (!MainViewModel.Instance.Initialized || AutoUpdater.Path == null)
             {
-                BatchItems.Clear();
-                foreach (string item in GetRefFolderFiles())
-                {
-                    var data = new BatchItemViewModel(item);
-                    BatchItems.Add(data);
-                }
+                return;
+            }
+            BatchItems.Clear();
+            foreach (string item in GetRefFolderFiles())
+            {
+                var data = new BatchItemViewModel(item);
+                BatchItems.Add(data);
             }
 
         }
 
-        public void OnRefreshFiles(object sender, EventArgs e)
+        public void OnRefreshFiles(object sender, FileSystemEventArgs e)
         {
+            // Ignore XML File changes.
+            if (!MainViewModel.Instance.IsLoaded || e.FullPath.ToLower().EndsWith(".xml"))
+            {
+                return;
+            }
+
             var dispatcher = Application.Current.Dispatcher;
             if (!dispatcher.CheckAccess())
             {
@@ -293,11 +300,8 @@ namespace XnormalBatcher.ViewModels
                     (FileSystemEventHandler)OnRefreshFiles, sender, e);
             }
             else
-            {
-                if (MainViewModel.Instance.IsLoaded)
-                {
-                    RefreshBatchItems();
-                }
+            {                
+                RefreshBatchItems();
             }
         }
 
@@ -362,7 +366,7 @@ namespace XnormalBatcher.ViewModels
                 // Events
                 AutoUpdater.IncludeSubdirectories = true;
                 AutoUpdater.NotifyFilter = NotifyFilters.FileName | NotifyFilters.DirectoryName;
-                AutoUpdater.Changed += new FileSystemEventHandler(OnRefreshFiles);
+                // AutoUpdater.Changed += new FileSystemEventHandler(OnRefreshFiles);           // Not sure we really need to monitor internal/attributes on files modifications...
                 AutoUpdater.Created += new FileSystemEventHandler(OnRefreshFiles);
                 AutoUpdater.Deleted += new FileSystemEventHandler(OnRefreshFiles);
                 AutoUpdater.Renamed += new RenamedEventHandler(OnRefreshFiles);
