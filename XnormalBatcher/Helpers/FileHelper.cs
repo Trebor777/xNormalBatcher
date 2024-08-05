@@ -9,7 +9,7 @@ namespace XnormalBatcher.Helpers
 {
     internal static class FileHelper
     {
-        public static string[] SubFolders = new string[] { @"LowPoly\", @"HighPoly\", @"Cage\", @"Maps\" };
+        public static string[] SubFolders = [@"LowPoly\", @"HighPoly\", @"Cage\", @"Maps\"];
         
         public static void CreateSubFolders(string root)
         {
@@ -28,7 +28,7 @@ namespace XnormalBatcher.Helpers
         public static string[] GetItems(string folder, string ext, string suffix = "", bool UseTermsAsPrefix = false)
         {
             string test;
-            string[] r = { };
+            string[] r = Array.Empty<string>();
             if (Directory.Exists(folder))
             {
                 test = UseTermsAsPrefix ? $"{suffix}*.{ext}" : $"*{suffix}.{ext}";
@@ -41,7 +41,7 @@ namespace XnormalBatcher.Helpers
         /// </summary>
         /// <param name="term"></param>
         /// <returns>Constructed string with separator</returns>
-        public static string CreateSuffix(string term, string separator, bool UseTermsAsPrefix = false)
+        public static string CreateMeshSuffix(string term, string separator, bool UseTermsAsPrefix = false)
         {            
             if (separator == "\" \"")
                 separator = " ";
@@ -55,5 +55,13 @@ namespace XnormalBatcher.Helpers
             var listB = string.Join(";", starred_extensions);
             return $"{title}({listA})|{listB}";
         }
+
+        public enum Slot:uint
+        {
+            LP = 0,
+            HP = 1,
+            Cage = 2,
+            Maps = 3
+        }    
     }
 }

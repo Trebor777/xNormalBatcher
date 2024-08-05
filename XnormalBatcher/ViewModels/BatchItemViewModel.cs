@@ -26,7 +26,7 @@ namespace XnormalBatcher.ViewModels
         private bool hasLow;
         private bool hasHigh;
         private bool hasCage;
-        private string[] hpList = { };
+        private string[] hpList = Array.Empty<string>();
 
         public bool IsSelected { get => isSelected; set { isSelected = value; NotifyPropertyChanged(); } }
         public string Name
@@ -35,8 +35,8 @@ namespace XnormalBatcher.ViewModels
         }
         public bool MultipleHP { get => multipleHP; set { multipleHP = value; NotifyPropertyChanged(); Validate(); } }
         public bool Baked { get => baked; set { baked = value; NotifyPropertyChanged(); } }
-        public int Width { get => width; set { width = value; NotifyPropertyChanged(); } }
-        public int Height { get => height; set { height = value; NotifyPropertyChanged(); } }
+        public int Width { get => width; set { width = value; NotifyPropertyChanged(); GenerateXml(); } }
+        public int Height { get => height; set { height = value; NotifyPropertyChanged(); GenerateXml(); } }
         public bool HasLow { get => hasLow; set { hasLow = value; NotifyPropertyChanged(); } }
         public bool HasHigh { get => hasHigh; set { hasHigh = value; NotifyPropertyChanged(); } }
         public bool HasCage { get => hasCage; set { hasCage = value; NotifyPropertyChanged(); } }
@@ -53,7 +53,7 @@ namespace XnormalBatcher.ViewModels
             get
             {
                 if (owner.BakeSeparately)
-                    return $@"{GenerateName(FileHelper.SubFolders[3], 3, true, false)}";
+                    return $@"{GetFilename(FileHelper.SubFolders[(uint)FileHelper.Slot.Maps], FileHelper.Slot.Maps, true, false)}";
                 else
                     return SettingsViewModel.Instance.BakingPath + FileHelper.SubFolders[3];
             }
@@ -73,10 +73,11 @@ namespace XnormalBatcher.ViewModels
             Width = owner.SelectedMapWidthAll;
             Height = owner.SelectedMapHeightAll;
 
+            var ps0 = owner.GetMeshSuffix(FileHelper.Slot.HP);
+            var ps1 = owner.GetMeshSuffix(FileHelper.Slot.LP);
+            var ps2 = owner.GetMeshSuffix(FileHelper.Slot.Cage);
+
             string temp = Path.GetFileNameWithoutExtension(filename);
-            var ps0 = owner.GetSuffix(0);
-            var ps1 = owner.GetSuffix(1);
-            var ps2 = owner.GetSuffix(2);
             temp = Regex.Replace(temp, ps0, "", RegexOptions.IgnoreCase);
             temp = Regex.Replace(temp, ps1, "", RegexOptions.IgnoreCase);
             temp = Regex.Replace(temp, ps2, "", RegexOptions.IgnoreCase);
@@ -174,32 +175,32 @@ namespace XnormalBatcher.ViewModels
             BakeAsync();
             BatchViewModel.Instance.IsBaking = false;
         }
-        private string GenerateName(string typePath, int slot, bool addpath = true, bool addExtension = true, string name = null)
+        private string GetFilename(string typePath, FileHelper.Slot slot, bool addpath = true, bool addExtension = true, string baseName = null)
         {
-            name = name ?? Name;
-            string result = name;
-            if (slot < 3)
+            baseName ??= Name;
+            string filename = baseName;
+            if (slot != FileHelper.Slot.Maps)
             {
-                string suffix = owner.GetSuffix(slot);
-                result = name + suffix; // Default case: suffix is a suffix
+                string meshSuffix = owner.GetMeshSuffix(slot);
+                filename = baseName + meshSuffix; // Default case: suffix is a suffix
                 if (owner.UseTermsAsPrefix) // else, if suffix is used as prefix:
                 {
-                    result = suffix + name;
+                    filename = meshSuffix + baseName;
                 }
             }
-            string final = result;
+            string final = filename;
             if (addpath)
-                final = SettingsViewModel.Instance.BakingPath + typePath + result;
+                final = Path.Combine(SettingsViewModel.Instance.BakingPath, typePath, filename);
             if (addExtension)
-                final += "." + owner.SelectedFormats[slot];
+                final += "." + owner.SelectedFormats[(int)slot];
             return final;
         }
 
         public bool CheckHighPolyFolder()
         {
             bool hasFiles = false;
-            string hp = GenerateName("", 1, false, true, "*");
-            string path = $@"{GenerateName(FileHelper.SubFolders[1], 1, true, false)}\";
+            string hp = GetFilename("", FileHelper.Slot.HP, false, true, "*");
+            string path = $@"{GetFilename(FileHelper.SubFolders[(int)FileHelper.Slot.HP], FileHelper.Slot.HP, true, false)}\";
             if (Directory.Exists(path))
             {
                 hpList = Directory.GetFiles(path, hp);
@@ -209,14 +210,12 @@ namespace XnormalBatcher.ViewModels
         }
         public void Validate()
         {
-            HasLow = File.Exists(GenerateName(FileHelper.SubFolders[0], 0));
-            HasHigh = (File.Exists(GenerateName(FileHelper.SubFolders[1], 1)) && !MultipleHP) || (CheckHighPolyFolder() && MultipleHP);
-            string path = GenerateName(FileHelper.SubFolders[2], 2);
-            bool v = File.Exists(path);
-            HasCage = (v && owner.UseCage) || !owner.UseCage;
+            HasLow = File.Exists(GetFilename(FileHelper.SubFolders[(int)FileHelper.Slot.LP], FileHelper.Slot.LP));
+            HasHigh = (!MultipleHP && File.Exists(GetFilename(FileHelper.SubFolders[(int)FileHelper.Slot.HP], FileHelper.Slot.LP))) || (CheckHighPolyFolder() && MultipleHP);                        
+            HasCage = !owner.UseCage || (owner.UseCage && File.Exists(GetFilename(FileHelper.SubFolders[(int)FileHelper.Slot.Cage], FileHelper.Slot.Cage)));
             Baked = false;
             if (Directory.Exists(BasenameMapPath))
-                Baked = Directory.GetFiles(BasenameMapPath, Name + "_*." + owner.SelectedFormats[3]).Length > 0;
+                Baked = Directory.GetFiles(BasenameMapPath, Name + "_*." + owner.SelectedFormats[(int)FileHelper.Slot.Maps]).Length > 0;
             NotifyPropertyChanged("IsValid");
         }
 
@@ -251,10 +250,10 @@ namespace XnormalBatcher.ViewModels
             }
             else
             {
-                SettingsHigh.AppendToXML(highMeshes, document, GenerateName(FileHelper.SubFolders[1], 1));
+                SettingsHigh.AppendToXML(highMeshes, document, GetFilename(FileHelper.SubFolders[(int)FileHelper.Slot.HP], FileHelper.Slot.HP));
             }
 
-            SettingsLow.SetXml(lowPolyMesh, GenerateName(FileHelper.SubFolders[0], 0), GenerateName(FileHelper.SubFolders[2], 2));
+            SettingsLow.SetXml(lowPolyMesh, GetFilename(FileHelper.SubFolders[0], 0), GetFilename(FileHelper.SubFolders[(int)FileHelper.Slot.Cage], FileHelper.Slot.Cage));
             genMaps.SetAttribute("Width", Width.ToString());
             genMaps.SetAttribute("Height", Height.ToString());
             genMaps.SetAttribute("File", $@"{BasenameMapPath}\{Name}.{settings.SelectedTextureFileFormat}");
