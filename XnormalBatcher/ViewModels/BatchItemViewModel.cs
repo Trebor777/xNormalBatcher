@@ -35,8 +35,8 @@ namespace XnormalBatcher.ViewModels
         }
         public bool MultipleHP { get => multipleHP; set { multipleHP = value; NotifyPropertyChanged(); Validate(); } }
         public bool Baked { get => baked; set { baked = value; NotifyPropertyChanged(); } }
-        public int Width { get => width; set { width = value; NotifyPropertyChanged(); } }
-        public int Height { get => height; set { height = value; NotifyPropertyChanged(); } }
+        public int Width { get => width; set { width = value; NotifyPropertyChanged(); GenerateXml(); } }
+        public int Height { get => height; set { height = value; NotifyPropertyChanged(); GenerateXml(); } }
         public bool HasLow { get => hasLow; set { hasLow = value; NotifyPropertyChanged(); } }
         public bool HasHigh { get => hasHigh; set { hasHigh = value; NotifyPropertyChanged(); } }
         public bool HasCage { get => hasCage; set { hasCage = value; NotifyPropertyChanged(); } }
